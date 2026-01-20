@@ -42,6 +42,13 @@ import {
   Award,
   Calendar,
   Filter,
+  HelpCircle,
+  Layers,
+  Brain,
+  MessageSquare,
+  ThumbsUp,
+  XCircle,
+  Info,
 } from "lucide-react";
 import { exportToPDF, exportToExcel } from "@/lib/export-utils";
 
@@ -448,51 +455,190 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* How It Works */}
+              <details className="group pt-4 border-t border-slate-700">
+                <summary className="text-sm cursor-pointer text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
+                  <Layers className="w-4 h-4" />
+                  <span>How it works</span>
+                  <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-start gap-4 p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
+                    <div className="p-2 bg-amber-500/20 rounded-lg">
+                      <FileSpreadsheet className="w-5 h-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-amber-300">1. Parse Excel</p>
+                      <p className="text-sm text-slate-400">Upload your CallRail export. We extract transcripts, timestamps, and call metadata.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                    <div className="p-2 bg-blue-500/20 rounded-lg">
+                      <Zap className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-blue-300">2. Smart Extraction (Haiku)</p>
+                      <p className="text-sm text-slate-400">AI identifies rep names, caller info, and filters out IVR/spam calls. ~$0.001/call</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
+                    <div className="p-2 bg-purple-500/20 rounded-lg">
+                      <Brain className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-purple-300">3. Deep Analysis (Opus 4.5)</p>
+                      <p className="text-sm text-slate-400">Advanced AI scores rep performance, lead quality, and generates coaching insights. ~$0.02/call</p>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
               {/* Scoring Methodology */}
               <details className="group pt-4 border-t border-slate-700">
                 <summary className="text-sm cursor-pointer text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
                   <BarChart3 className="w-4 h-4" />
-                  <span>How scoring works</span>
+                  <span>Scoring methodology</span>
                   <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
                 </summary>
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mt-4 space-y-4">
+                  {/* Lead Score */}
                   <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 p-4 rounded-xl border border-orange-500/30">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-4">
                       <Flame className="w-5 h-5 text-orange-400" />
-                      <p className="font-semibold text-white">Lead Score (1-10)</p>
+                      <p className="font-semibold text-white">Lead Quality Score (1-10)</p>
                     </div>
-                    <ul className="space-y-2 text-sm text-slate-300">
-                      <li className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-red-500" />
-                        <span><strong className="text-red-400">9-10:</strong> Hot lead, call within 1hr</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-orange-500" />
-                        <span><strong className="text-orange-400">7-8:</strong> Qualified, follow up 24hr</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-amber-500" />
-                        <span><strong className="text-amber-400">5-6:</strong> Nurture over 48-72hr</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-slate-500" />
-                        <span><strong className="text-slate-400">1-4:</strong> Low priority / No follow-up</span>
-                      </li>
-                    </ul>
+                    <p className="text-sm text-slate-300 mb-3">Measures how likely the caller is to become a paying customer:</p>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="flex items-center gap-2 text-sm text-slate-300">
+                        <Clock className="w-4 h-4 text-orange-400" />
+                        <span>Timeline to purchase</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-300">
+                        <User className="w-4 h-4 text-orange-400" />
+                        <span>Decision-maker status</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-300">
+                        <Target className="w-4 h-4 text-orange-400" />
+                        <span>Specific need identified</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-300">
+                        <MapPin className="w-4 h-4 text-orange-400" />
+                        <span>Geographic/service fit</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 pt-3 border-t border-orange-500/20">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50" />
+                          <span className="text-sm font-medium text-red-400">9-10: Hot Lead</span>
+                        </div>
+                        <span className="text-xs text-slate-400">Call within 1 hour</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-orange-500" />
+                          <span className="text-sm font-medium text-orange-400">7-8: Qualified</span>
+                        </div>
+                        <span className="text-xs text-slate-400">Follow up in 24 hours</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-amber-500" />
+                          <span className="text-sm font-medium text-amber-400">5-6: Nurture</span>
+                        </div>
+                        <span className="text-xs text-slate-400">Follow up in 48-72 hours</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-slate-500" />
+                          <span className="text-sm font-medium text-slate-400">1-4: Low Priority</span>
+                        </div>
+                        <span className="text-xs text-slate-400">Email only or no follow-up</span>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Rep Score */}
                   <div className="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 p-4 rounded-xl border border-blue-500/30">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-4">
                       <Target className="w-5 h-5 text-blue-400" />
-                      <p className="font-semibold text-white">Rep Score (1-10)</p>
+                      <p className="font-semibold text-white">Rep Performance Score (1-10)</p>
                     </div>
-                    <ul className="space-y-1 text-sm text-slate-300">
-                      <li>• Information Gathering (15%)</li>
-                      <li>• Tone & Professionalism (10%)</li>
-                      <li>• Listening Ratio (10%)</li>
-                      <li>• Objection Handling (10%)</li>
-                      <li>• Next Steps & Closing (20%)</li>
-                      <li>• Conversation Guidance (10%)</li>
-                    </ul>
+                    <p className="text-sm text-slate-300 mb-3">Weighted average of sales skills demonstrated on the call:</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Information Gathering</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">15%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <ThumbsUp className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Next Steps & Closing</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '20%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">20%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Tone & Professionalism</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">15%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Listening Ratio</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">15%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Objection Handling</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">15%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm text-slate-300">Conversation Guidance</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{width: '20%'}} />
+                          </div>
+                          <span className="text-xs text-slate-400 w-8">20%</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </details>
@@ -511,11 +657,29 @@ export default function Home() {
         {!result && (
           <div className="max-w-3xl mx-auto">
             <Card className="shadow-2xl border-0 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white">
                 <h2 className="text-2xl font-bold mb-2">Upload Call Log</h2>
-                <p className="text-blue-100">
+                <p className="text-blue-100 mb-4">
                   Upload your CallRail export to analyze sales performance and discover hot leads
                 </p>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Score every call</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Flame className="w-4 h-4" />
+                    <span>Find hot leads</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Users className="w-4 h-4" />
+                    <span>Rank your reps</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Sparkles className="w-4 h-4" />
+                    <span>AI coaching insights</span>
+                  </div>
+                </div>
               </div>
               <CardContent className="p-8 space-y-8">
                 <div
@@ -550,6 +714,15 @@ export default function Home() {
                       </div>
                     )}
                   </label>
+                </div>
+
+                {/* File format info */}
+                <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <Info className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div className="text-sm text-slate-600">
+                    <p className="font-medium text-slate-700 mb-1">Expected file format</p>
+                    <p>Export your calls from CallRail with the "Full Transcription" column included. The app will automatically extract rep names, caller info, and filter out IVR/spam calls.</p>
+                  </div>
                 </div>
 
                 <div>
@@ -913,9 +1086,11 @@ export default function Home() {
                   </div>
                   <Button
                     onClick={() => setActiveView('calls')}
-                    className="bg-white text-orange-600 hover:bg-white/90 font-semibold rounded-xl"
+                    className="bg-white text-orange-600 hover:bg-orange-50 font-semibold rounded-xl shadow-lg gap-2 px-6"
                   >
+                    <Flame className="w-4 h-4" />
                     View Hot Leads
+                    <ArrowUpRight className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
@@ -1202,7 +1377,8 @@ export default function Home() {
                       </CardTitle>
                       <CardDescription>Highest priority calls that need immediate follow-up</CardDescription>
                     </div>
-                    <Button onClick={() => setActiveView('calls')} variant="outline" className="gap-2 rounded-xl">
+                    <Button onClick={() => setActiveView('calls')} className="gap-2 rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white">
+                      <List className="w-4 h-4" />
                       View All Calls
                       <ArrowUpRight className="w-4 h-4" />
                     </Button>
@@ -1225,7 +1401,7 @@ export default function Home() {
                               {call.score.callerInfo?.phone && (
                                 <span className="text-sm text-slate-600 bg-white px-3 py-1 rounded-lg">{call.score.callerInfo.phone}</span>
                               )}
-                              <Button size="sm" className="bg-red-500 hover:bg-red-600 rounded-lg gap-1">
+                              <Button size="sm" className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-lg gap-2 shadow-lg shadow-red-500/30 font-semibold">
                                 <PhoneCall className="w-4 h-4" />
                                 Call Now
                               </Button>
