@@ -379,13 +379,13 @@ export default function Home() {
                   <Key className="w-5 h-5 text-amber-600 mt-0.5" />
                   <div className="flex-1">
                     <p className="font-semibold text-slate-800 mb-1">API Key Required</p>
-                    <p className="text-sm text-slate-600 mb-3">
+                    <p className="text-sm text-slate-600 mb-2">
                       You&apos;ll need an Anthropic or OpenAI API key.
                       {(anthropicKey || openaiKey) && (
                         <span className="text-emerald-600 font-medium ml-1">✓ Key saved</span>
                       )}
                     </p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-3">
                       <a
                         href="https://platform.claude.com/settings/keys"
                         target="_blank"
@@ -404,6 +404,14 @@ export default function Home() {
                         OpenAI Platform
                         <ArrowUpRight className="w-3 h-3" />
                       </a>
+                    </div>
+                    <div className="text-xs text-amber-700 bg-amber-100/50 rounded-lg p-2.5 space-y-1">
+                      <p className="font-medium">💡 Quick Start Tips:</p>
+                      <ul className="space-y-0.5 text-amber-600">
+                        <li>• Add <span className="font-semibold">$5-10</span> credits to your account to get started</li>
+                        <li>• Analyzing 50 calls typically costs <span className="font-semibold">~$1-2</span></li>
+                        <li>• API keys won&apos;t work without credits added to billing</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -559,12 +567,16 @@ export default function Home() {
               {/* Cost Estimate */}
               <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
                 <p className="text-sm font-semibold text-slate-700 mb-2">Estimated Cost</p>
-                <div className="flex flex-wrap items-center gap-4 text-sm">
+                <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
                   <span className="text-slate-600">~$0.001/call extraction</span>
                   <span className="text-slate-300">•</span>
                   <span className="text-slate-600">~$0.02/call analysis</span>
                   <span className="text-slate-300">•</span>
                   <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-semibold">~$1-2 for 50 calls</span>
+                </div>
+                <div className="text-xs text-blue-700 bg-blue-100/50 rounded-lg p-2.5">
+                  <p className="font-medium mb-1">💡 Getting Started:</p>
+                  <p className="text-blue-600">Add <span className="font-semibold">$5-10</span> credits to your API account. This covers analyzing <span className="font-semibold">200-500 calls</span> and will last for weeks of typical use. Your API key won&apos;t work until billing is set up.</p>
                 </div>
               </div>
 
