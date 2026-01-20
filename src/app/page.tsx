@@ -348,6 +348,28 @@ export default function Home() {
               <CardDescription className="text-slate-400">
                 Enter your API keys to enable AI analysis. Keys are stored locally in your browser only and sent directly to AI providers over HTTPS. Never stored on our servers.
               </CardDescription>
+              <div className="flex flex-wrap gap-3 mt-3">
+                <a
+                  href="https://console.anthropic.com/settings/keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm px-3 py-1.5 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors"
+                >
+                  <Zap className="w-4 h-4" />
+                  Get Anthropic Key
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+                <a
+                  href="https://platform.openai.com/api-keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm px-3 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-lg hover:bg-emerald-500/30 transition-colors"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Get OpenAI Key
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -404,6 +426,25 @@ export default function Home() {
                       <CheckCircle className="w-3 h-3" /> Key saved
                     </p>
                   )}
+                </div>
+              </div>
+
+              {/* Cost Estimate */}
+              <div className="p-4 bg-slate-700/50 rounded-xl border border-slate-600">
+                <p className="text-sm font-medium text-slate-300 mb-2">Estimated Cost per Analysis</p>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-2xl font-bold text-slate-100">~$0.001</p>
+                    <p className="text-xs text-slate-400">per call (extraction)</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-100">~$0.02</p>
+                    <p className="text-xs text-slate-400">per call (analysis)</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-emerald-400">~$1-2</p>
+                    <p className="text-xs text-slate-400">for 50 calls total</p>
+                  </div>
                 </div>
               </div>
 
