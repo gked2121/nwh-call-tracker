@@ -935,8 +935,8 @@ export default function Home() {
                       <Info className="w-4 h-4 text-slate-400" />
                       File Requirements
                     </label>
-                    <div className="p-4 bg-slate-100 rounded-xl border border-slate-200 h-[calc(100%-32px)]">
-                      <ul className="space-y-3 text-sm text-slate-600">
+                    <div className="p-4 bg-slate-100 rounded-xl border border-slate-200">
+                      <ul className="space-y-2 text-sm text-slate-600">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
                           <span>CallRail Excel export (.xlsx or .xls)</span>
@@ -949,11 +949,19 @@ export default function Home() {
                           <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
                           <span>Auto-filters IVR, spam, and short calls</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span>Extracts caller names and contact info</span>
-                        </li>
                       </ul>
+                      <div className="mt-3 pt-3 border-t border-slate-200">
+                        <p className="text-xs font-medium text-slate-500 mb-2">Recommended Limits</p>
+                        <div className="flex flex-wrap gap-2 text-xs">
+                          <span className="px-2 py-1 bg-white rounded-md text-slate-600 border border-slate-200">
+                            <span className="font-semibold">50-100</span> calls/upload
+                          </span>
+                          <span className="px-2 py-1 bg-white rounded-md text-slate-600 border border-slate-200">
+                            <span className="font-semibold">&lt;10MB</span> file size
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-2">Larger files? Split into multiple uploads</p>
+                      </div>
                     </div>
                   </div>
                 </div>
