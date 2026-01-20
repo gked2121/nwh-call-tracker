@@ -3,103 +3,214 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { AnalysisResult } from '@/types/call';
 
+// Color constants
+const COLORS = {
+  primary: [59, 130, 246] as [number, number, number],      // Blue
+  secondary: [99, 102, 241] as [number, number, number],    // Indigo
+  success: [16, 185, 129] as [number, number, number],      // Green
+  warning: [245, 158, 11] as [number, number, number],      // Amber
+  danger: [239, 68, 68] as [number, number, number],        // Red
+  dark: [30, 41, 59] as [number, number, number],           // Slate-800
+  light: [248, 250, 252] as [number, number, number],       // Slate-50
+  muted: [148, 163, 184] as [number, number, number],       // Slate-400
+};
+
+function getScoreColor(score: number): [number, number, number] {
+  if (score >= 8) return COLORS.success;
+  if (score >= 6) return COLORS.warning;
+  return COLORS.danger;
+}
+
+function getActionColor(action: string | undefined): [number, number, number] {
+  switch (action) {
+    case 'priority-1hr': return COLORS.danger;
+    case 'follow-24hr': return COLORS.warning;
+    case 'nurture-48-72hr': return [234, 179, 8]; // Yellow
+    default: return COLORS.muted;
+  }
+}
+
 export function exportToPDF(result: AnalysisResult, filename: string = 'call-analysis-report.pdf') {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
-  let yPos = 20;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let yPos = 0;
+
+  // Helper to add page numbers
+  const addPageNumber = () => {
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(...COLORS.muted);
+      doc.text(`Page ${i} of ${pageCount}`, pageWidth - 25, pageHeight - 10);
+      doc.text('NWH Call Analysis Report', 14, pageHeight - 10);
+    }
+  };
+
+  // ============================================
+  // COVER PAGE
+  // ============================================
+
+  // Dark header bar
+  doc.setFillColor(...COLORS.dark);
+  doc.rect(0, 0, pageWidth, 60, 'F');
+
+  // Gradient accent
+  doc.setFillColor(...COLORS.primary);
+  doc.rect(0, 60, pageWidth, 4, 'F');
 
   // Title
-  doc.setFontSize(22);
+  doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
-  doc.text('NWH Call Analysis Report', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 8;
+  doc.setTextColor(255, 255, 255);
+  doc.text('NWH Call Analysis', pageWidth / 2, 30, { align: 'center' });
 
-  // Subtitle
-  doc.setFontSize(10);
+  doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100);
-  doc.text('AI-Powered Sales Performance & Lead Quality Analysis', pageWidth / 2, yPos, { align: 'center' });
-  doc.setTextColor(0);
-  yPos += 6;
+  doc.text('AI-Powered Sales Performance Report', pageWidth / 2, 42, { align: 'center' });
 
   // Date
-  doc.setFontSize(9);
-  doc.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, pageWidth / 2, yPos, { align: 'center' });
-  yPos += 12;
-
-  // Executive Summary Box
-  doc.setFillColor(59, 130, 246);
-  doc.rect(14, yPos, pageWidth - 28, 28, 'F');
-  doc.setTextColor(255);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Executive Summary', 20, yPos + 8);
   doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`${result.overallStats.totalCalls} Calls Analyzed  |  Rep Avg: ${result.overallStats.averageScore}/10  |  Lead Avg: ${result.overallStats.averageLeadScore || 0}/10`, 20, yPos + 16);
-  doc.text(`Hot Leads: ${result.overallStats.hotLeads || 0}  |  Qualified: ${result.overallStats.qualifiedLeads || 0}  |  Red Flags: ${result.overallStats.redFlagCalls || 0}`, 20, yPos + 23);
-  doc.setTextColor(0);
-  yPos += 36;
+  doc.setTextColor(...COLORS.muted);
+  yPos = 75;
+  doc.text(`Generated: ${new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  })}`, pageWidth / 2, yPos, { align: 'center' });
+  yPos += 15;
 
-  // Overall Stats
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Performance Overview', 14, yPos);
-  yPos += 8;
+  // ============================================
+  // EXECUTIVE SUMMARY CARDS
+  // ============================================
+  doc.setTextColor(0, 0, 0);
 
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  const stats = [
-    `Total Calls Analyzed: ${result.overallStats.totalCalls}`,
-    `Average Rep Performance Score: ${result.overallStats.averageScore}/10`,
-    `Average Lead Quality Score: ${result.overallStats.averageLeadScore || 0}/10`,
-    `Hot Leads (9-10): ${result.overallStats.hotLeads || 0}`,
-    `Qualified Leads (7-8): ${result.overallStats.qualifiedLeads || 0}`,
-    `Red Flag Calls: ${result.overallStats.redFlagCalls || 0}`,
-    `Top Performer: ${result.overallStats.topPerformer}`,
-    `Needs Improvement: ${result.overallStats.needsImprovement}`,
+  // Summary box
+  doc.setFillColor(...COLORS.light);
+  doc.roundedRect(14, yPos, pageWidth - 28, 50, 3, 3, 'F');
+
+  // Stats row
+  const cardWidth = (pageWidth - 42) / 4;
+  const cards = [
+    { label: 'Total Calls', value: result.overallStats.totalCalls.toString(), color: COLORS.primary },
+    { label: 'Avg Rep Score', value: `${result.overallStats.averageScore}/10`, color: COLORS.success },
+    { label: 'Hot Leads', value: (result.overallStats.hotLeads || 0).toString(), color: COLORS.danger },
+    { label: 'Qualified', value: (result.overallStats.qualifiedLeads || 0).toString(), color: COLORS.warning },
   ];
-  stats.forEach(stat => {
-    doc.text(stat, 14, yPos);
-    yPos += 5;
-  });
-  yPos += 8;
 
-  // Rep Summary Table
-  doc.setFontSize(14);
+  cards.forEach((card, i) => {
+    const x = 21 + i * cardWidth;
+    doc.setFillColor(...card.color);
+    doc.roundedRect(x, yPos + 8, cardWidth - 8, 34, 2, 2, 'F');
+
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text(card.value, x + (cardWidth - 8) / 2, yPos + 24, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(card.label, x + (cardWidth - 8) / 2, yPos + 34, { align: 'center' });
+  });
+
+  doc.setTextColor(0, 0, 0);
+  yPos += 60;
+
+  // Top/Bottom performers
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('Rep Performance Summary', 14, yPos);
-  yPos += 5;
+  doc.text('Top Performer:', 14, yPos);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...COLORS.success);
+  doc.text(result.overallStats.topPerformer, 55, yPos);
+
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Needs Coaching:', pageWidth / 2, yPos);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...COLORS.warning);
+  doc.text(result.overallStats.needsImprovement, pageWidth / 2 + 45, yPos);
+
+  doc.setTextColor(0, 0, 0);
+  yPos += 15;
+
+  // ============================================
+  // REP PERFORMANCE TABLE
+  // ============================================
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Rep Performance Rankings', 14, yPos);
+  yPos += 3;
 
   autoTable(doc, {
     startY: yPos,
-    head: [['Rep Name', 'Calls', 'Rep Score', 'Lead Score', 'Hot Leads', 'Qualified', 'Trend']],
-    body: result.repSummaries.map(rep => [
+    head: [['#', 'Rep Name', 'Calls', 'Rep Score', 'Lead Score', 'Hot', 'Qualified', 'Trend']],
+    body: result.repSummaries.map((rep, i) => [
+      (i + 1).toString(),
       rep.repName,
       rep.totalCalls.toString(),
       `${rep.averageScore}/10`,
       `${rep.averageLeadScore || 0}/10`,
       (rep.hotLeads || 0).toString(),
       (rep.qualifiedLeads || 0).toString(),
-      rep.trend,
+      rep.trend.charAt(0).toUpperCase() + rep.trend.slice(1),
     ]),
-    styles: { fontSize: 8 },
-    headStyles: { fillColor: [59, 130, 246] },
+    styles: {
+      fontSize: 9,
+      cellPadding: 4,
+    },
+    headStyles: {
+      fillColor: COLORS.dark,
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+    },
+    alternateRowStyles: {
+      fillColor: COLORS.light,
+    },
+    columnStyles: {
+      0: { cellWidth: 10, halign: 'center' },
+      3: { halign: 'center' },
+      4: { halign: 'center' },
+      5: { halign: 'center' },
+      6: { halign: 'center' },
+      7: { halign: 'center' },
+    },
+    didParseCell: (data) => {
+      // Color code scores
+      if (data.section === 'body') {
+        if (data.column.index === 3 || data.column.index === 4) {
+          const score = parseFloat(data.cell.text[0]);
+          if (score >= 8) data.cell.styles.textColor = COLORS.success;
+          else if (score >= 6) data.cell.styles.textColor = COLORS.warning;
+          else data.cell.styles.textColor = COLORS.danger;
+          data.cell.styles.fontStyle = 'bold';
+        }
+        if (data.column.index === 7) {
+          const trend = data.cell.text[0].toLowerCase();
+          if (trend === 'improving') data.cell.styles.textColor = COLORS.success;
+          else if (trend === 'declining') data.cell.styles.textColor = COLORS.danger;
+          else data.cell.styles.textColor = COLORS.muted;
+        }
+      }
+    },
   });
 
   // @ts-expect-error - autoTable adds this property
-  yPos = doc.lastAutoTable.finalY + 12;
+  yPos = doc.lastAutoTable.finalY + 15;
 
-  // Coaching Insights Section
-  if (yPos > 240) {
+  // ============================================
+  // COACHING INSIGHTS
+  // ============================================
+  if (yPos > 200) {
     doc.addPage();
     yPos = 20;
   }
 
-  doc.setFontSize(14);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 0, 0);
   doc.text('Coaching Insights by Rep', 14, yPos);
-  yPos += 8;
+  yPos += 10;
 
   result.repSummaries.forEach(rep => {
     if (yPos > 250) {
@@ -107,101 +218,213 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
       yPos = 20;
     }
 
-    // Rep header with score
-    doc.setFillColor(240, 240, 240);
-    doc.rect(14, yPos - 4, pageWidth - 28, 8, 'F');
+    // Rep header
+    doc.setFillColor(...COLORS.dark);
+    doc.roundedRect(14, yPos - 5, pageWidth - 28, 12, 2, 2, 'F');
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(`${rep.repName}`, 16, yPos + 1);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Rep: ${rep.averageScore}/10  |  Lead: ${rep.averageLeadScore || 0}/10  |  ${rep.trend}`, pageWidth - 80, yPos + 1);
-    yPos += 10;
+    doc.setTextColor(255, 255, 255);
+    doc.text(rep.repName, 18, yPos + 3);
 
+    // Score badges
+    const repScoreColor = getScoreColor(rep.averageScore);
+    const leadScoreColor = getScoreColor(rep.averageLeadScore || 0);
+
+    doc.setFillColor(...repScoreColor);
+    doc.roundedRect(pageWidth - 85, yPos - 4, 30, 10, 2, 2, 'F');
     doc.setFontSize(9);
+    doc.text(`Rep: ${rep.averageScore}`, pageWidth - 78, yPos + 3);
 
-    // Strengths
-    if (rep.strengths.length > 0) {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(34, 139, 34);
-      doc.text('Strengths:', 16, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(0);
-      yPos += 4;
-      rep.strengths.forEach(s => {
-        const lines = doc.splitTextToSize(`• ${s}`, pageWidth - 36);
-        lines.forEach((line: string) => {
-          doc.text(line, 20, yPos);
-          yPos += 4;
-        });
-      });
-      yPos += 2;
-    }
+    doc.setFillColor(...leadScoreColor);
+    doc.roundedRect(pageWidth - 50, yPos - 4, 35, 10, 2, 2, 'F');
+    doc.text(`Lead: ${rep.averageLeadScore || 0}`, pageWidth - 45, yPos + 3);
 
-    // Weaknesses
-    if (rep.weaknesses.length > 0) {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(220, 53, 69);
-      doc.text('Areas to Improve:', 16, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(0);
-      yPos += 4;
-      rep.weaknesses.forEach(w => {
-        const lines = doc.splitTextToSize(`• ${w}`, pageWidth - 36);
-        lines.forEach((line: string) => {
-          doc.text(line, 20, yPos);
-          yPos += 4;
-        });
-      });
-      yPos += 2;
-    }
+    yPos += 12;
+    doc.setTextColor(0, 0, 0);
 
-    // Coaching insights
-    if (rep.coachingInsights.length > 0) {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(128, 0, 128);
-      doc.text('Coaching Recommendations:', 16, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(0);
-      yPos += 4;
-      rep.coachingInsights.forEach(insight => {
-        const lines = doc.splitTextToSize(`→ ${insight}`, pageWidth - 36);
-        lines.forEach((line: string) => {
-          if (yPos > 280) {
-            doc.addPage();
-            yPos = 20;
-          }
-          doc.text(line, 20, yPos);
+    // Three columns: Strengths, Weaknesses, Coaching
+    const colWidth = (pageWidth - 38) / 3;
+    const startY = yPos;
+
+    // Strengths column
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.success);
+    doc.text('Strengths', 16, yPos);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    yPos += 5;
+    rep.strengths.slice(0, 3).forEach(s => {
+      const lines = doc.splitTextToSize(`• ${s}`, colWidth - 4);
+      lines.forEach((line: string) => {
+        if (yPos < 280) {
+          doc.text(line, 16, yPos);
           yPos += 4;
-        });
+        }
       });
-    }
-    yPos += 6;
+    });
+
+    // Weaknesses column
+    yPos = startY;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.danger);
+    doc.text('Areas to Improve', 16 + colWidth, yPos);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    yPos += 5;
+    rep.weaknesses.slice(0, 3).forEach(w => {
+      const lines = doc.splitTextToSize(`• ${w}`, colWidth - 4);
+      lines.forEach((line: string) => {
+        if (yPos < 280) {
+          doc.text(line, 16 + colWidth, yPos);
+          yPos += 4;
+        }
+      });
+    });
+
+    // Coaching column
+    yPos = startY;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.secondary);
+    doc.text('Coaching Tips', 16 + colWidth * 2, yPos);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    yPos += 5;
+    rep.coachingInsights.slice(0, 3).forEach(c => {
+      const lines = doc.splitTextToSize(`→ ${c}`, colWidth - 4);
+      lines.forEach((line: string) => {
+        if (yPos < 280) {
+          doc.text(line, 16 + colWidth * 2, yPos);
+          yPos += 4;
+        }
+      });
+    });
+
+    yPos = Math.max(yPos, startY + 25) + 8;
   });
 
-  // Individual Call Analysis
+  // ============================================
+  // HOT LEADS PAGE
+  // ============================================
   doc.addPage();
   yPos = 20;
 
-  doc.setFontSize(14);
+  // Header
+  doc.setFillColor(...COLORS.danger);
+  doc.rect(0, 0, pageWidth, 25, 'F');
+  doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text('Individual Call Analysis', 14, yPos);
-  yPos += 5;
+  doc.setTextColor(255, 255, 255);
+  doc.text('Hot Leads - Priority Follow-Up', pageWidth / 2, 16, { align: 'center' });
+
+  yPos = 35;
+  doc.setTextColor(0, 0, 0);
+
+  const hotLeads = result.calls
+    .filter(c => (c.score.leadQuality?.score || 0) >= 7)
+    .sort((a, b) => (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0));
+
+  if (hotLeads.length > 0) {
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Score', 'Caller', 'Company/Location', 'Rep', 'Need Summary', 'Action']],
+      body: hotLeads.map(call => [
+        `${call.score.leadQuality?.score || '-'}/10`,
+        call.score.callerInfo?.name || 'Unknown',
+        call.score.callerInfo?.company || call.score.callerInfo?.location || '-',
+        call.score.repInfo?.name || call.record.repName,
+        call.score.callerInfo?.needSummary || '-',
+        (call.score.leadQuality?.recommendedAction || '-').replace(/-/g, ' '),
+      ]),
+      styles: {
+        fontSize: 8,
+        cellPadding: 3,
+      },
+      headStyles: {
+        fillColor: COLORS.dark,
+        textColor: [255, 255, 255],
+      },
+      columnStyles: {
+        0: { cellWidth: 18, halign: 'center', fontStyle: 'bold' },
+        4: { cellWidth: 50 },
+        5: { cellWidth: 25 },
+      },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 0) {
+          const score = parseFloat(data.cell.text[0]);
+          if (score >= 9) {
+            data.cell.styles.textColor = COLORS.danger;
+          } else {
+            data.cell.styles.textColor = COLORS.warning;
+          }
+        }
+        if (data.section === 'body' && data.column.index === 5) {
+          const action = data.cell.text[0].toLowerCase();
+          if (action.includes('priority') || action.includes('1hr')) {
+            data.cell.styles.textColor = COLORS.danger;
+            data.cell.styles.fontStyle = 'bold';
+          }
+        }
+      },
+    });
+  } else {
+    doc.setFontSize(12);
+    doc.setTextColor(...COLORS.muted);
+    doc.text('No hot leads (score 7+) found in this analysis.', pageWidth / 2, yPos + 20, { align: 'center' });
+  }
+
+  // ============================================
+  // ALL CALLS DETAIL
+  // ============================================
+  doc.addPage();
+  yPos = 20;
+
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 0, 0);
+  doc.text('Complete Call Analysis', 14, yPos);
+  yPos += 8;
 
   autoTable(doc, {
     startY: yPos,
-    head: [['Rep', 'Date', 'Duration', 'Rep Score', 'Lead Score', 'Action', 'Type']],
+    head: [['Rep', 'Caller', 'Date', 'Duration', 'Rep Score', 'Lead Score', 'Action', 'Type']],
     body: result.calls.map(call => [
-      call.record.repName,
+      call.score.repInfo?.name || call.record.repName,
+      call.score.callerInfo?.name || 'Unknown',
       call.record.callDate,
       call.record.callDuration,
       `${call.score.overallScore}/10`,
       `${call.score.leadQuality?.score || '-'}/10`,
-      call.score.leadQuality?.recommendedAction?.replace(/-/g, ' ') || '-',
+      (call.score.leadQuality?.recommendedAction || '-').replace(/-/g, ' '),
       call.score.callContext?.type || '-',
     ]),
-    styles: { fontSize: 7 },
-    headStyles: { fillColor: [59, 130, 246] },
+    styles: {
+      fontSize: 7,
+      cellPadding: 2,
+    },
+    headStyles: {
+      fillColor: COLORS.dark,
+      textColor: [255, 255, 255],
+      fontSize: 8,
+    },
+    alternateRowStyles: {
+      fillColor: COLORS.light,
+    },
+    didParseCell: (data) => {
+      if (data.section === 'body') {
+        if (data.column.index === 4 || data.column.index === 5) {
+          const score = parseFloat(data.cell.text[0]);
+          if (score >= 8) data.cell.styles.textColor = COLORS.success;
+          else if (score >= 6) data.cell.styles.textColor = COLORS.warning;
+          else if (!isNaN(score)) data.cell.styles.textColor = COLORS.danger;
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    },
   });
+
+  // Add page numbers
+  addPageNumber();
 
   // Save the PDF
   doc.save(filename);
@@ -210,86 +433,259 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
 export function exportToExcel(result: AnalysisResult, filename: string = 'call-analysis-report.xlsx') {
   const workbook = XLSX.utils.book_new();
 
-  // Summary Sheet
-  const summaryData = [
-    ['NWH Call Analysis Report'],
-    [`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`],
-    [],
+  // ============================================
+  // DASHBOARD SHEET
+  // ============================================
+  const dashboardData = [
+    ['NWH CALL ANALYSIS REPORT'],
+    [''],
+    ['Generated:', new Date().toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    })],
+    [''],
+    ['═══════════════════════════════════════'],
     ['EXECUTIVE SUMMARY'],
+    ['═══════════════════════════════════════'],
+    [''],
+    ['Metric', 'Value'],
     ['Total Calls Analyzed', result.overallStats.totalCalls],
-    ['Average Rep Performance Score', result.overallStats.averageScore],
-    ['Average Lead Quality Score', result.overallStats.averageLeadScore || 0],
-    [],
-    ['LEAD QUALITY BREAKDOWN'],
-    ['Hot Leads (9-10)', result.overallStats.hotLeads || 0],
-    ['Qualified Leads (7-8)', result.overallStats.qualifiedLeads || 0],
-    ['Red Flag Calls', result.overallStats.redFlagCalls || 0],
-    [],
+    ['Average Rep Performance', `${result.overallStats.averageScore}/10`],
+    ['Average Lead Quality', `${result.overallStats.averageLeadScore || 0}/10`],
+    [''],
+    ['═══════════════════════════════════════'],
+    ['LEAD BREAKDOWN'],
+    ['═══════════════════════════════════════'],
+    [''],
+    ['Category', 'Count', 'Description'],
+    ['Hot Leads (9-10)', result.overallStats.hotLeads || 0, 'Call within 1 hour'],
+    ['Qualified Leads (7-8)', result.overallStats.qualifiedLeads || 0, 'Follow up within 24 hours'],
+    ['Red Flag Calls', result.overallStats.redFlagCalls || 0, 'Requires attention'],
+    [''],
+    ['═══════════════════════════════════════'],
     ['TOP PERFORMERS'],
-    ['Top Performer', result.overallStats.topPerformer],
-    ['Needs Improvement', result.overallStats.needsImprovement],
+    ['═══════════════════════════════════════'],
+    [''],
+    ['Best Rep', result.overallStats.topPerformer],
+    ['Needs Coaching', result.overallStats.needsImprovement],
   ];
-  const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-  XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
 
-  // Rep Performance Sheet
-  const repHeaders = ['Rep Name', 'Total Calls', 'Rep Score', 'Lead Score', 'Hot Leads', 'Qualified', 'Trend', 'Strengths', 'Weaknesses', 'Coaching Insights'];
-  const repData = result.repSummaries.map(rep => [
+  const dashboardSheet = XLSX.utils.aoa_to_sheet(dashboardData);
+
+  // Set column widths
+  dashboardSheet['!cols'] = [
+    { wch: 25 },
+    { wch: 20 },
+    { wch: 30 },
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, dashboardSheet, 'Dashboard');
+
+  // ============================================
+  // REP LEADERBOARD SHEET
+  // ============================================
+  const repHeaders = [
+    'Rank',
+    'Rep Name',
+    'Total Calls',
+    'Rep Score',
+    'Lead Score',
+    'Hot Leads',
+    'Qualified Leads',
+    'Trend',
+    'Top Strengths',
+    'Key Improvements',
+    'Coaching Focus',
+  ];
+
+  const repData = result.repSummaries.map((rep, i) => [
+    i + 1,
     rep.repName,
     rep.totalCalls,
     rep.averageScore,
     rep.averageLeadScore || 0,
     rep.hotLeads || 0,
     rep.qualifiedLeads || 0,
-    rep.trend,
-    rep.strengths.join('; '),
-    rep.weaknesses.join('; '),
-    rep.coachingInsights.join('; '),
+    rep.trend.charAt(0).toUpperCase() + rep.trend.slice(1),
+    rep.strengths.slice(0, 2).join(' | '),
+    rep.weaknesses.slice(0, 2).join(' | '),
+    rep.coachingInsights.slice(0, 2).join(' | '),
   ]);
-  const repSheet = XLSX.utils.aoa_to_sheet([repHeaders, ...repData]);
-  XLSX.utils.book_append_sheet(workbook, repSheet, 'Rep Performance');
 
-  // Individual Calls Sheet
+  const repSheet = XLSX.utils.aoa_to_sheet([repHeaders, ...repData]);
+
+  repSheet['!cols'] = [
+    { wch: 6 },   // Rank
+    { wch: 15 },  // Name
+    { wch: 10 },  // Calls
+    { wch: 10 },  // Rep Score
+    { wch: 10 },  // Lead Score
+    { wch: 10 },  // Hot
+    { wch: 12 },  // Qualified
+    { wch: 12 },  // Trend
+    { wch: 40 },  // Strengths
+    { wch: 40 },  // Improvements
+    { wch: 40 },  // Coaching
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, repSheet, 'Rep Leaderboard');
+
+  // ============================================
+  // HOT LEADS SHEET (Priority)
+  // ============================================
+  const hotLeadHeaders = [
+    'Priority',
+    'Lead Score',
+    'Caller Name',
+    'Company',
+    'Location',
+    'Phone',
+    'Need Summary',
+    'Rep',
+    'Date',
+    'Recommended Action',
+    'Timeline',
+  ];
+
+  const hotLeadData = result.calls
+    .filter(c => (c.score.leadQuality?.score || 0) >= 7)
+    .sort((a, b) => (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0))
+    .map((call, i) => [
+      i + 1,
+      call.score.leadQuality?.score || 0,
+      call.score.callerInfo?.name || 'Unknown',
+      call.score.callerInfo?.company || '',
+      call.score.callerInfo?.location || '',
+      call.score.callerInfo?.phone || call.record.phoneNumber || '',
+      call.score.callerInfo?.needSummary || '',
+      call.score.repInfo?.name || call.record.repName,
+      call.record.callDate,
+      (call.score.leadQuality?.recommendedAction || '').replace(/-/g, ' '),
+      call.score.leadQuality?.timeline || '',
+    ]);
+
+  const hotLeadSheet = XLSX.utils.aoa_to_sheet([hotLeadHeaders, ...hotLeadData]);
+
+  hotLeadSheet['!cols'] = [
+    { wch: 8 },   // Priority
+    { wch: 10 },  // Score
+    { wch: 20 },  // Name
+    { wch: 25 },  // Company
+    { wch: 20 },  // Location
+    { wch: 15 },  // Phone
+    { wch: 40 },  // Need
+    { wch: 12 },  // Rep
+    { wch: 18 },  // Date
+    { wch: 18 },  // Action
+    { wch: 15 },  // Timeline
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, hotLeadSheet, 'Hot Leads');
+
+  // ============================================
+  // ALL CALLS SHEET
+  // ============================================
   const callHeaders = [
     'Rep Name',
+    'Caller Name',
+    'Company',
+    'Location',
+    'Caller Phone',
+    'Need Summary',
     'Date',
     'Duration',
-    'Overall Rep Score',
-    'Lead Quality Score',
-    'Lead Timeline',
+    'Call Type',
+    'Rep Score',
+    'Lead Score',
+    'Recommended Action',
+    'Timeline',
     'Has Authority',
     'Need Identified',
     'Service Fit',
-    'Recommended Action',
-    'Red Flags',
-    'Call Type',
-    'Objective Clarity',
-    'Info Gathering',
-    'Info Quality',
-    'Tone',
-    'Listening Ratio',
-    'Conversation Guidance',
-    'Objection Handling',
-    'Next Steps',
-    'Call Closing',
     'Strengths',
     'Weaknesses',
     'Coaching Insights',
-    'Internal Alerts',
+    'Red Flags',
   ];
+
   const callData = result.calls.map(call => [
-    call.record.repName,
+    call.score.repInfo?.name || call.record.repName,
+    call.score.callerInfo?.name || 'Unknown',
+    call.score.callerInfo?.company || '',
+    call.score.callerInfo?.location || '',
+    call.score.callerInfo?.phone || call.record.phoneNumber || '',
+    call.score.callerInfo?.needSummary || '',
     call.record.callDate,
     call.record.callDuration,
+    call.score.callContext?.type || '',
     call.score.overallScore,
     call.score.leadQuality?.score || '',
+    (call.score.leadQuality?.recommendedAction || '').replace(/-/g, ' '),
     call.score.leadQuality?.timeline || '',
     call.score.leadQuality?.hasAuthority ? 'Yes' : 'No',
     call.score.leadQuality?.needIdentified ? 'Yes' : 'No',
     call.score.leadQuality?.serviceFit || '',
-    call.score.leadQuality?.recommendedAction || '',
-    (call.score.leadQuality?.redFlags || []).join('; '),
-    call.score.callContext?.type || '',
+    (call.score.strengths || []).join(' | '),
+    (call.score.weaknesses || []).join(' | '),
+    (call.score.coachingInsights || []).join(' | '),
+    (call.score.leadQuality?.redFlags || []).join(' | '),
+  ]);
+
+  const callSheet = XLSX.utils.aoa_to_sheet([callHeaders, ...callData]);
+
+  callSheet['!cols'] = [
+    { wch: 12 },  // Rep
+    { wch: 18 },  // Caller
+    { wch: 20 },  // Company
+    { wch: 18 },  // Location
+    { wch: 15 },  // Phone
+    { wch: 35 },  // Need
+    { wch: 18 },  // Date
+    { wch: 10 },  // Duration
+    { wch: 10 },  // Type
+    { wch: 10 },  // Rep Score
+    { wch: 10 },  // Lead Score
+    { wch: 18 },  // Action
+    { wch: 15 },  // Timeline
+    { wch: 12 },  // Authority
+    { wch: 12 },  // Need ID
+    { wch: 12 },  // Fit
+    { wch: 40 },  // Strengths
+    { wch: 40 },  // Weaknesses
+    { wch: 40 },  // Coaching
+    { wch: 30 },  // Red Flags
+  ];
+
+  // Freeze header row
+  callSheet['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+  XLSX.utils.book_append_sheet(workbook, callSheet, 'All Calls');
+
+  // ============================================
+  // SCORE BREAKDOWN SHEET
+  // ============================================
+  const scoreHeaders = [
+    'Rep',
+    'Caller',
+    'Date',
+    'Overall',
+    'Lead Quality',
+    'Objective Clarity',
+    'Info Gathering',
+    'Info Quality',
+    'Tone',
+    'Listening',
+    'Guidance',
+    'Objection Handling',
+    'Next Steps',
+    'Closing',
+  ];
+
+  const scoreData = result.calls.map(call => [
+    call.score.repInfo?.name || call.record.repName,
+    call.score.callerInfo?.name || 'Unknown',
+    call.record.callDate,
+    call.score.overallScore,
+    call.score.leadQuality?.score || '',
     call.score.objectiveClarity?.score || '',
     call.score.informationGathering?.score || '',
     call.score.informationQuality?.score || '',
@@ -299,72 +695,58 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     call.score.objectionHandling?.score || '',
     call.score.nextSteps?.score || '',
     call.score.callClosing?.score || '',
-    (call.score.strengths || []).join('; '),
-    (call.score.weaknesses || []).join('; '),
-    (call.score.coachingInsights || []).join('; '),
-    (call.score.internalAlerts || []).join('; '),
   ]);
-  const callSheet = XLSX.utils.aoa_to_sheet([callHeaders, ...callData]);
-  XLSX.utils.book_append_sheet(workbook, callSheet, 'Individual Calls');
 
-  // Hot Leads Sheet - Priority follow-ups
-  const hotLeadHeaders = ['Rep', 'Date', 'Lead Score', 'Timeline', 'Has Authority', 'Need', 'Service Fit', 'Action', 'Notes'];
-  const hotLeadData = result.calls
-    .filter(c => (c.score.leadQuality?.score || 0) >= 7)
-    .sort((a, b) => (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0))
-    .map(call => [
-      call.record.repName,
+  const scoreSheet = XLSX.utils.aoa_to_sheet([scoreHeaders, ...scoreData]);
+
+  scoreSheet['!cols'] = [
+    { wch: 12 },  // Rep
+    { wch: 18 },  // Caller
+    { wch: 18 },  // Date
+    { wch: 8 },   // Overall
+    { wch: 12 },  // Lead
+    { wch: 14 },  // Clarity
+    { wch: 14 },  // Gathering
+    { wch: 12 },  // Quality
+    { wch: 8 },   // Tone
+    { wch: 10 },  // Listening
+    { wch: 10 },  // Guidance
+    { wch: 16 },  // Objection
+    { wch: 12 },  // Next Steps
+    { wch: 10 },  // Closing
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, scoreSheet, 'Score Breakdown');
+
+  // ============================================
+  // RED FLAGS SHEET (if any)
+  // ============================================
+  const redFlagCalls = result.calls.filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0);
+
+  if (redFlagCalls.length > 0) {
+    const redFlagHeaders = ['Rep', 'Caller', 'Date', 'Lead Score', 'Red Flags', 'Notes'];
+    const redFlagData = redFlagCalls.map(call => [
+      call.score.repInfo?.name || call.record.repName,
+      call.score.callerInfo?.name || 'Unknown',
       call.record.callDate,
       call.score.leadQuality?.score || '',
-      call.score.leadQuality?.timeline || '',
-      call.score.leadQuality?.hasAuthority ? 'Yes' : 'No',
-      call.score.leadQuality?.needIdentified ? 'Yes' : 'No',
-      call.score.leadQuality?.serviceFit || '',
-      call.score.leadQuality?.recommendedAction || '',
+      (call.score.leadQuality?.redFlags || []).join(' | '),
       call.score.leadQuality?.notes || '',
     ]);
-  const hotLeadSheet = XLSX.utils.aoa_to_sheet([hotLeadHeaders, ...hotLeadData]);
-  XLSX.utils.book_append_sheet(workbook, hotLeadSheet, 'Hot & Qualified Leads');
 
-  // Red Flags Sheet
-  const redFlagHeaders = ['Rep', 'Date', 'Lead Score', 'Red Flags', 'Notes'];
-  const redFlagData = result.calls
-    .filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0)
-    .map(call => [
-      call.record.repName,
-      call.record.callDate,
-      call.score.leadQuality?.score || '',
-      (call.score.leadQuality?.redFlags || []).join('; '),
-      call.score.leadQuality?.notes || '',
-    ]);
-  if (redFlagData.length > 0) {
     const redFlagSheet = XLSX.utils.aoa_to_sheet([redFlagHeaders, ...redFlagData]);
-    XLSX.utils.book_append_sheet(workbook, redFlagSheet, 'Red Flag Calls');
-  }
 
-  // Detailed Notes Sheet
-  const notesHeaders = ['Rep Name', 'Date', 'Category', 'Score', 'Notes'];
-  const notesData: (string | number)[][] = [];
-  result.calls.forEach(call => {
-    const categories = [
-      { name: 'Lead Quality', score: call.score.leadQuality?.score || '', notes: call.score.leadQuality?.notes || '' },
-      { name: 'Call Context', score: call.score.callContext?.score || '', notes: call.score.callContext?.notes || '' },
-      { name: 'Objective Clarity', score: call.score.objectiveClarity?.score || '', notes: call.score.objectiveClarity?.notes || '' },
-      { name: 'Information Gathering', score: call.score.informationGathering?.score || '', notes: call.score.informationGathering?.notes || '' },
-      { name: 'Information Quality', score: call.score.informationQuality?.score || '', notes: call.score.informationQuality?.notes || '' },
-      { name: 'Tone & Professionalism', score: call.score.toneProfessionalism?.score || '', notes: call.score.toneProfessionalism?.notes || '' },
-      { name: 'Listening Ratio', score: call.score.listeningRatio?.score || '', notes: `${call.score.listeningRatio?.estimatedRatio || ''} - ${call.score.listeningRatio?.notes || ''}` },
-      { name: 'Conversation Guidance', score: call.score.conversationGuidance?.score || '', notes: call.score.conversationGuidance?.notes || '' },
-      { name: 'Objection Handling', score: call.score.objectionHandling?.score || '', notes: call.score.objectionHandling?.notes || '' },
-      { name: 'Next Steps', score: call.score.nextSteps?.score || '', notes: call.score.nextSteps?.notes || '' },
-      { name: 'Call Closing', score: call.score.callClosing?.score || '', notes: call.score.callClosing?.notes || '' },
+    redFlagSheet['!cols'] = [
+      { wch: 12 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 10 },
+      { wch: 50 },
+      { wch: 40 },
     ];
-    categories.forEach(cat => {
-      notesData.push([call.record.repName, call.record.callDate, cat.name, cat.score, cat.notes]);
-    });
-  });
-  const notesSheet = XLSX.utils.aoa_to_sheet([notesHeaders, ...notesData]);
-  XLSX.utils.book_append_sheet(workbook, notesSheet, 'Detailed Notes');
+
+    XLSX.utils.book_append_sheet(workbook, redFlagSheet, 'Red Flags');
+  }
 
   // Save the workbook
   XLSX.writeFile(workbook, filename);
