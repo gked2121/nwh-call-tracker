@@ -77,6 +77,9 @@ export default function Home() {
   // Dashboard view state
   const [activeView, setActiveView] = useState<'dashboard' | 'calls'>('dashboard');
 
+  // Welcome modal state
+  const [showWelcome, setShowWelcome] = useState(false);
+
   // Multi-layer progress
   const [currentPhase, setCurrentPhase] = useState<'bronze' | 'silver' | 'gold' | null>(null);
   const [extractionStats, setExtractionStats] = useState<{
@@ -90,13 +93,24 @@ export default function Home() {
   useEffect(() => {
     const savedAnthropicKey = localStorage.getItem("anthropic_api_key") || "";
     const savedOpenaiKey = localStorage.getItem("openai_api_key") || "";
+    const hasSeenWelcome = localStorage.getItem("nwh_seen_welcome");
+
     setAnthropicKey(savedAnthropicKey);
     setOpenaiKey(savedOpenaiKey);
 
-    if (!savedAnthropicKey && !savedOpenaiKey) {
-      setShowSettings(true);
+    // Show welcome modal on first visit or if no API keys
+    if (!hasSeenWelcome || (!savedAnthropicKey && !savedOpenaiKey)) {
+      setShowWelcome(true);
     }
   }, []);
+
+  const dismissWelcome = () => {
+    localStorage.setItem("nwh_seen_welcome", "true");
+    setShowWelcome(false);
+    if (!anthropicKey && !openaiKey) {
+      setShowSettings(true);
+    }
+  };
 
   const saveApiKeys = () => {
     localStorage.setItem("anthropic_api_key", anthropicKey);
@@ -307,6 +321,135 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50">
+      {/* Welcome Modal */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300 overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-300 my-8">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white text-center">
+              <div className="inline-flex p-4 bg-white/20 rounded-2xl backdrop-blur mb-4">
+                <BarChart3 className="w-10 h-10" />
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Welcome to NWH Call Analysis</h1>
+              <p className="text-blue-100">AI-powered sales call scoring and lead discovery</p>
+            </div>
+
+            {/* Content */}
+            <div className="p-8 space-y-6">
+              {/* How it works steps */}
+              <div className="space-y-4">
+                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-indigo-500" />
+                  How It Works
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <Key className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-500 mb-1">Step 1</p>
+                    <p className="text-sm font-semibold text-slate-800">Add API Key</p>
+                  </div>
+                  <div className="text-center p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <Upload className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-500 mb-1">Step 2</p>
+                    <p className="text-sm font-semibold text-slate-800">Upload Excel</p>
+                  </div>
+                  <div className="text-center p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <Brain className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-500 mb-1">Step 3</p>
+                    <p className="text-sm font-semibold text-slate-800">AI Analyzes</p>
+                  </div>
+                  <div className="text-center p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <Download className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-500 mb-1">Step 4</p>
+                    <p className="text-sm font-semibold text-slate-800">Export Report</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* API Key info */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-amber-100 rounded-lg">
+                    <Key className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-amber-800 mb-1">API Key Required</p>
+                    <p className="text-sm text-amber-700 mb-3">
+                      You&apos;ll need an Anthropic (Claude) or OpenAI API key to analyze calls.
+                      {(anthropicKey || openaiKey) && (
+                        <span className="text-emerald-600 font-medium"> You have a saved key!</span>
+                      )}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href="https://console.anthropic.com/settings/keys"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors font-medium"
+                      >
+                        <Zap className="w-4 h-4" />
+                        Get Anthropic Key
+                        <ArrowUpRight className="w-3 h-3" />
+                      </a>
+                      <a
+                        href="https://platform.openai.com/api-keys"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors font-medium"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Get OpenAI Key
+                        <ArrowUpRight className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Privacy note */}
+              <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="p-2 bg-slate-200 rounded-lg">
+                  <AlertCircle className="w-5 h-5 text-slate-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800 mb-1">No Data Storage</p>
+                  <p className="text-sm text-slate-600">
+                    This app runs entirely in your browser. Your call data and API keys are never stored on any server.
+                    Each analysis is independent—upload, analyze, export, done.
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <Button
+                onClick={dismissWelcome}
+                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-500/25 rounded-xl gap-2"
+              >
+                {(anthropicKey || openaiKey) ? (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Continue to App
+                  </>
+                ) : (
+                  <>
+                    <Key className="w-5 h-5" />
+                    Get Started — Set Up API Key
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Premium Dark Header */}
       <header className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white sticky top-0 z-20 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 py-5">
@@ -343,7 +486,7 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Settings Panel */}
-        <div className={`transition-all duration-300 ease-out overflow-hidden ${showSettings ? "max-h-[600px] opacity-100 mb-8" : "max-h-0 opacity-0 mb-0"}`}>
+        <div className={`transition-all duration-300 ease-out ${showSettings ? "max-h-[800px] overflow-y-auto opacity-100 mb-8" : "max-h-0 overflow-hidden opacity-0 mb-0"}`}>
           <Card className="border-0 shadow-xl bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-3 text-xl">
@@ -500,7 +643,7 @@ export default function Home() {
                   <span>Scoring methodology</span>
                   <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
                 </summary>
-                <div className="mt-4 space-y-4">
+                <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2">
                   {/* Lead Score */}
                   <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 p-4 rounded-xl border border-orange-500/30">
                     <div className="flex items-center gap-2 mb-4">
