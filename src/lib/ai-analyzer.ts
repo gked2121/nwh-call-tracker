@@ -172,7 +172,7 @@ async function analyzeWithOpenAIKey(call: CallRecord, apiKey: string): Promise<C
   const prompt = ANALYSIS_PROMPT.replace('{CALL_DATA}', callDataString);
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: 'gpt-4.1',
     max_tokens: 2000,
     messages: [{ role: 'user', content: prompt }],
     response_format: { type: 'json_object' },
@@ -394,7 +394,7 @@ async function analyzeWithOpenAISilver(silver: SilverCall, apiKey: string): Prom
   const prompt = buildGoldPrompt(silver);
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: 'gpt-4.1',
     max_tokens: 2000,
     messages: [{ role: 'user', content: prompt }],
     response_format: { type: 'json_object' },

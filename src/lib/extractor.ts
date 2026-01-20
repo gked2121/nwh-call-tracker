@@ -217,7 +217,7 @@ export async function triageCall(
     if (model === 'openai') {
       const openai = new OpenAI({ apiKey });
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-mini',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
@@ -283,7 +283,7 @@ export async function extractCallData(
     if (model === 'openai') {
       const openai = new OpenAI({ apiKey });
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-mini',
         max_tokens: 500,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
@@ -378,7 +378,7 @@ export async function processBronzeCall(
     callContext,
     validation,
     extractedAt: new Date().toISOString(),
-    extractionModel: model === 'openai' ? 'gpt-4o-mini' : 'claude-3-5-haiku-20241022',
+    extractionModel: model === 'openai' ? 'gpt-4.1-mini' : 'claude-3-5-haiku-20241022',
   };
 }
 

@@ -448,7 +448,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {result && (
                 <span className="text-sm px-4 py-2 bg-white/10 rounded-full text-slate-300 backdrop-blur">
-                  {result.calls[0]?.aiModel === "claude" ? "Claude Opus 4.5" : "GPT-4o"}
+                  {result.calls[0]?.aiModel === "claude" ? "Claude Opus 4.5" : "GPT-4.1"}
                 </span>
               )}
               <Button
@@ -768,38 +768,59 @@ export default function Home() {
 
         {/* Upload Section */}
         {!result && (
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <Card className="shadow-2xl border-0 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white">
-                <h2 className="text-2xl font-bold mb-2">Upload Call Log</h2>
-                <p className="text-blue-100 mb-4">
-                  Upload your CallRail export to analyze sales performance and discover hot leads
-                </p>
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>Score every call</span>
+              {/* Header */}
+              <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-10 text-white overflow-hidden">
+                {/* Background pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 left-0 w-40 h-40 bg-blue-500 rounded-full blur-3xl" />
+                  <div className="absolute bottom-0 right-0 w-60 h-60 bg-purple-500 rounded-full blur-3xl" />
+                </div>
+
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 bg-blue-500 rounded-xl">
+                      <BarChart3 className="w-7 h-7" />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-bold">Analyze Your Calls</h2>
+                      <p className="text-slate-400">AI-powered sales intelligence in minutes</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Star className="w-4 h-4" />
-                    <span>Find hot leads</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Users className="w-4 h-4" />
-                    <span>Rank your reps</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Bot className="w-4 h-4" />
-                    <span>AI coaching insights</span>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                    <div className="bg-white/5 backdrop-blur rounded-xl p-4 border border-white/10">
+                      <Target className="w-6 h-6 text-blue-400 mb-2" />
+                      <p className="font-semibold">Score Reps</p>
+                      <p className="text-xs text-slate-400 mt-1">1-10 performance rating</p>
+                    </div>
+                    <div className="bg-white/5 backdrop-blur rounded-xl p-4 border border-white/10">
+                      <Star className="w-6 h-6 text-orange-400 mb-2" />
+                      <p className="font-semibold">Find Hot Leads</p>
+                      <p className="text-xs text-slate-400 mt-1">Prioritized follow-ups</p>
+                    </div>
+                    <div className="bg-white/5 backdrop-blur rounded-xl p-4 border border-white/10">
+                      <Users className="w-6 h-6 text-emerald-400 mb-2" />
+                      <p className="font-semibold">Rank Team</p>
+                      <p className="text-xs text-slate-400 mt-1">Leaderboard insights</p>
+                    </div>
+                    <div className="bg-white/5 backdrop-blur rounded-xl p-4 border border-white/10">
+                      <MessageSquare className="w-6 h-6 text-purple-400 mb-2" />
+                      <p className="font-semibold">AI Coaching</p>
+                      <p className="text-xs text-slate-400 mt-1">Personalized tips</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <CardContent className="p-8 space-y-8">
+
+              <CardContent className="p-8 space-y-8 bg-gradient-to-b from-slate-50 to-white">
+                {/* Upload Area */}
                 <div
-                  className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+                  className={`relative border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 ${
                     file
-                      ? "border-blue-400 bg-blue-50"
-                      : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
+                      ? "border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg shadow-blue-500/10"
+                      : "border-slate-300 hover:border-blue-400 hover:bg-slate-50 hover:shadow-lg"
                   }`}
                 >
                   <input
@@ -810,77 +831,118 @@ export default function Home() {
                     id="file-upload"
                   />
                   <label htmlFor="file-upload" className="cursor-pointer block">
-                    <div className={`mx-auto w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
-                      file ? "bg-blue-100" : "bg-slate-100"
+                    <div className={`mx-auto w-24 h-24 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 ${
+                      file
+                        ? "bg-blue-500 shadow-lg shadow-blue-500/30"
+                        : "bg-slate-100 group-hover:bg-slate-200"
                     }`}>
-                      <FileSpreadsheet className={`w-10 h-10 ${file ? "text-blue-600" : "text-slate-400"}`} />
+                      <FileSpreadsheet className={`w-12 h-12 transition-colors ${file ? "text-white" : "text-slate-400"}`} />
                     </div>
                     {file ? (
-                      <div>
-                        <p className="text-xl font-semibold text-blue-700">{file.name}</p>
-                        <p className="text-slate-500 mt-2">Click to change file</p>
+                      <div className="space-y-2">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full">
+                          <CheckCircle className="w-5 h-5" />
+                          <span className="font-semibold">{file.name}</span>
+                        </div>
+                        <p className="text-slate-500 text-sm">Click to change file</p>
                       </div>
                     ) : (
                       <div>
-                        <p className="text-xl font-semibold text-slate-700">Drop your Excel file here</p>
-                        <p className="text-slate-500 mt-2">or click to browse</p>
+                        <p className="text-2xl font-bold text-slate-800 mb-2">Drop your CallRail export</p>
+                        <p className="text-slate-500">or click to browse • Excel files (.xlsx, .xls)</p>
                       </div>
                     )}
                   </label>
                 </div>
 
-                {/* File format info */}
-                <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                  <Info className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-slate-600">
-                    <p className="font-medium text-slate-700 mb-1">Expected file format</p>
-                    <p>Export your calls from CallRail with the "Full Transcription" column included. The app will automatically extract rep names, caller info, and filter out IVR/spam calls.</p>
+                {/* Two Column Layout */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Model Selection */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Bot className="w-4 h-4 text-slate-400" />
+                      AI Model
+                    </label>
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => setAiModel("claude")}
+                        className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                          aiModel === "claude"
+                            ? "border-purple-500 bg-purple-50 shadow-md"
+                            : "border-slate-200 hover:border-slate-300 bg-white"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-purple-100" : "bg-slate-100"}`}>
+                              <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-purple-600" : "text-slate-400"}`} />
+                            </div>
+                            <div>
+                              <p className={`font-semibold ${aiModel === "claude" ? "text-purple-700" : "text-slate-700"}`}>
+                                Claude Opus 4.5
+                              </p>
+                              <p className="text-xs text-slate-500">Best quality • Recommended</p>
+                            </div>
+                          </div>
+                          {aiModel === "claude" && (
+                            <CheckCircle className="w-5 h-5 text-purple-500" />
+                          )}
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setAiModel("openai")}
+                        className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                          aiModel === "openai"
+                            ? "border-emerald-500 bg-emerald-50 shadow-md"
+                            : "border-slate-200 hover:border-slate-300 bg-white"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${aiModel === "openai" ? "bg-emerald-100" : "bg-slate-100"}`}>
+                              <Bot className={`w-5 h-5 ${aiModel === "openai" ? "text-emerald-600" : "text-slate-400"}`} />
+                            </div>
+                            <div>
+                              <p className={`font-semibold ${aiModel === "openai" ? "text-emerald-700" : "text-slate-700"}`}>
+                                GPT-4.1
+                              </p>
+                              <p className="text-xs text-slate-500">Fast • 1M context window</p>
+                            </div>
+                          </div>
+                          {aiModel === "openai" && (
+                            <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          )}
+                        </div>
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-3 block">Select AI Model</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={() => setAiModel("claude")}
-                      className={`p-5 rounded-2xl border-2 text-left transition-all duration-200 ${
-                        aiModel === "claude"
-                          ? "border-purple-500 bg-purple-50 shadow-lg"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-xl ${aiModel === "claude" ? "bg-purple-100" : "bg-slate-100"}`}>
-                          <Zap className={`w-6 h-6 ${aiModel === "claude" ? "text-purple-600" : "text-slate-400"}`} />
-                        </div>
-                        <div>
-                          <p className={`font-semibold text-lg ${aiModel === "claude" ? "text-purple-700" : "text-slate-700"}`}>
-                            Claude
-                          </p>
-                          <p className="text-sm text-slate-500">Opus 4.5 (Recommended)</p>
-                        </div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setAiModel("openai")}
-                      className={`p-5 rounded-2xl border-2 text-left transition-all duration-200 ${
-                        aiModel === "openai"
-                          ? "border-emerald-500 bg-emerald-50 shadow-lg"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-xl ${aiModel === "openai" ? "bg-emerald-100" : "bg-slate-100"}`}>
-                          <Bot className={`w-6 h-6 ${aiModel === "openai" ? "text-emerald-600" : "text-slate-400"}`} />
-                        </div>
-                        <div>
-                          <p className={`font-semibold text-lg ${aiModel === "openai" ? "text-emerald-700" : "text-slate-700"}`}>
-                            OpenAI
-                          </p>
-                          <p className="text-sm text-slate-500">GPT-4o</p>
-                        </div>
-                      </div>
-                    </button>
+                  {/* File format info */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Info className="w-4 h-4 text-slate-400" />
+                      File Requirements
+                    </label>
+                    <div className="p-4 bg-slate-100 rounded-xl border border-slate-200 h-[calc(100%-32px)]">
+                      <ul className="space-y-3 text-sm text-slate-600">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span>CallRail Excel export (.xlsx or .xls)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span>Include &quot;Full Transcription&quot; column</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span>Auto-filters IVR, spam, and short calls</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span>Extracts caller names and contact info</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
