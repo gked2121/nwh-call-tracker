@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const file = formData.get('file') as File;
         const apiKey = formData.get('apiKey') as string;
+        const aiModel = (formData.get('model') as 'claude' | 'openai') || 'claude';
 
         if (!file) {
           send({ type: 'error', message: 'No file provided' });
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
         const silverCalls: SilverCall[] = await extractBatch(
           bronzeCalls,
           apiKey,
+          aiModel,
           (processed, total, call) => {
             send({
               type: 'extract_progress',

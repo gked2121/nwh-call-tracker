@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import {
   BronzeCall,
   SilverCall,
@@ -9,6 +10,8 @@ import {
   ExtractionValidation,
   CallClassification,
 } from '@/types/call';
+
+type AIModel = 'claude' | 'openai';
 
 // =============================================================================
 // PROMPTS
@@ -173,7 +176,8 @@ function validateExtraction(
 
 export async function triageCall(
   transcript: string,
-  apiKey: string
+  apiKey: string,
+  model: AIModel = 'claude'
 ): Promise<TriageResult> {
   // Quick heuristics first
   if (!transcript || transcript.trim().length < 50) {
@@ -205,26 +209,38 @@ export async function triageCall(
     };
   }
 
-  // For ambiguous cases, use Haiku
-  const anthropic = new Anthropic({ apiKey });
   const prompt = TRIAGE_PROMPT.replace('{TRANSCRIPT}', transcript.slice(0, 2000));
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 200,
-      messages: [
-        { role: 'user', content: prompt },
-        { role: 'assistant', content: '{' },
-      ],
-    });
+    let resultText: string;
 
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type');
+    if (model === 'openai') {
+      const openai = new OpenAI({ apiKey });
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+      });
+      resultText = response.choices[0].message.content || '{}';
+    } else {
+      const anthropic = new Anthropic({ apiKey });
+      const response = await anthropic.messages.create({
+        model: 'claude-3-5-haiku-20241022',
+        max_tokens: 200,
+        messages: [
+          { role: 'user', content: prompt },
+          { role: 'assistant', content: '{' },
+        ],
+      });
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type');
+      }
+      resultText = '{' + content.text;
     }
 
-    const result = JSON.parse('{' + content.text) as {
+    const result = JSON.parse(resultText) as {
       classification: CallClassification;
       confidence: number;
       reason: string;
@@ -248,10 +264,9 @@ export async function triageCall(
 
 export async function extractCallData(
   transcript: string,
-  apiKey: string
+  apiKey: string,
+  model: AIModel = 'claude'
 ): Promise<{ rep: ExtractedRep; caller: ExtractedCaller; callContext: ExtractedCallContext }> {
-  const anthropic = new Anthropic({ apiKey });
-
   // Optimize transcript - keep intro and key parts
   let optimizedTranscript = transcript;
   if (transcript.length > 6000) {
@@ -263,21 +278,35 @@ export async function extractCallData(
   const prompt = EXTRACTION_PROMPT.replace('{TRANSCRIPT}', optimizedTranscript);
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 500,
-      messages: [
-        { role: 'user', content: prompt },
-        { role: 'assistant', content: '{' },
-      ],
-    });
+    let resultText: string;
 
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type');
+    if (model === 'openai') {
+      const openai = new OpenAI({ apiKey });
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+      });
+      resultText = response.choices[0].message.content || '{}';
+    } else {
+      const anthropic = new Anthropic({ apiKey });
+      const response = await anthropic.messages.create({
+        model: 'claude-3-5-haiku-20241022',
+        max_tokens: 500,
+        messages: [
+          { role: 'user', content: prompt },
+          { role: 'assistant', content: '{' },
+        ],
+      });
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type');
+      }
+      resultText = '{' + content.text;
     }
 
-    const result = JSON.parse('{' + content.text);
+    const result = JSON.parse(resultText);
 
     // Normalize rep name
     if (result.rep?.name) {
@@ -318,12 +347,13 @@ export async function extractCallData(
 
 export async function processBronzeCall(
   bronze: BronzeCall,
-  apiKey: string
+  apiKey: string,
+  model: AIModel = 'claude'
 ): Promise<SilverCall> {
   const transcript = bronze.transcript || '';
 
   // Step 1: Triage
-  const triage = await triageCall(transcript, apiKey);
+  const triage = await triageCall(transcript, apiKey, model);
 
   // Step 2: Extract (only if valid sales call)
   let rep: ExtractedRep = { name: null, introducedProperly: false, introPattern: null };
@@ -331,7 +361,7 @@ export async function processBronzeCall(
   let callContext: ExtractedCallContext = { type: 'unknown', needSummary: '', productInterest: [], urgency: 'unknown' };
 
   if (triage.shouldAnalyze) {
-    const extracted = await extractCallData(transcript, apiKey);
+    const extracted = await extractCallData(transcript, apiKey, model);
     rep = extracted.rep;
     caller = extracted.caller;
     callContext = extracted.callContext;
@@ -348,22 +378,23 @@ export async function processBronzeCall(
     callContext,
     validation,
     extractedAt: new Date().toISOString(),
-    extractionModel: 'claude-3-5-haiku-20241022',
+    extractionModel: model === 'openai' ? 'gpt-4o-mini' : 'claude-3-5-haiku-20241022',
   };
 }
 
 export async function extractBatch(
   calls: BronzeCall[],
   apiKey: string,
+  model: AIModel = 'claude',
   onProgress?: (processed: number, total: number, call: SilverCall) => void
 ): Promise<SilverCall[]> {
   const results: SilverCall[] = [];
-  const BATCH_SIZE = 5; // Process 5 calls at a time for Haiku
+  const BATCH_SIZE = 5; // Process 5 calls at a time
 
   for (let i = 0; i < calls.length; i += BATCH_SIZE) {
     const batch = calls.slice(i, i + BATCH_SIZE);
     const batchResults = await Promise.all(
-      batch.map(call => processBronzeCall(call, apiKey))
+      batch.map(call => processBronzeCall(call, apiKey, model))
     );
 
     for (const result of batchResults) {

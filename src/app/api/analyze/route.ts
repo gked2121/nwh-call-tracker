@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
         const silverCalls = await extractBatch(
           bronzeCalls,
           apiKey,
+          aiModel,
           (processed, total, call) => {
             send({
               type: 'extract_progress',
