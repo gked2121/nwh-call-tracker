@@ -951,16 +951,22 @@ export default function Home() {
                         </li>
                       </ul>
                       <div className="mt-3 pt-3 border-t border-slate-200">
-                        <p className="text-xs font-medium text-slate-500 mb-2">Recommended Limits</p>
-                        <div className="flex flex-wrap gap-2 text-xs">
-                          <span className="px-2 py-1 bg-white rounded-md text-slate-600 border border-slate-200">
-                            <span className="font-semibold">50-100</span> calls/upload
-                          </span>
-                          <span className="px-2 py-1 bg-white rounded-md text-slate-600 border border-slate-200">
-                            <span className="font-semibold">&lt;10MB</span> file size
-                          </span>
+                        <p className="text-xs font-medium text-slate-500 mb-2">Upload Limits</p>
+                        <div className="space-y-1.5 text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-200 font-semibold">50-75 calls</span>
+                            <span className="text-slate-500">recommended</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-md border border-amber-200 font-semibold">100 calls</span>
+                            <span className="text-slate-500">max (may timeout)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-white text-slate-600 rounded-md border border-slate-200 font-semibold">&lt;10MB</span>
+                            <span className="text-slate-500">file size</span>
+                          </div>
                         </div>
-                        <p className="text-xs text-slate-400 mt-2">Larger files? Split into multiple uploads</p>
+                        <p className="text-xs text-slate-400 mt-2">More calls? Export by week or rep</p>
                       </div>
                     </div>
                   </div>
