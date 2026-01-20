@@ -18,7 +18,7 @@ import {
   CheckCircle,
   ChevronDown,
   ChevronUp,
-  Sparkles,
+  Bot,
   Download,
   FileText,
   Table,
@@ -33,7 +33,7 @@ import {
   Building,
   Clock,
   PhoneCall,
-  Flame,
+  Star,
   LayoutDashboard,
   List,
   PieChart,
@@ -323,69 +323,64 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50">
       {/* Welcome Modal */}
       {showWelcome && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300 overflow-y-auto">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-300 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full overflow-hidden my-8">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white text-center">
-              <div className="inline-flex p-4 bg-white/20 rounded-2xl backdrop-blur mb-4">
-                <BarChart3 className="w-10 h-10" />
+            <div className="bg-slate-900 p-6 text-white">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-slate-800 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-blue-400" />
+                </div>
+                <h1 className="text-xl font-semibold">NWH Call Analysis</h1>
               </div>
-              <h1 className="text-3xl font-bold mb-2">Welcome to NWH Call Analysis</h1>
-              <p className="text-blue-100">AI-powered sales call scoring and lead discovery</p>
+              <p className="text-slate-400 text-sm">Analyze sales call transcripts to score rep performance and identify qualified leads</p>
             </div>
 
             {/* Content */}
-            <div className="p-8 space-y-6">
+            <div className="p-6 space-y-5">
               {/* How it works steps */}
-              <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-indigo-500" />
+              <div className="space-y-3">
+                <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wide">
                   How It Works
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-slate-50 rounded-xl">
-                    <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                      <Key className="w-5 h-5 text-amber-600" />
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Key className="w-4 h-4 text-slate-600" />
                     </div>
-                    <p className="text-xs font-medium text-slate-500 mb-1">Step 1</p>
-                    <p className="text-sm font-semibold text-slate-800">Add API Key</p>
+                    <p className="text-xs text-slate-500">1. Add Key</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-xl">
-                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                      <Upload className="w-5 h-5 text-blue-600" />
+                  <div className="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Upload className="w-4 h-4 text-slate-600" />
                     </div>
-                    <p className="text-xs font-medium text-slate-500 mb-1">Step 2</p>
-                    <p className="text-sm font-semibold text-slate-800">Upload Excel</p>
+                    <p className="text-xs text-slate-500">2. Upload</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-xl">
-                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                      <Brain className="w-5 h-5 text-purple-600" />
+                  <div className="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Brain className="w-4 h-4 text-slate-600" />
                     </div>
-                    <p className="text-xs font-medium text-slate-500 mb-1">Step 3</p>
-                    <p className="text-sm font-semibold text-slate-800">AI Analyzes</p>
+                    <p className="text-xs text-slate-500">3. Analyze</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-xl">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                      <Download className="w-5 h-5 text-emerald-600" />
+                  <div className="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Download className="w-4 h-4 text-slate-600" />
                     </div>
-                    <p className="text-xs font-medium text-slate-500 mb-1">Step 4</p>
-                    <p className="text-sm font-semibold text-slate-800">Export Report</p>
+                    <p className="text-xs text-slate-500">4. Export</p>
                   </div>
                 </div>
               </div>
 
               {/* API Key info */}
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-amber-100 rounded-lg">
-                    <Key className="w-5 h-5 text-amber-600" />
-                  </div>
+                  <Key className="w-5 h-5 text-slate-500 mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-semibold text-amber-800 mb-1">API Key Required</p>
-                    <p className="text-sm text-amber-700 mb-3">
-                      You&apos;ll need an Anthropic (Claude) or OpenAI API key to analyze calls.
+                    <p className="font-medium text-slate-800 mb-1">API Key Required</p>
+                    <p className="text-sm text-slate-600 mb-3">
+                      You&apos;ll need an Anthropic or OpenAI API key.
                       {(anthropicKey || openaiKey) && (
-                        <span className="text-emerald-600 font-medium"> You have a saved key!</span>
+                        <span className="text-emerald-600 ml-1">Key saved.</span>
                       )}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -393,20 +388,18 @@ export default function Home() {
                         href="https://console.anthropic.com/settings/keys"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors font-medium"
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-slate-200 text-slate-700 rounded hover:bg-slate-300 transition-colors"
                       >
-                        <Zap className="w-4 h-4" />
-                        Get Anthropic Key
+                        Anthropic Console
                         <ArrowUpRight className="w-3 h-3" />
                       </a>
                       <a
                         href="https://platform.openai.com/api-keys"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors font-medium"
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-slate-200 text-slate-700 rounded hover:bg-slate-300 transition-colors"
                       >
-                        <Sparkles className="w-4 h-4" />
-                        Get OpenAI Key
+                        OpenAI Platform
                         <ArrowUpRight className="w-3 h-3" />
                       </a>
                     </div>
@@ -415,54 +408,38 @@ export default function Home() {
               </div>
 
               {/* Privacy note */}
-              <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <div className="p-2 bg-slate-200 rounded-lg">
-                  <AlertCircle className="w-5 h-5 text-slate-600" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-800 mb-1">No Data Storage</p>
-                  <p className="text-sm text-slate-600">
-                    This app runs entirely in your browser. Your call data and API keys are never stored on any server.
-                    Each analysis is independent—upload, analyze, export, done.
-                  </p>
-                </div>
+              <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <AlertCircle className="w-4 h-4 text-slate-400 mt-0.5" />
+                <p className="text-xs text-slate-500">
+                  Your data stays in your browser. API keys are stored locally and sent directly to AI providers.
+                </p>
               </div>
 
               {/* CTA Button */}
               <Button
                 onClick={dismissWelcome}
-                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-500/25 rounded-xl gap-2"
+                className="w-full h-11 font-medium bg-slate-900 hover:bg-slate-800 rounded-lg"
               >
-                {(anthropicKey || openaiKey) ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    Continue to App
-                  </>
-                ) : (
-                  <>
-                    <Key className="w-5 h-5" />
-                    Get Started — Set Up API Key
-                  </>
-                )}
+                {(anthropicKey || openaiKey) ? "Continue" : "Get Started"}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Premium Dark Header */}
-      <header className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white sticky top-0 z-20 shadow-xl">
-        <div className="max-w-7xl mx-auto px-6 py-5">
+      {/* Professional Header */}
+      <header className="bg-slate-900 text-white sticky top-0 z-20 shadow-md border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/30">
-                <BarChart3 className="w-7 h-7 text-white" />
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-slate-800 rounded-lg border border-slate-700">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">
+                <h1 className="text-xl font-semibold tracking-tight">
                   NWH Call Analysis
                 </h1>
-                <p className="text-sm text-slate-400">AI-Powered Sales Intelligence</p>
+                <p className="text-xs text-slate-500">Sales Performance Analytics</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -486,151 +463,132 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Settings Panel */}
-        <div className={`transition-all duration-300 ease-out ${showSettings ? "max-h-[800px] overflow-y-auto opacity-100 mb-8" : "max-h-0 overflow-hidden opacity-0 mb-0"}`}>
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 bg-amber-500/20 rounded-lg">
-                  <Key className="w-5 h-5 text-amber-400" />
-                </div>
+        <div className={`transition-all duration-200 ${showSettings ? "max-h-[800px] overflow-y-auto opacity-100 mb-6" : "max-h-0 overflow-hidden opacity-0 mb-0"}`}>
+          <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="pb-3 bg-slate-50 border-b border-slate-100">
+              <CardTitle className="flex items-center gap-2 text-base font-medium text-slate-800">
+                <Key className="w-4 h-4 text-slate-500" />
                 API Configuration
               </CardTitle>
-              <CardDescription className="text-slate-400">
-                Enter your API keys to enable AI analysis. Keys are stored locally in your browser only and sent directly to AI providers over HTTPS. Never stored on our servers.
+              <CardDescription className="text-slate-500 text-sm">
+                Keys are stored locally in your browser and sent directly to AI providers.
               </CardDescription>
-              <div className="flex flex-wrap gap-3 mt-3">
+              <div className="flex flex-wrap gap-2 mt-2">
                 <a
                   href="https://console.anthropic.com/settings/keys"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm px-3 py-1.5 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-slate-100 text-slate-600 rounded hover:bg-slate-200 transition-colors"
                 >
-                  <Zap className="w-4 h-4" />
-                  Get Anthropic Key
+                  Anthropic Console
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
                 <a
                   href="https://platform.openai.com/api-keys"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm px-3 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-lg hover:bg-emerald-500/30 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-slate-100 text-slate-600 rounded hover:bg-slate-200 transition-colors"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  Get OpenAI Key
+                  OpenAI Platform
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-purple-400" />
-                    Anthropic API Key (Claude)
+            <CardContent className="space-y-5 pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">
+                    Anthropic API Key
                   </label>
-                  <div className="relative group">
+                  <div className="relative">
                     <input
                       type={showAnthropicKey ? "text" : "password"}
                       value={anthropicKey}
                       onChange={(e) => setAnthropicKey(e.target.value)}
                       placeholder="sk-ant-..."
-                      className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-slate-600 rounded-xl text-sm transition-all duration-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-slate-700 text-white placeholder-slate-500 group-hover:border-slate-500"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400"
                     />
                     <button
                       type="button"
                       onClick={() => setShowAnthropicKey(!showAnthropicKey)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     >
-                      {showAnthropicKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showAnthropicKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {anthropicKey && (
-                    <p className="text-xs text-emerald-400 flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" /> Key saved
+                    <p className="text-xs text-emerald-600 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> Saved
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-emerald-400" />
-                    OpenAI API Key (GPT-4o)
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700">
+                    OpenAI API Key
                   </label>
-                  <div className="relative group">
+                  <div className="relative">
                     <input
                       type={showOpenaiKey ? "text" : "password"}
                       value={openaiKey}
                       onChange={(e) => setOpenaiKey(e.target.value)}
                       placeholder="sk-..."
-                      className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-slate-600 rounded-xl text-sm transition-all duration-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-slate-700 text-white placeholder-slate-500 group-hover:border-slate-500"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400"
                     />
                     <button
                       type="button"
                       onClick={() => setShowOpenaiKey(!showOpenaiKey)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     >
-                      {showOpenaiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showOpenaiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {openaiKey && (
-                    <p className="text-xs text-emerald-400 flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" /> Key saved
+                    <p className="text-xs text-emerald-600 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> Saved
                     </p>
                   )}
                 </div>
               </div>
 
               {/* Cost Estimate */}
-              <div className="p-4 bg-slate-700/50 rounded-xl border border-slate-600">
-                <p className="text-sm font-medium text-slate-300 mb-2">Estimated Cost per Analysis</p>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="text-2xl font-bold text-slate-100">~$0.001</p>
-                    <p className="text-xs text-slate-400">per call (extraction)</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-slate-100">~$0.02</p>
-                    <p className="text-xs text-slate-400">per call (analysis)</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-emerald-400">~$1-2</p>
-                    <p className="text-xs text-slate-400">for 50 calls total</p>
-                  </div>
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <p className="text-xs font-medium text-slate-500 mb-2">Estimated Cost</p>
+                <div className="flex items-center gap-4 text-sm text-slate-600">
+                  <span>~$0.001/call extraction</span>
+                  <span className="text-slate-300">•</span>
+                  <span>~$0.02/call analysis</span>
+                  <span className="text-slate-300">•</span>
+                  <span className="text-slate-800 font-medium">~$1-2 for 50 calls</span>
                 </div>
               </div>
 
               {/* How It Works */}
-              <details className="group pt-4 border-t border-slate-700">
-                <summary className="text-sm cursor-pointer text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
-                  <Layers className="w-4 h-4" />
-                  <span>How it works</span>
-                  <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
+              <details className="group pt-3 border-t border-slate-200">
+                <summary className="text-xs cursor-pointer text-slate-500 hover:text-slate-700 flex items-center gap-2">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>Processing Pipeline</span>
+                  <ChevronDown className="w-3.5 h-3.5 ml-auto transition-transform group-open:rotate-180" />
                 </summary>
-                <div className="mt-4 space-y-3">
-                  <div className="flex items-start gap-4 p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
-                    <div className="p-2 bg-amber-500/20 rounded-lg">
-                      <FileSpreadsheet className="w-5 h-5 text-amber-400" />
-                    </div>
+                <div className="mt-3 space-y-2 text-sm">
+                  <div className="flex items-start gap-3 p-2 bg-slate-50 rounded border border-slate-100">
+                    <FileSpreadsheet className="w-4 h-4 text-slate-400 mt-0.5" />
                     <div>
-                      <p className="font-medium text-amber-300">1. Parse Excel</p>
-                      <p className="text-sm text-slate-400">Upload your CallRail export. We extract transcripts, timestamps, and call metadata.</p>
+                      <p className="font-medium text-slate-700">1. Parse Excel</p>
+                      <p className="text-xs text-slate-500">Extract transcripts and metadata from CallRail export</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4 p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <Zap className="w-5 h-5 text-blue-400" />
-                    </div>
+                  <div className="flex items-start gap-3 p-2 bg-slate-50 rounded border border-slate-100">
+                    <Zap className="w-4 h-4 text-slate-400 mt-0.5" />
                     <div>
-                      <p className="font-medium text-blue-300">2. Smart Extraction (Haiku)</p>
-                      <p className="text-sm text-slate-400">AI identifies rep names, caller info, and filters out IVR/spam calls. ~$0.001/call</p>
+                      <p className="font-medium text-slate-700">2. Extract Contacts (Haiku/GPT-4o-mini)</p>
+                      <p className="text-xs text-slate-500">Identify rep names, caller info, filter IVR/spam</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4 p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <Brain className="w-5 h-5 text-purple-400" />
-                    </div>
+                  <div className="flex items-start gap-3 p-2 bg-slate-50 rounded border border-slate-100">
+                    <Brain className="w-4 h-4 text-slate-400 mt-0.5" />
                     <div>
-                      <p className="font-medium text-purple-300">3. Deep Analysis (Opus 4.5)</p>
-                      <p className="text-sm text-slate-400">Advanced AI scores rep performance, lead quality, and generates coaching insights. ~$0.02/call</p>
+                      <p className="font-medium text-slate-700">3. Analyze (Opus 4.5/GPT-4o)</p>
+                      <p className="text-xs text-slate-500">Score performance, qualify leads, generate coaching insights</p>
                     </div>
                   </div>
                 </div>
@@ -647,7 +605,7 @@ export default function Home() {
                   {/* Lead Score */}
                   <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 p-4 rounded-xl border border-orange-500/30">
                     <div className="flex items-center gap-2 mb-4">
-                      <Flame className="w-5 h-5 text-orange-400" />
+                      <Star className="w-5 h-5 text-orange-400" />
                       <p className="font-semibold text-white">Lead Quality Score (1-10)</p>
                     </div>
                     <p className="text-sm text-slate-300 mb-3">Measures how likely the caller is to become a paying customer:</p>
@@ -771,7 +729,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-blue-400" />
+                          <Bot className="w-4 h-4 text-blue-400" />
                           <span className="text-sm text-slate-300">Conversation Guidance</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -811,7 +769,7 @@ export default function Home() {
                     <span>Score every call</span>
                   </div>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Flame className="w-4 h-4" />
+                    <Star className="w-4 h-4" />
                     <span>Find hot leads</span>
                   </div>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
@@ -819,7 +777,7 @@ export default function Home() {
                     <span>Rank your reps</span>
                   </div>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Sparkles className="w-4 h-4" />
+                    <Bot className="w-4 h-4" />
                     <span>AI coaching insights</span>
                   </div>
                 </div>
@@ -901,7 +859,7 @@ export default function Home() {
                     >
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-xl ${aiModel === "openai" ? "bg-emerald-100" : "bg-slate-100"}`}>
-                          <Sparkles className={`w-6 h-6 ${aiModel === "openai" ? "text-emerald-600" : "text-slate-400"}`} />
+                          <Bot className={`w-6 h-6 ${aiModel === "openai" ? "text-emerald-600" : "text-slate-400"}`} />
                         </div>
                         <div>
                           <p className={`font-semibold text-lg ${aiModel === "openai" ? "text-emerald-700" : "text-slate-700"}`}>
@@ -958,7 +916,7 @@ export default function Home() {
                           ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-400 ring-offset-2'
                           : 'bg-slate-200 text-slate-500'
                       }`}>
-                        <Sparkles className="w-4 h-4" />
+                        <Bot className="w-4 h-4" />
                         <span className="text-sm font-semibold">Analyze</span>
                       </div>
                     </div>
@@ -1192,7 +1150,7 @@ export default function Home() {
                       <p className="text-4xl font-bold text-orange-700">{result.overallStats.hotLeads || 0}</p>
                     </div>
                     <div className="p-3 bg-orange-100 rounded-xl group-hover:scale-110 transition-transform">
-                      <Flame className="w-6 h-6 text-orange-600" />
+                      <Star className="w-6 h-6 text-orange-600" />
                     </div>
                   </div>
                 </CardContent>
@@ -1220,7 +1178,7 @@ export default function Home() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-white/20 rounded-xl backdrop-blur">
-                      <Flame className="w-8 h-8" />
+                      <Star className="w-8 h-8" />
                     </div>
                     <div>
                       <h3 className="text-xl font-bold">{priorityCalls.length} calls need immediate follow-up</h3>
@@ -1231,7 +1189,7 @@ export default function Home() {
                     onClick={() => setActiveView('calls')}
                     className="bg-white text-orange-600 hover:bg-orange-50 font-semibold rounded-xl shadow-lg gap-2 px-6"
                   >
-                    <Flame className="w-4 h-4" />
+                    <Star className="w-4 h-4" />
                     View Hot Leads
                     <ArrowUpRight className="w-4 h-4" />
                   </Button>
@@ -1442,7 +1400,7 @@ export default function Home() {
                               </td>
                               <td className="text-center py-4 px-4">
                                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                                  <Flame className="w-3 h-3" /> {rep.hotLeads}
+                                  <Star className="w-3 h-3" /> {rep.hotLeads}
                                 </span>
                               </td>
                               <td className="text-center py-4 px-4">
@@ -1515,7 +1473,7 @@ export default function Home() {
                   <CardHeader className="flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="flex items-center gap-2">
-                        <Flame className="w-5 h-5 text-red-500" />
+                        <Star className="w-5 h-5 text-red-500" />
                         Hot Leads Requiring Action
                       </CardTitle>
                       <CardDescription>Highest priority calls that need immediate follow-up</CardDescription>
@@ -1757,7 +1715,7 @@ export default function Home() {
                             </div>
                             <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
                               <h5 className="font-semibold text-purple-700 mb-2 flex items-center gap-2">
-                                <Sparkles className="w-4 h-4" /> Coaching
+                                <Bot className="w-4 h-4" /> Coaching
                               </h5>
                               <ul className="space-y-1 text-sm text-slate-600">
                                 {(call.score.coachingInsights || []).map((c, i) => (
