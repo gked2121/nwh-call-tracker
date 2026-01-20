@@ -387,7 +387,7 @@ export default function Home() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <a
-                        href="https://console.anthropic.com/settings/keys"
+                        href="https://platform.claude.com/settings/keys"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium"
@@ -481,7 +481,7 @@ export default function Home() {
               </CardDescription>
               <div className="flex flex-wrap gap-2 mt-3">
                 <a
-                  href="https://console.anthropic.com/settings/keys"
+                  href="https://platform.claude.com/settings/keys"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
