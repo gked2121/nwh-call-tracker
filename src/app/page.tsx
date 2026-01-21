@@ -51,6 +51,74 @@ import {
   Info,
 } from "lucide-react";
 import { exportToPDF, exportToExcel } from "@/lib/export-utils";
+import { RepSummary } from "@/types/call";
+
+// Helper function to build result from collected calls (fallback if complete event fails to parse)
+function buildResultFromCalls(calls: AnalyzedCall[]): AnalysisResult {
+  // Generate rep summaries
+  const repMap = new Map<string, AnalyzedCall[]>();
+  for (const call of calls) {
+    const repName = call.score.repInfo?.name || call.record.repName;
+    if (!repMap.has(repName)) {
+      repMap.set(repName, []);
+    }
+    repMap.get(repName)!.push(call);
+  }
+
+  const repSummaries: RepSummary[] = [];
+  for (const [repName, repCalls] of repMap.entries()) {
+    const scores = repCalls.map(c => c.score.overallScore);
+    const leadScores = repCalls.map(c => c.score.leadQuality?.score || 0);
+    const averageScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const averageLeadScore = leadScores.reduce((a, b) => a + b, 0) / leadScores.length;
+
+    const strengthCounts = new Map<string, number>();
+    const weaknessCounts = new Map<string, number>();
+    for (const call of repCalls) {
+      for (const s of call.score.strengths || []) {
+        strengthCounts.set(s, (strengthCounts.get(s) || 0) + 1);
+      }
+      for (const w of call.score.weaknesses || []) {
+        weaknessCounts.set(w, (weaknessCounts.get(w) || 0) + 1);
+      }
+    }
+
+    repSummaries.push({
+      repName,
+      totalCalls: repCalls.length,
+      averageScore: Math.round(averageScore * 10) / 10,
+      averageLeadScore: Math.round(averageLeadScore * 10) / 10,
+      strengths: [...strengthCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([s]) => s),
+      weaknesses: [...weaknessCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([w]) => w),
+      coachingInsights: [],
+      callScores: scores,
+      leadScores: leadScores,
+      trend: 'stable' as const,
+      hotLeads: leadScores.filter(s => s >= 9).length,
+      qualifiedLeads: leadScores.filter(s => s >= 7 && s < 9).length,
+    });
+  }
+  repSummaries.sort((a, b) => b.averageScore - a.averageScore);
+
+  // Calculate overall stats
+  const allScores = calls.map(c => c.score.overallScore);
+  const allLeadScores = calls.map(c => c.score.leadQuality?.score || 0);
+  const overallStats = {
+    totalCalls: calls.length,
+    averageScore: allScores.length > 0 ? Math.round((allScores.reduce((a, b) => a + b, 0) / allScores.length) * 10) / 10 : 0,
+    averageLeadScore: allLeadScores.length > 0 ? Math.round((allLeadScores.reduce((a, b) => a + b, 0) / allLeadScores.length) * 10) / 10 : 0,
+    topPerformer: repSummaries[0]?.repName || 'N/A',
+    needsImprovement: repSummaries[repSummaries.length - 1]?.repName || 'N/A',
+    hotLeads: allLeadScores.filter(s => s >= 9).length,
+    qualifiedLeads: allLeadScores.filter(s => s >= 7 && s < 9).length,
+    redFlagCalls: calls.filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0).length,
+    totalInFile: calls.length,
+    ivrCalls: 0,
+    spamCalls: 0,
+  };
+
+  return { calls, repSummaries, overallStats };
+}
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -168,6 +236,8 @@ export default function Home() {
       const decoder = new TextDecoder();
       let buffer = "";
       let finalResult: AnalysisResult | null = null;
+      let serverError: string | null = null;
+      const collectedCalls: AnalyzedCall[] = [];
 
       const processLine = (line: string) => {
         if (!line.startsWith("data: ")) return;
@@ -202,6 +272,8 @@ export default function Home() {
             setProgress(45);
           } else if (data.type === "call_complete") {
             setProcessedCalls(data.processed);
+            // Collect calls for fallback result building
+            collectedCalls.push(data.call);
             setLiveResults((prev) => [...prev, data.call]);
             const pct = Math.round(45 + (data.processed / data.total) * 50);
             setProgress(pct);
@@ -212,15 +284,15 @@ export default function Home() {
             setProgress(pct);
             setProgressMessage(`Analyzing ${data.processed}/${data.total} calls (1 error)...`);
           } else if (data.type === "complete") {
-            // Store result in local variable to ensure it's captured
+            console.log('Received complete event, result:', data.result ? 'present' : 'missing');
             finalResult = data.result;
             setProgress(100);
             setProgressMessage("Complete!");
           } else if (data.type === "error") {
-            throw new Error(data.message);
+            serverError = data.message;
           }
         } catch (parseErr) {
-          console.error('Failed to parse SSE message:', line, parseErr);
+          console.error('Failed to parse SSE message:', line.substring(0, 200), parseErr);
         }
       };
 
@@ -245,11 +317,25 @@ export default function Home() {
         }
       }
 
-      // Set result AFTER all processing is done
+      // Check for server error
+      if (serverError) {
+        throw new Error(serverError);
+      }
+
+      // Set result - use finalResult if available, otherwise build from collected calls
       if (finalResult) {
+        console.log('Setting result from complete event');
         setResult(finalResult);
+      } else if (collectedCalls.length > 0) {
+        // Fallback: build result from collected call_complete events
+        console.log('Building result from collected calls (fallback)');
+        const fallbackResult = buildResultFromCalls(collectedCalls);
+        setResult(fallbackResult);
+      } else {
+        throw new Error("Analysis completed but no results received");
       }
     } catch (err) {
+      console.error('Analysis error:', err);
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
