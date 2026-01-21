@@ -178,50 +178,75 @@ export default function Home() {
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {
-            const data = JSON.parse(line.slice(6));
+            try {
+              const data = JSON.parse(line.slice(6));
 
-            // Multi-layer progress events
-            if (data.type === "status") {
-              setCurrentPhase(data.phase);
-              setProgressMessage(data.message);
-            } else if (data.type === "bronze_complete") {
-              setProgress(10);
-              setProgressMessage(`Found ${data.count} calls in file`);
-            } else if (data.type === "extract_progress") {
-              const pct = Math.round(10 + (data.processed / data.total) * 30);
-              setProgress(pct);
-              setProgressMessage(`Extracting: ${data.processed}/${data.total} (${data.repName || 'Unknown rep'})`);
-            } else if (data.type === "silver_complete") {
-              setExtractionStats({
-                totalCalls: data.totalCalls,
-                validSales: data.validSales,
-                skipped: data.skipped,
-                uniqueReps: data.uniqueReps,
-              });
-              setProgress(40);
-              setProgressMessage(`Extraction complete: ${data.validSales} sales calls, ${data.uniqueReps?.length || 0} reps`);
-            } else if (data.type === "start") {
-              setCurrentPhase('gold');
-              setTotalCalls(data.totalCalls);
-              setProgressMessage(`Analyzing ${data.totalCalls} calls with AI...`);
-              setProgress(45);
-            } else if (data.type === "call_complete") {
-              setProcessedCalls(data.processed);
-              setLiveResults((prev) => [...prev, data.call]);
-              const pct = Math.round(45 + (data.processed / data.total) * 50);
-              setProgress(pct);
-              setProgressMessage(`Analyzing ${data.processed}/${data.total} calls...`);
-            } else if (data.type === "call_error") {
-              setProcessedCalls(data.processed);
-              const pct = Math.round(45 + (data.processed / data.total) * 50);
-              setProgress(pct);
-              setProgressMessage(`Analyzing ${data.processed}/${data.total} calls (1 error)...`);
-            } else if (data.type === "complete") {
-              setResult(data.result);
-              setProgress(100);
-              setProgressMessage("Complete!");
-            } else if (data.type === "error") {
-              throw new Error(data.message);
+              // Multi-layer progress events
+              if (data.type === "status") {
+                setCurrentPhase(data.phase);
+                setProgressMessage(data.message);
+              } else if (data.type === "bronze_complete") {
+                setProgress(10);
+                setProgressMessage(`Found ${data.count} calls in file`);
+              } else if (data.type === "extract_progress") {
+                const pct = Math.round(10 + (data.processed / data.total) * 30);
+                setProgress(pct);
+                setProgressMessage(`Extracting: ${data.processed}/${data.total} (${data.repName || 'Unknown rep'})`);
+              } else if (data.type === "silver_complete") {
+                setExtractionStats({
+                  totalCalls: data.totalCalls,
+                  validSales: data.validSales,
+                  skipped: data.skipped,
+                  uniqueReps: data.uniqueReps,
+                });
+                setProgress(40);
+                setProgressMessage(`Extraction complete: ${data.validSales} sales calls, ${data.uniqueReps?.length || 0} reps`);
+              } else if (data.type === "start") {
+                setCurrentPhase('gold');
+                setTotalCalls(data.totalCalls);
+                setProgressMessage(`Analyzing ${data.totalCalls} calls with AI...`);
+                setProgress(45);
+              } else if (data.type === "call_complete") {
+                setProcessedCalls(data.processed);
+                setLiveResults((prev) => [...prev, data.call]);
+                const pct = Math.round(45 + (data.processed / data.total) * 50);
+                setProgress(pct);
+                setProgressMessage(`Analyzing ${data.processed}/${data.total} calls...`);
+              } else if (data.type === "call_error") {
+                setProcessedCalls(data.processed);
+                const pct = Math.round(45 + (data.processed / data.total) * 50);
+                setProgress(pct);
+                setProgressMessage(`Analyzing ${data.processed}/${data.total} calls (1 error)...`);
+              } else if (data.type === "complete") {
+                setResult(data.result);
+                setProgress(100);
+                setProgressMessage("Complete!");
+              } else if (data.type === "error") {
+                throw new Error(data.message);
+              }
+            } catch (parseErr) {
+              console.error('Failed to parse SSE message:', line, parseErr);
+            }
+          }
+        }
+      }
+
+      // Process any remaining data in buffer after stream ends
+      if (buffer.trim()) {
+        const remainingLines = buffer.split("\n\n");
+        for (const line of remainingLines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.type === "complete") {
+                setResult(data.result);
+                setProgress(100);
+                setProgressMessage("Complete!");
+              } else if (data.type === "error") {
+                throw new Error(data.message);
+              }
+            } catch (parseErr) {
+              console.error('Failed to parse remaining SSE message:', line, parseErr);
             }
           }
         }
