@@ -363,11 +363,11 @@ export default function Home() {
       case "follow-24hr":
         return "bg-gradient-to-r from-orange-400 to-amber-400 text-white";
       case "nurture-48-72hr":
-        return "bg-gradient-to-r from-yellow-400 to-lime-400 text-slate-800";
+        return "bg-gradient-to-r from-yellow-400 to-lime-400 text-[#1B254B]";
       case "email-only":
-        return "bg-slate-200 text-slate-600";
+        return "bg-slate-200 text-[#718096]";
       default:
-        return "bg-slate-100 text-slate-500";
+        return "bg-slate-100 text-[#a0aec0]";
     }
   };
 
@@ -429,20 +429,20 @@ export default function Home() {
   const scoreDist = getScoreDistribution();
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-[#F4F7FE]">
       {/* Welcome Modal */}
       {showWelcome && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden my-8">
             {/* Header */}
-            <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white border-b-4 border-blue-500">
+            <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white border-b-4 border-[#7551FF]">
               <div className="flex items-center gap-4 mb-3">
-                <div className="p-3 bg-blue-500 rounded-xl">
+                <div className="p-3 bg-[#7551FF] rounded-xl">
                   <BarChart3 className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold">NWH Call Analysis</h1>
-                  <p className="text-blue-200 text-sm">AI-Powered Sales Intelligence</p>
+                  <p className="text-[#A195FD] text-sm">AI-Powered Sales Intelligence</p>
                 </div>
               </div>
             </div>
@@ -451,33 +451,33 @@ export default function Home() {
             <div className="p-6 space-y-6">
               {/* How it works steps */}
               <div className="space-y-3">
-                <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+                <h2 className="text-sm font-semibold text-[#1B254B] uppercase tracking-wide">
                   How It Works
                 </h2>
                 <div className="grid grid-cols-4 gap-3">
-                  <div className="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <div className="text-center p-4 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                    <div className="w-10 h-10 bg-[#7551FF] rounded-xl flex items-center justify-center mx-auto mb-2">
                       <Key className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-xs font-medium text-slate-700">1. Add Key</p>
+                    <p className="text-xs font-medium text-[#1B254B]">1. Add Key</p>
                   </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <div className="text-center p-4 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                    <div className="w-10 h-10 bg-[#7551FF] rounded-xl flex items-center justify-center mx-auto mb-2">
                       <Upload className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-xs font-medium text-slate-700">2. Upload</p>
+                    <p className="text-xs font-medium text-[#1B254B]">2. Upload</p>
                   </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <div className="text-center p-4 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                    <div className="w-10 h-10 bg-[#7551FF] rounded-xl flex items-center justify-center mx-auto mb-2">
                       <Brain className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-xs font-medium text-slate-700">3. Analyze</p>
+                    <p className="text-xs font-medium text-[#1B254B]">3. Analyze</p>
                   </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <div className="text-center p-4 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                    <div className="w-10 h-10 bg-[#7551FF] rounded-xl flex items-center justify-center mx-auto mb-2">
                       <Download className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-xs font-medium text-slate-700">4. Export</p>
+                    <p className="text-xs font-medium text-[#1B254B]">4. Export</p>
                   </div>
                 </div>
               </div>
@@ -487,8 +487,8 @@ export default function Home() {
                 <div className="flex items-start gap-3">
                   <Key className="w-5 h-5 text-amber-600 mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-semibold text-slate-800 mb-1">API Key Required</p>
-                    <p className="text-sm text-slate-600 mb-2">
+                    <p className="font-semibold text-[#1B254B] mb-1">API Key Required</p>
+                    <p className="text-sm text-[#718096] mb-2">
                       You&apos;ll need an Anthropic or OpenAI API key.
                       {(anthropicKey || openaiKey) && (
                         <span className="text-emerald-600 font-medium ml-1">✓ Key saved</span>
@@ -499,7 +499,7 @@ export default function Home() {
                         href="https://platform.claude.com/settings/keys"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium"
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-[#e2e8f0] text-[#1B254B] rounded-lg hover:bg-[#F4F7FE] transition-colors font-medium"
                       >
                         Anthropic Console
                         <ArrowUpRight className="w-3 h-3" />
@@ -508,7 +508,7 @@ export default function Home() {
                         href="https://platform.openai.com/api-keys"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium"
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-[#e2e8f0] text-[#1B254B] rounded-lg hover:bg-[#F4F7FE] transition-colors font-medium"
                       >
                         OpenAI Platform
                         <ArrowUpRight className="w-3 h-3" />
@@ -527,9 +527,9 @@ export default function Home() {
               </div>
 
               {/* Privacy note */}
-              <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <AlertCircle className="w-4 h-4 text-blue-500 mt-0.5" />
-                <p className="text-sm text-slate-600">
+              <div className="flex items-start gap-3 p-4 bg-[#F4F7FE] rounded-xl border border-[#e2e8f0]">
+                <AlertCircle className="w-4 h-4 text-[#422AFB] mt-0.5" />
+                <p className="text-sm text-[#718096]">
                   Your data stays in your browser. API keys are stored locally and sent directly to AI providers.
                 </p>
               </div>
@@ -537,7 +537,7 @@ export default function Home() {
               {/* CTA Button */}
               <Button
                 onClick={dismissWelcome}
-                className="w-full h-12 font-semibold bg-blue-600 hover:bg-blue-700 rounded-xl text-base"
+                className="w-full h-12 font-semibold bg-[#422AFB] hover:bg-[#3311DB] rounded-xl text-base"
               >
                 {(anthropicKey || openaiKey) ? "Continue to Dashboard" : "Get Started"}
               </Button>
@@ -547,24 +547,24 @@ export default function Home() {
       )}
 
       {/* Professional Header */}
-      <header className="bg-gradient-to-r from-slate-900 to-slate-800 text-white sticky top-0 z-20 shadow-lg">
-        <div className="h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500" />
+      <header className="bg-gradient-to-r from-[#0b1437] to-[#1B254B] text-white sticky top-0 z-20 shadow-lg">
+        <div className="h-1 bg-gradient-to-r from-[#7551FF] via-[#422AFB] to-[#7551FF]" />
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-2.5 bg-blue-500 rounded-xl shadow-lg shadow-blue-500/25">
+              <div className="p-2.5 bg-gradient-to-br from-[#7551FF] to-[#422AFB] rounded-xl shadow-lg shadow-[#422AFB]/25">
                 <BarChart3 className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-tight">
                   NWH Call Analysis
                 </h1>
-                <p className="text-sm text-blue-200">Sales Performance Analytics</p>
+                <p className="text-sm text-[#A195FD]">Sales Performance Analytics</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               {result && (
-                <span className="text-sm px-4 py-2 bg-white/10 rounded-full text-slate-300 backdrop-blur">
+                <span className="text-sm px-4 py-2 bg-white/10 rounded-full text-[#cbd5e0] backdrop-blur">
                   {result.calls[0]?.aiModel === "claude" ? "Claude Sonnet 4.5" : "GPT-4.1"}
                 </span>
               )}
@@ -586,14 +586,14 @@ export default function Home() {
         <div className={`transition-all duration-300 ${showSettings ? "max-h-[800px] overflow-y-auto opacity-100 mb-6" : "max-h-0 overflow-hidden opacity-0 mb-0"}`}>
           <Card className="border-0 shadow-xl bg-white overflow-hidden rounded-2xl">
             <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-400" />
-            <CardHeader className="pb-4 bg-slate-50 border-b border-slate-100">
-              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-slate-800">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Key className="w-5 h-5 text-blue-600" />
+            <CardHeader className="pb-4 bg-[#F4F7FE] border-b border-[#edf2f7]">
+              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-[#1B254B]">
+                <div className="p-2 bg-[#C0B8FE] rounded-lg">
+                  <Key className="w-5 h-5 text-[#3311DB]" />
                 </div>
                 API Configuration
               </CardTitle>
-              <CardDescription className="text-slate-600">
+              <CardDescription className="text-[#718096]">
                 Keys are stored locally in your browser and sent directly to AI providers.
               </CardDescription>
               <div className="flex flex-wrap gap-2 mt-3">
@@ -601,7 +601,7 @@ export default function Home() {
                   href="https://platform.claude.com/settings/keys"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[#E9E3FF] text-[#2111A5] rounded-lg hover:bg-[#C0B8FE] transition-colors font-medium"
                 >
                   Anthropic Console
                   <ArrowUpRight className="w-3 h-3" />
@@ -620,7 +620,7 @@ export default function Home() {
             <CardContent className="space-y-5 pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">
+                  <label className="text-sm font-medium text-[#1B254B]">
                     Anthropic API Key
                   </label>
                   <div className="relative">
@@ -629,12 +629,12 @@ export default function Home() {
                       value={anthropicKey}
                       onChange={(e) => setAnthropicKey(e.target.value)}
                       placeholder="sk-ant-..."
-                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-[#7551FF] placeholder-slate-400"
                     />
                     <button
                       type="button"
                       onClick={() => setShowAnthropicKey(!showAnthropicKey)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#718096]"
                     >
                       {showAnthropicKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -646,7 +646,7 @@ export default function Home() {
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">
+                  <label className="text-sm font-medium text-[#1B254B]">
                     OpenAI API Key
                   </label>
                   <div className="relative">
@@ -655,12 +655,12 @@ export default function Home() {
                       value={openaiKey}
                       onChange={(e) => setOpenaiKey(e.target.value)}
                       placeholder="sk-..."
-                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-[#7551FF] placeholder-slate-400"
                     />
                     <button
                       type="button"
                       onClick={() => setShowOpenaiKey(!showOpenaiKey)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#718096]"
                     >
                       {showOpenaiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -674,25 +674,25 @@ export default function Home() {
               </div>
 
               {/* Cost Estimate */}
-              <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Estimated Cost</p>
+              <div className="p-4 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                <p className="text-sm font-semibold text-[#1B254B] mb-2">Estimated Cost</p>
                 <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
-                  <span className="text-slate-600">~$0.001/call extraction</span>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-slate-600">~$0.01/call analysis</span>
-                  <span className="text-slate-300">•</span>
+                  <span className="text-[#718096]">~$0.001/call extraction</span>
+                  <span className="text-[#cbd5e0]">•</span>
+                  <span className="text-[#718096]">~$0.01/call analysis</span>
+                  <span className="text-[#cbd5e0]">•</span>
                   <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-semibold">~$1 for 50 calls</span>
                 </div>
-                <div className="text-xs text-blue-700 bg-blue-100/50 rounded-lg p-2.5">
+                <div className="text-xs text-[#2111A5] bg-[#C0B8FE]/50 rounded-lg p-2.5">
                   <p className="font-medium mb-1">💡 Getting Started:</p>
-                  <p className="text-blue-600">Add <span className="font-semibold">$5-10</span> credits to your API account. This covers analyzing <span className="font-semibold">200-500 calls</span> and will last for weeks of typical use. Your API key won&apos;t work until billing is set up.</p>
+                  <p className="text-[#3311DB]">Add <span className="font-semibold">$5-10</span> credits to your API account. This covers analyzing <span className="font-semibold">200-500 calls</span> and will last for weeks of typical use. Your API key won&apos;t work until billing is set up.</p>
                 </div>
               </div>
 
               {/* How It Works */}
-              <details className="group pt-4 border-t border-slate-200">
-                <summary className="text-sm font-medium cursor-pointer text-slate-600 hover:text-slate-800 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-blue-500" />
+              <details className="group pt-4 border-t border-[#e2e8f0]">
+                <summary className="text-sm font-medium cursor-pointer text-[#718096] hover:text-[#1B254B] flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#422AFB]" />
                   <span>Processing Pipeline</span>
                   <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
                 </summary>
@@ -702,35 +702,35 @@ export default function Home() {
                       <FileSpreadsheet className="w-4 h-4 text-amber-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-800">1. Parse Excel</p>
-                      <p className="text-sm text-slate-600">Extract transcripts and metadata from CallRail export</p>
+                      <p className="font-semibold text-[#1B254B]">1. Parse Excel</p>
+                      <p className="text-sm text-[#718096]">Extract transcripts and metadata from CallRail export</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="p-1.5 bg-blue-100 rounded-lg">
-                      <Zap className="w-4 h-4 text-blue-600" />
+                  <div className="flex items-start gap-3 p-3 bg-[#E9E3FF] rounded-xl border border-[#E9E3FF]">
+                    <div className="p-1.5 bg-[#C0B8FE] rounded-lg">
+                      <Zap className="w-4 h-4 text-[#3311DB]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-800">2. Extract Contacts</p>
-                      <p className="text-sm text-slate-600">AI identifies rep names, caller info, and filters IVR/spam</p>
+                      <p className="font-semibold text-[#1B254B]">2. Extract Contacts</p>
+                      <p className="text-sm text-[#718096]">AI identifies rep names, caller info, and filters IVR/spam</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100">
-                    <div className="p-1.5 bg-purple-100 rounded-lg">
-                      <Brain className="w-4 h-4 text-purple-600" />
+                  <div className="flex items-start gap-3 p-3 bg-[#E9E3FF] rounded-xl border border-purple-100">
+                    <div className="p-1.5 bg-[#E9E3FF] rounded-lg">
+                      <Brain className="w-4 h-4 text-[#422AFB]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-800">3. Deep Analysis</p>
-                      <p className="text-sm text-slate-600">Score performance, qualify leads, generate coaching insights</p>
+                      <p className="font-semibold text-[#1B254B]">3. Deep Analysis</p>
+                      <p className="text-sm text-[#718096]">Score performance, qualify leads, generate coaching insights</p>
                     </div>
                   </div>
                 </div>
               </details>
 
               {/* Scoring Methodology */}
-              <details className="group pt-4 border-t border-slate-200">
-                <summary className="text-sm font-medium cursor-pointer text-slate-600 hover:text-slate-800 flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-blue-500" />
+              <details className="group pt-4 border-t border-[#e2e8f0]">
+                <summary className="text-sm font-medium cursor-pointer text-[#718096] hover:text-[#1B254B] flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-[#422AFB]" />
                   <span>Scoring Methodology</span>
                   <ChevronDown className="w-4 h-4 ml-auto transition-transform group-open:rotate-180" />
                 </summary>
@@ -739,23 +739,23 @@ export default function Home() {
                   <div className="p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl border border-orange-200">
                     <div className="flex items-center gap-2 mb-3">
                       <Star className="w-5 h-5 text-orange-500" />
-                      <p className="font-semibold text-slate-800">Lead Quality Score (1-10)</p>
+                      <p className="font-semibold text-[#1B254B]">Lead Quality Score (1-10)</p>
                     </div>
-                    <p className="text-sm text-slate-600 mb-3">Measures how likely the caller is to become a paying customer:</p>
+                    <p className="text-sm text-[#718096] mb-3">Measures how likely the caller is to become a paying customer:</p>
                     <div className="grid grid-cols-2 gap-3 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <div className="flex items-center gap-2 text-sm text-[#1B254B]">
                         <Clock className="w-4 h-4 text-orange-500" />
                         <span>Timeline to purchase</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <div className="flex items-center gap-2 text-sm text-[#1B254B]">
                         <User className="w-4 h-4 text-orange-500" />
                         <span>Decision-maker status</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <div className="flex items-center gap-2 text-sm text-[#1B254B]">
                         <Target className="w-4 h-4 text-orange-500" />
                         <span>Specific need identified</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <div className="flex items-center gap-2 text-sm text-[#1B254B]">
                         <MapPin className="w-4 h-4 text-orange-500" />
                         <span>Geographic/service fit</span>
                       </div>
@@ -766,28 +766,28 @@ export default function Home() {
                           <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/30" />
                           <span className="text-sm font-medium text-red-600">9-10: Hot Lead</span>
                         </div>
-                        <span className="text-xs text-slate-500">Call within 1 hour</span>
+                        <span className="text-xs text-[#a0aec0]">Call within 1 hour</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-orange-500" />
                           <span className="text-sm font-medium text-orange-600">7-8: Qualified</span>
                         </div>
-                        <span className="text-xs text-slate-500">Follow up in 24 hours</span>
+                        <span className="text-xs text-[#a0aec0]">Follow up in 24 hours</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-amber-500" />
                           <span className="text-sm font-medium text-amber-600">5-6: Nurture</span>
                         </div>
-                        <span className="text-xs text-slate-500">Follow up in 48-72 hours</span>
+                        <span className="text-xs text-[#a0aec0]">Follow up in 48-72 hours</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-slate-400" />
-                          <span className="text-sm font-medium text-slate-500">1-4: Low Priority</span>
+                          <span className="text-sm font-medium text-[#a0aec0]">1-4: Low Priority</span>
                         </div>
-                        <span className="text-xs text-slate-500">Email only or no follow-up</span>
+                        <span className="text-xs text-[#a0aec0]">Email only or no follow-up</span>
                       </div>
                     </div>
                   </div>
@@ -795,81 +795,81 @@ export default function Home() {
                   {/* Rep Score */}
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
                     <div className="flex items-center gap-2 mb-4">
-                      <Target className="w-5 h-5 text-blue-500" />
-                      <p className="font-semibold text-slate-800">Rep Performance Score (1-10)</p>
+                      <Target className="w-5 h-5 text-[#422AFB]" />
+                      <p className="font-semibold text-[#1B254B]">Rep Performance Score (1-10)</p>
                     </div>
-                    <p className="text-sm text-slate-600 mb-3">Weighted average of sales skills demonstrated on the call:</p>
+                    <p className="text-sm text-[#718096] mb-3">Weighted average of sales skills demonstrated on the call:</p>
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Information Gathering</span>
+                          <MessageSquare className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Information Gathering</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '15%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">15%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">15%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <ThumbsUp className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Next Steps & Closing</span>
+                          <ThumbsUp className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Next Steps & Closing</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '20%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '20%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">20%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">20%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Tone & Professionalism</span>
+                          <User className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Tone & Professionalism</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '15%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">15%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">15%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <BarChart3 className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Listening Ratio</span>
+                          <BarChart3 className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Listening Ratio</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '15%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">15%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">15%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Objection Handling</span>
+                          <AlertCircle className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Objection Handling</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '15%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '15%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">15%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">15%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-blue-100">
+                      <div className="flex items-center justify-between p-2 bg-white/70 rounded-lg border border-[#E9E3FF]">
                         <div className="flex items-center gap-2">
-                          <Bot className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-slate-700">Conversation Guidance</span>
+                          <Bot className="w-4 h-4 text-[#422AFB]" />
+                          <span className="text-sm text-[#1B254B]">Conversation Guidance</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{width: '20%'}} />
+                            <div className="h-full bg-[#7551FF] rounded-full" style={{width: '20%'}} />
                           </div>
-                          <span className="text-xs text-slate-500 w-8">20%</span>
+                          <span className="text-xs text-[#a0aec0] w-8">20%</span>
                         </div>
                       </div>
                     </div>
@@ -895,13 +895,13 @@ export default function Home() {
               <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-10 text-white overflow-hidden">
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-0 left-0 w-40 h-40 bg-blue-500 rounded-full blur-3xl" />
-                  <div className="absolute bottom-0 right-0 w-60 h-60 bg-purple-500 rounded-full blur-3xl" />
+                  <div className="absolute top-0 left-0 w-40 h-40 bg-[#7551FF] rounded-full blur-3xl" />
+                  <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#E9E3FF]0 rounded-full blur-3xl" />
                 </div>
 
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 bg-blue-500 rounded-xl">
+                    <div className="p-3 bg-[#7551FF] rounded-xl">
                       <BarChart3 className="w-7 h-7" />
                     </div>
                     <div>
@@ -941,7 +941,7 @@ export default function Home() {
                   className={`relative border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 ${
                     file
                       ? "border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg shadow-blue-500/10"
-                      : "border-slate-300 hover:border-blue-400 hover:bg-slate-50 hover:shadow-lg"
+                      : "border-slate-300 hover:border-blue-400 hover:bg-[#F4F7FE] hover:shadow-lg"
                   }`}
                 >
                   <input
@@ -954,23 +954,23 @@ export default function Home() {
                   <label htmlFor="file-upload" className="cursor-pointer block">
                     <div className={`mx-auto w-24 h-24 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 ${
                       file
-                        ? "bg-blue-500 shadow-lg shadow-blue-500/30"
+                        ? "bg-[#7551FF] shadow-lg shadow-blue-500/30"
                         : "bg-slate-100 group-hover:bg-slate-200"
                     }`}>
                       <FileSpreadsheet className={`w-12 h-12 transition-colors ${file ? "text-white" : "text-slate-400"}`} />
                     </div>
                     {file ? (
                       <div className="space-y-2">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#C0B8FE] text-[#2111A5] rounded-full">
                           <CheckCircle className="w-5 h-5" />
                           <span className="font-semibold">{file.name}</span>
                         </div>
-                        <p className="text-slate-500 text-sm">Click to change file</p>
+                        <p className="text-[#a0aec0] text-sm">Click to change file</p>
                       </div>
                     ) : (
                       <div>
-                        <p className="text-2xl font-bold text-slate-800 mb-2">Drop your CallRail export</p>
-                        <p className="text-slate-500">or click to browse • Excel files (.xlsx, .xls)</p>
+                        <p className="text-2xl font-bold text-[#1B254B] mb-2">Drop your CallRail export</p>
+                        <p className="text-[#a0aec0]">or click to browse • Excel files (.xlsx, .xls)</p>
                       </div>
                     )}
                   </label>
@@ -980,7 +980,7 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Model Selection */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <label className="text-sm font-semibold text-[#1B254B] flex items-center gap-2">
                       <Bot className="w-4 h-4 text-slate-400" />
                       AI Model
                     </label>
@@ -989,24 +989,24 @@ export default function Home() {
                         onClick={() => setAiModel("claude")}
                         className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                           aiModel === "claude"
-                            ? "border-purple-500 bg-purple-50 shadow-md"
-                            : "border-slate-200 hover:border-slate-300 bg-white"
+                            ? "border-[#7551FF] bg-[#E9E3FF] shadow-md"
+                            : "border-[#e2e8f0] hover:border-[#cbd5e0] bg-white"
                         }`}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-purple-100" : "bg-slate-100"}`}>
-                              <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-purple-600" : "text-slate-400"}`} />
+                            <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-[#E9E3FF]" : "bg-slate-100"}`}>
+                              <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-[#422AFB]" : "text-slate-400"}`} />
                             </div>
                             <div>
-                              <p className={`font-semibold ${aiModel === "claude" ? "text-purple-700" : "text-slate-700"}`}>
+                              <p className={`font-semibold ${aiModel === "claude" ? "text-[#2111A5]" : "text-[#1B254B]"}`}>
                                 Claude Sonnet 4.5
                               </p>
-                              <p className="text-xs text-slate-500">Fast & accurate • Recommended</p>
+                              <p className="text-xs text-[#a0aec0]">Fast & accurate • Recommended</p>
                             </div>
                           </div>
                           {aiModel === "claude" && (
-                            <CheckCircle className="w-5 h-5 text-purple-500" />
+                            <CheckCircle className="w-5 h-5 text-[#7551FF]" />
                           )}
                         </div>
                       </button>
@@ -1015,7 +1015,7 @@ export default function Home() {
                         className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                           aiModel === "openai"
                             ? "border-emerald-500 bg-emerald-50 shadow-md"
-                            : "border-slate-200 hover:border-slate-300 bg-white"
+                            : "border-[#e2e8f0] hover:border-[#cbd5e0] bg-white"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -1024,10 +1024,10 @@ export default function Home() {
                               <Bot className={`w-5 h-5 ${aiModel === "openai" ? "text-emerald-600" : "text-slate-400"}`} />
                             </div>
                             <div>
-                              <p className={`font-semibold ${aiModel === "openai" ? "text-emerald-700" : "text-slate-700"}`}>
+                              <p className={`font-semibold ${aiModel === "openai" ? "text-emerald-700" : "text-[#1B254B]"}`}>
                                 GPT-4.1
                               </p>
-                              <p className="text-xs text-slate-500">Fast • 1M context window</p>
+                              <p className="text-xs text-[#a0aec0]">Fast • 1M context window</p>
                             </div>
                           </div>
                           {aiModel === "openai" && (
@@ -1040,12 +1040,12 @@ export default function Home() {
 
                   {/* File format info */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <label className="text-sm font-semibold text-[#1B254B] flex items-center gap-2">
                       <Info className="w-4 h-4 text-slate-400" />
                       File Requirements
                     </label>
-                    <div className="p-4 bg-slate-100 rounded-xl border border-slate-200">
-                      <ul className="space-y-2 text-sm text-slate-600">
+                    <div className="p-4 bg-slate-100 rounded-xl border border-[#e2e8f0]">
+                      <ul className="space-y-2 text-sm text-[#718096]">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
                           <span>CallRail Excel export (.xlsx or .xls)</span>
@@ -1059,20 +1059,20 @@ export default function Home() {
                           <span>Auto-filters IVR, spam, and short calls</span>
                         </li>
                       </ul>
-                      <div className="mt-3 pt-3 border-t border-slate-200">
-                        <p className="text-xs font-medium text-slate-500 mb-2">Upload Limits</p>
+                      <div className="mt-3 pt-3 border-t border-[#e2e8f0]">
+                        <p className="text-xs font-medium text-[#a0aec0] mb-2">Upload Limits</p>
                         <div className="space-y-1.5 text-xs">
                           <div className="flex items-center gap-2">
                             <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-200 font-semibold">50-75 calls</span>
-                            <span className="text-slate-500">recommended</span>
+                            <span className="text-[#a0aec0]">recommended</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-md border border-amber-200 font-semibold">100 calls</span>
-                            <span className="text-slate-500">max (may timeout)</span>
+                            <span className="text-[#a0aec0]">max (may timeout)</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="px-2 py-1 bg-white text-slate-600 rounded-md border border-slate-200 font-semibold">&lt;10MB</span>
-                            <span className="text-slate-500">file size</span>
+                            <span className="px-2 py-1 bg-white text-[#718096] rounded-md border border-[#e2e8f0] font-semibold">&lt;10MB</span>
+                            <span className="text-[#a0aec0]">file size</span>
                           </div>
                         </div>
                         <p className="text-xs text-slate-400 mt-2">More calls? Export by week or rep</p>
@@ -1082,7 +1082,7 @@ export default function Home() {
                 </div>
 
                 {loading && (
-                  <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200">
+                  <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-[#e2e8f0]">
                     {/* Pipeline Indicator */}
                     <div className="flex items-center justify-center gap-2">
                       {/* Bronze Step */}
@@ -1091,7 +1091,7 @@ export default function Home() {
                           ? 'bg-amber-100 text-amber-700 ring-2 ring-amber-400 ring-offset-2'
                           : currentPhase === 'silver' || currentPhase === 'gold'
                             ? 'bg-amber-500 text-white'
-                            : 'bg-slate-200 text-slate-500'
+                            : 'bg-slate-200 text-[#a0aec0]'
                       }`}>
                         <FileSpreadsheet className="w-4 h-4" />
                         <span className="text-sm font-semibold">Parse</span>
@@ -1105,10 +1105,10 @@ export default function Home() {
                       {/* Silver Step */}
                       <div className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
                         currentPhase === 'silver'
-                          ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-400 ring-offset-2'
+                          ? 'bg-[#C0B8FE] text-[#2111A5] ring-2 ring-blue-400 ring-offset-2'
                           : currentPhase === 'gold'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-slate-200 text-slate-500'
+                            ? 'bg-[#7551FF] text-white'
+                            : 'bg-slate-200 text-[#a0aec0]'
                       }`}>
                         <Zap className="w-4 h-4" />
                         <span className="text-sm font-semibold">Extract</span>
@@ -1122,8 +1122,8 @@ export default function Home() {
                       {/* Gold Step */}
                       <div className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
                         currentPhase === 'gold'
-                          ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-400 ring-offset-2'
-                          : 'bg-slate-200 text-slate-500'
+                          ? 'bg-[#E9E3FF] text-[#2111A5] ring-2 ring-purple-400 ring-offset-2'
+                          : 'bg-slate-200 text-[#a0aec0]'
                       }`}>
                         <Bot className="w-4 h-4" />
                         <span className="text-sm font-semibold">Analyze</span>
@@ -1133,7 +1133,7 @@ export default function Home() {
                     {/* Progress Bar */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600 font-medium">{progressMessage}</span>
+                        <span className="text-[#718096] font-medium">{progressMessage}</span>
                         <span className="font-bold text-slate-900">{progress}%</span>
                       </div>
                       <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
@@ -1150,22 +1150,22 @@ export default function Home() {
 
                     {/* Extraction Stats */}
                     {extractionStats && (
-                      <div className="animate-slide-up grid grid-cols-4 gap-3 p-4 bg-white rounded-xl border border-slate-200">
+                      <div className="animate-slide-up grid grid-cols-4 gap-3 p-4 bg-white rounded-xl border border-[#e2e8f0]">
                         <div className="text-center">
                           <p className="text-2xl font-bold text-slate-900">{extractionStats.totalCalls}</p>
-                          <p className="text-xs text-slate-500">Total</p>
+                          <p className="text-xs text-[#a0aec0]">Total</p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-emerald-600">{extractionStats.validSales}</p>
-                          <p className="text-xs text-slate-500">Valid Sales</p>
+                          <p className="text-xs text-[#a0aec0]">Valid Sales</p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-slate-400">{extractionStats.skipped}</p>
-                          <p className="text-xs text-slate-500">Filtered</p>
+                          <p className="text-xs text-[#a0aec0]">Filtered</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-2xl font-bold text-purple-600">{extractionStats.uniqueReps.length}</p>
-                          <p className="text-xs text-slate-500">Reps Found</p>
+                          <p className="text-2xl font-bold text-[#422AFB]">{extractionStats.uniqueReps.length}</p>
+                          <p className="text-xs text-[#a0aec0]">Reps Found</p>
                         </div>
                       </div>
                     )}
@@ -1174,7 +1174,7 @@ export default function Home() {
                     {liveResults.length > 0 && (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Live Analysis</p>
+                          <p className="text-xs font-semibold text-[#a0aec0] uppercase tracking-wider">Live Analysis</p>
                           <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                             {processedCalls}/{totalCalls} complete
@@ -1184,17 +1184,17 @@ export default function Home() {
                           {liveResults.slice(-5).map((call, idx) => (
                             <div
                               key={idx}
-                              className="animate-slide-up flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 shadow-sm"
+                              className="animate-slide-up flex items-center justify-between p-3 bg-white rounded-xl border border-[#e2e8f0] shadow-sm"
                             >
                               <div className="flex items-center gap-3">
                                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-bold text-lg ${getScoreBg(call.score.leadQuality?.score || 0)} text-white shadow-lg`}>
                                   {call.score.leadQuality?.score || "-"}
                                 </div>
                                 <div>
-                                  <p className="font-semibold text-slate-800">
+                                  <p className="font-semibold text-[#1B254B]">
                                     {call.score.callerInfo?.name || "Unknown Caller"}
                                   </p>
-                                  <p className="text-xs text-slate-500">
+                                  <p className="text-xs text-[#a0aec0]">
                                     {call.score.callerInfo?.location || call.record.callDate}
                                   </p>
                                 </div>
@@ -1255,7 +1255,7 @@ export default function Home() {
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
                     activeView === 'dashboard'
                       ? 'bg-white text-slate-900 shadow-md'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'text-[#718096] hover:text-slate-900'
                   }`}
                 >
                   <LayoutDashboard className="w-4 h-4" />
@@ -1266,7 +1266,7 @@ export default function Home() {
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
                     activeView === 'calls'
                       ? 'bg-white text-slate-900 shadow-md'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'text-[#718096] hover:text-slate-900'
                   }`}
                 >
                   <List className="w-4 h-4" />
@@ -1325,11 +1325,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1">Total Calls</p>
+                      <p className="text-sm font-medium text-[#a0aec0] mb-1">Total Calls</p>
                       <p className="text-4xl font-bold text-slate-900">{result.overallStats.totalCalls}</p>
                     </div>
-                    <div className="p-3 bg-blue-100 rounded-xl group-hover:scale-110 transition-transform">
-                      <Phone className="w-6 h-6 text-blue-600" />
+                    <div className="p-3 bg-[#C0B8FE] rounded-xl group-hover:scale-110 transition-transform">
+                      <Phone className="w-6 h-6 text-[#3311DB]" />
                     </div>
                   </div>
                 </CardContent>
@@ -1340,7 +1340,7 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1">Rep Average</p>
+                      <p className="text-sm font-medium text-[#a0aec0] mb-1">Rep Average</p>
                       <p className="text-4xl font-bold text-slate-900">{result.overallStats.averageScore}<span className="text-lg text-slate-400">/10</span></p>
                     </div>
                     <div className="p-3 bg-emerald-100 rounded-xl group-hover:scale-110 transition-transform">
@@ -1370,11 +1370,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1">Sales Reps</p>
+                      <p className="text-sm font-medium text-[#a0aec0] mb-1">Sales Reps</p>
                       <p className="text-4xl font-bold text-slate-900">{result.repSummaries.length}</p>
                     </div>
-                    <div className="p-3 bg-purple-100 rounded-xl group-hover:scale-110 transition-transform">
-                      <Users className="w-6 h-6 text-purple-600" />
+                    <div className="p-3 bg-[#E9E3FF] rounded-xl group-hover:scale-110 transition-transform">
+                      <Users className="w-6 h-6 text-[#422AFB]" />
                     </div>
                   </div>
                 </CardContent>
@@ -1421,7 +1421,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-500" />
-                            <span className="text-sm text-slate-600">Hot (9-10)</span>
+                            <span className="text-sm text-[#718096]">Hot (9-10)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{leadDist.hot}</span>
@@ -1433,7 +1433,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-orange-500" />
-                            <span className="text-sm text-slate-600">Qualified (7-8)</span>
+                            <span className="text-sm text-[#718096]">Qualified (7-8)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{leadDist.qualified}</span>
@@ -1445,7 +1445,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-amber-500" />
-                            <span className="text-sm text-slate-600">Nurture (5-6)</span>
+                            <span className="text-sm text-[#718096]">Nurture (5-6)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{leadDist.nurture}</span>
@@ -1457,7 +1457,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-slate-400" />
-                            <span className="text-sm text-slate-600">Low (1-4)</span>
+                            <span className="text-sm text-[#718096]">Low (1-4)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{leadDist.low}</span>
@@ -1474,7 +1474,7 @@ export default function Home() {
                   <Card className="border-0 shadow-xl">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-lg">
-                        <Target className="w-5 h-5 text-blue-500" />
+                        <Target className="w-5 h-5 text-[#422AFB]" />
                         Rep Performance Distribution
                       </CardTitle>
                     </CardHeader>
@@ -1483,7 +1483,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                            <span className="text-sm text-slate-600">Excellent (8+)</span>
+                            <span className="text-sm text-[#718096]">Excellent (8+)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{scoreDist.excellent}</span>
@@ -1494,20 +1494,20 @@ export default function Home() {
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-blue-500" />
-                            <span className="text-sm text-slate-600">Good (6-7)</span>
+                            <div className="w-3 h-3 rounded-full bg-[#7551FF]" />
+                            <span className="text-sm text-[#718096]">Good (6-7)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{scoreDist.good}</span>
                             <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
-                              <div className="h-full bg-blue-500 rounded-full" style={{ width: `${result.calls.length ? (scoreDist.good / result.calls.length) * 100 : 0}%` }} />
+                              <div className="h-full bg-[#7551FF] rounded-full" style={{ width: `${result.calls.length ? (scoreDist.good / result.calls.length) * 100 : 0}%` }} />
                             </div>
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-amber-500" />
-                            <span className="text-sm text-slate-600">Average (4-5)</span>
+                            <span className="text-sm text-[#718096]">Average (4-5)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{scoreDist.average}</span>
@@ -1519,7 +1519,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-500" />
-                            <span className="text-sm text-slate-600">Needs Work (&lt;4)</span>
+                            <span className="text-sm text-[#718096]">Needs Work (&lt;4)</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-900">{scoreDist.poor}</span>
@@ -1536,7 +1536,7 @@ export default function Home() {
                   <Card className="border-0 shadow-xl">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-lg">
-                        <Zap className="w-5 h-5 text-purple-500" />
+                        <Zap className="w-5 h-5 text-[#7551FF]" />
                         Follow-up Actions
                       </CardTitle>
                     </CardHeader>
@@ -1554,9 +1554,9 @@ export default function Home() {
                           <span className="text-sm font-medium text-amber-700">Nurture 48-72hr</span>
                           <span className="text-xl font-bold text-amber-700">{actionDist['nurture-48-72hr'] || 0}</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
-                          <span className="text-sm font-medium text-slate-600">Email Only / None</span>
-                          <span className="text-xl font-bold text-slate-600">{(actionDist['email-only'] || 0) + (actionDist['no-follow-up'] || 0)}</span>
+                        <div className="flex items-center justify-between p-3 bg-[#F4F7FE] rounded-xl border border-[#e2e8f0]">
+                          <span className="text-sm font-medium text-[#718096]">Email Only / None</span>
+                          <span className="text-xl font-bold text-[#718096]">{(actionDist['email-only'] || 0) + (actionDist['no-follow-up'] || 0)}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -1576,23 +1576,23 @@ export default function Home() {
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="border-b border-slate-200">
-                            <th className="text-left py-3 px-4 font-semibold text-slate-600">Rep</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Calls</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Avg Score</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Lead Avg</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Hot Leads</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Qualified</th>
-                            <th className="text-center py-3 px-4 font-semibold text-slate-600">Trend</th>
+                          <tr className="border-b border-[#e2e8f0]">
+                            <th className="text-left py-3 px-4 font-semibold text-[#718096]">Rep</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Calls</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Avg Score</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Lead Avg</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Hot Leads</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Qualified</th>
+                            <th className="text-center py-3 px-4 font-semibold text-[#718096]">Trend</th>
                           </tr>
                         </thead>
                         <tbody>
                           {result.repSummaries.map((rep, idx) => (
-                            <tr key={rep.repName} className={`border-b border-slate-100 hover:bg-slate-50 ${idx === 0 ? 'bg-amber-50' : ''}`}>
+                            <tr key={rep.repName} className={`border-b border-[#edf2f7] hover:bg-[#F4F7FE] ${idx === 0 ? 'bg-amber-50' : ''}`}>
                               <td className="py-4 px-4">
                                 <div className="flex items-center gap-3">
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                                    idx === 0 ? 'bg-amber-200 text-amber-800' : 'bg-slate-100 text-slate-600'
+                                    idx === 0 ? 'bg-amber-200 text-amber-800' : 'bg-slate-100 text-[#718096]'
                                   }`}>
                                     {idx + 1}
                                   </div>
@@ -1622,7 +1622,7 @@ export default function Home() {
                                   {getTrendIcon(rep.trend)}
                                   <span className={`text-sm font-medium ${
                                     rep.trend === 'improving' ? 'text-emerald-600' :
-                                    rep.trend === 'declining' ? 'text-red-600' : 'text-slate-500'
+                                    rep.trend === 'declining' ? 'text-red-600' : 'text-[#a0aec0]'
                                   }`}>
                                     {rep.trend}
                                   </span>
@@ -1648,7 +1648,7 @@ export default function Home() {
                     <CardContent>
                       <ul className="space-y-2">
                         {[...new Set(result.repSummaries.flatMap(r => r.strengths))].slice(0, 5).map((s, i) => (
-                          <li key={i} className="flex items-start gap-2 text-slate-700">
+                          <li key={i} className="flex items-start gap-2 text-[#1B254B]">
                             <span className="mt-1 w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full flex items-center justify-center text-xs font-bold">{i + 1}</span>
                             {s}
                           </li>
@@ -1667,7 +1667,7 @@ export default function Home() {
                     <CardContent>
                       <ul className="space-y-2">
                         {[...new Set(result.repSummaries.flatMap(r => r.weaknesses))].slice(0, 5).map((w, i) => (
-                          <li key={i} className="flex items-start gap-2 text-slate-700">
+                          <li key={i} className="flex items-start gap-2 text-[#1B254B]">
                             <span className="mt-1 w-5 h-5 bg-red-200 text-red-700 rounded-full flex items-center justify-center text-xs font-bold">{i + 1}</span>
                             {w}
                           </li>
@@ -1704,12 +1704,12 @@ export default function Home() {
                               </div>
                               <div>
                                 <p className="font-semibold text-slate-900">{call.score.callerInfo?.name || 'Unknown Caller'}</p>
-                                <p className="text-sm text-slate-600">{call.score.callerInfo?.company || call.score.callerInfo?.location || call.record.callDate}</p>
+                                <p className="text-sm text-[#718096]">{call.score.callerInfo?.company || call.score.callerInfo?.location || call.record.callDate}</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
                               {call.score.callerInfo?.phone && (
-                                <span className="text-sm text-slate-600 bg-white px-3 py-1 rounded-lg">{call.score.callerInfo.phone}</span>
+                                <span className="text-sm text-[#718096] bg-white px-3 py-1 rounded-lg">{call.score.callerInfo.phone}</span>
                               )}
                               <Button size="sm" className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-lg gap-2 shadow-lg shadow-red-500/30 font-semibold">
                                 <PhoneCall className="w-4 h-4" />
@@ -1720,7 +1720,7 @@ export default function Home() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-center text-slate-500 py-8">No hot leads requiring immediate action</p>
+                      <p className="text-center text-[#a0aec0] py-8">No hot leads requiring immediate action</p>
                     )}
                   </CardContent>
                 </Card>
@@ -1739,7 +1739,7 @@ export default function Home() {
                 <Card className="border-0 shadow-xl sticky top-24">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center gap-2 text-lg">
-                      <Users className="w-5 h-5 text-purple-600" />
+                      <Users className="w-5 h-5 text-[#422AFB]" />
                       Rep Leaderboard
                     </CardTitle>
                   </CardHeader>
@@ -1747,19 +1747,19 @@ export default function Home() {
                     {result.repSummaries.map((rep, index) => (
                       <div
                         key={rep.repName}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition-colors"
                       >
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                           index === 0 ? "bg-amber-100 text-amber-700" :
-                          index === 1 ? "bg-slate-200 text-slate-600" :
+                          index === 1 ? "bg-slate-200 text-[#718096]" :
                           index === 2 ? "bg-orange-100 text-orange-700" :
-                          "bg-slate-100 text-slate-500"
+                          "bg-slate-100 text-[#a0aec0]"
                         }`}>
                           {index + 1}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-slate-900 truncate">{rep.repName}</p>
-                          <p className="text-xs text-slate-500">{rep.totalCalls} calls</p>
+                          <p className="text-xs text-[#a0aec0]">{rep.totalCalls} calls</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`font-bold ${getScoreColor(rep.averageScore)}`}>
@@ -1777,7 +1777,7 @@ export default function Home() {
               <div className="lg:col-span-3 space-y-4">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-xl font-bold text-slate-900">Call Analysis</h2>
-                  <p className="text-sm text-slate-500">{result.calls.length} calls analyzed</p>
+                  <p className="text-sm text-[#a0aec0]">{result.calls.length} calls analyzed</p>
                 </div>
 
                 {result.calls.map((call) => (
@@ -1795,13 +1795,13 @@ export default function Home() {
                           <div className="flex-1">
                             <div className="flex items-start gap-4">
                               <div className="p-3 bg-slate-100 rounded-xl">
-                                <User className="w-6 h-6 text-slate-600" />
+                                <User className="w-6 h-6 text-[#718096]" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-lg font-bold text-slate-900">
                                   {call.score.callerInfo?.name || "Unknown Caller"}
                                 </h3>
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-slate-500">
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-[#a0aec0]">
                                   {call.score.callerInfo?.location && (
                                     <span className="flex items-center gap-1">
                                       <MapPin className="w-3.5 h-3.5" />
@@ -1822,7 +1822,7 @@ export default function Home() {
                                   )}
                                 </div>
                                 {call.score.callerInfo?.needSummary && (
-                                  <p className="mt-2 text-sm text-slate-700 bg-slate-50 px-3 py-2 rounded-lg inline-block">
+                                  <p className="mt-2 text-sm text-[#1B254B] bg-[#F4F7FE] px-3 py-2 rounded-lg inline-block">
                                     <span className="font-medium">Need:</span> {call.score.callerInfo.needSummary}
                                   </p>
                                 )}
@@ -1836,13 +1836,13 @@ export default function Home() {
                               <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold ${getScoreBg(call.score.overallScore)} text-white`}>
                                 {call.score.overallScore}
                               </div>
-                              <p className="text-xs text-slate-500 mt-1">Rep</p>
+                              <p className="text-xs text-[#a0aec0] mt-1">Rep</p>
                             </div>
                             <div className="text-center">
                               <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold ${getScoreBg(call.score.leadQuality?.score || 0)} text-white`}>
                                 {call.score.leadQuality?.score || "-"}
                               </div>
-                              <p className="text-xs text-slate-500 mt-1">Lead</p>
+                              <p className="text-xs text-[#a0aec0] mt-1">Lead</p>
                             </div>
                             <div className={`px-4 py-2 rounded-xl text-sm font-semibold ${getActionStyles(call.score.leadQuality?.recommendedAction)}`}>
                               {getActionLabel(call.score.leadQuality?.recommendedAction)}
@@ -1853,7 +1853,7 @@ export default function Home() {
                         </div>
 
                         {/* Footer Row */}
-                        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100 text-sm text-slate-500">
+                        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#edf2f7] text-sm text-[#a0aec0]">
                           <span className="flex items-center gap-1">
                             <User className="w-3.5 h-3.5" />
                             Rep: {call.score.repInfo?.name || call.record.repName}
@@ -1865,7 +1865,7 @@ export default function Home() {
                           <span>{call.record.callDuration}</span>
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                             call.score.callContext?.type === "inbound"
-                              ? "bg-blue-100 text-blue-700"
+                              ? "bg-[#C0B8FE] text-[#2111A5]"
                               : "bg-emerald-100 text-emerald-700"
                           }`}>
                             {call.score.callContext?.type || "unknown"}
@@ -1876,11 +1876,11 @@ export default function Home() {
 
                     {/* Expanded Details */}
                     {expandedCall === call.record.id && (
-                      <div className="px-5 pb-5 border-t border-slate-100 bg-slate-50">
+                      <div className="px-5 pb-5 border-t border-[#edf2f7] bg-[#F4F7FE]">
                         <div className="pt-5 space-y-5">
                           {/* Score Breakdown */}
                           <div>
-                            <h4 className="font-semibold text-slate-700 mb-3">Performance Breakdown</h4>
+                            <h4 className="font-semibold text-[#1B254B] mb-3">Performance Breakdown</h4>
                             <div className="grid grid-cols-4 gap-2">
                               {[
                                 { label: "Info Gathering", score: call.score.informationGathering?.score },
@@ -1894,7 +1894,7 @@ export default function Home() {
                               ].map((item) => (
                                 <div key={item.label} className="bg-white p-3 rounded-xl text-center">
                                   <p className={`text-xl font-bold ${getScoreColor(item.score || 0)}`}>{item.score || "-"}</p>
-                                  <p className="text-xs text-slate-500">{item.label}</p>
+                                  <p className="text-xs text-[#a0aec0]">{item.label}</p>
                                 </div>
                               ))}
                             </div>
@@ -1906,7 +1906,7 @@ export default function Home() {
                               <h5 className="font-semibold text-emerald-700 mb-2 flex items-center gap-2">
                                 <CheckCircle className="w-4 h-4" /> Strengths
                               </h5>
-                              <ul className="space-y-1 text-sm text-slate-600">
+                              <ul className="space-y-1 text-sm text-[#718096]">
                                 {(call.score.strengths || []).map((s, i) => (
                                   <li key={i}>• {s}</li>
                                 ))}
@@ -1916,17 +1916,17 @@ export default function Home() {
                               <h5 className="font-semibold text-red-700 mb-2 flex items-center gap-2">
                                 <AlertCircle className="w-4 h-4" /> Improve
                               </h5>
-                              <ul className="space-y-1 text-sm text-slate-600">
+                              <ul className="space-y-1 text-sm text-[#718096]">
                                 {(call.score.weaknesses || []).map((w, i) => (
                                   <li key={i}>• {w}</li>
                                 ))}
                               </ul>
                             </div>
-                            <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
-                              <h5 className="font-semibold text-purple-700 mb-2 flex items-center gap-2">
+                            <div className="bg-[#E9E3FF] p-4 rounded-xl border border-purple-200">
+                              <h5 className="font-semibold text-[#2111A5] mb-2 flex items-center gap-2">
                                 <Bot className="w-4 h-4" /> Coaching
                               </h5>
-                              <ul className="space-y-1 text-sm text-slate-600">
+                              <ul className="space-y-1 text-sm text-[#718096]">
                                 {(call.score.coachingInsights || []).map((c, i) => (
                                   <li key={i}>• {c}</li>
                                 ))}
@@ -1937,11 +1937,11 @@ export default function Home() {
                           {/* Transcript */}
                           {call.record.transcript && (
                             <details className="group">
-                              <summary className="cursor-pointer text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-2">
+                              <summary className="cursor-pointer text-sm font-medium text-[#718096] hover:text-slate-900 flex items-center gap-2">
                                 <FileText className="w-4 h-4" />
                                 View Transcript
                               </summary>
-                              <div className="mt-3 p-4 bg-white rounded-xl border text-sm text-slate-600 max-h-64 overflow-y-auto font-mono text-xs whitespace-pre-wrap">
+                              <div className="mt-3 p-4 bg-white rounded-xl border text-sm text-[#718096] max-h-64 overflow-y-auto font-mono text-xs whitespace-pre-wrap">
                                 {call.record.transcript}
                               </div>
                             </details>

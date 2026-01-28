@@ -1,28 +1,229 @@
 @import "tailwindcss";
 
+/* Horizon UI Design System */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background & Foreground */
+  --background: #F4F7FE;
+  --foreground: #1B2559;
+
+  /* Brand Colors (Purple-Blue) */
+  --brand-50: #E9E3FF;
+  --brand-100: #C0B8FE;
+  --brand-200: #A195FD;
+  --brand-300: #8171FC;
+  --brand-400: #7551FF;
+  --brand-500: #422AFB;
+  --brand-600: #3311DB;
+  --brand-700: #2111A5;
+  --brand-800: #190793;
+  --brand-900: #11047A;
+
+  /* Navy (Dark elements) */
+  --navy-50: #d0dcfb;
+  --navy-100: #aac0fe;
+  --navy-200: #a3b9f8;
+  --navy-300: #728fea;
+  --navy-400: #3652ba;
+  --navy-500: #1b3bbb;
+  --navy-600: #24388a;
+  --navy-700: #1B254B;
+  --navy-800: #111c44;
+  --navy-900: #0b1437;
+
+  /* Gray Scale */
+  --gray-50: #f8f9fa;
+  --gray-100: #edf2f7;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e0;
+  --gray-400: #a0aec0;
+  --gray-500: #718096;
+  --gray-600: #4a5568;
+  --gray-700: #2d3748;
+  --gray-800: #1a202c;
+  --gray-900: #171923;
+
+  /* Status Colors */
+  --success: #01B574;
+  --warning: #FFB547;
+  --error: #E31A1A;
+  --info: #4318FF;
+
+  /* Shadows */
+  --shadow-sm: 0px 4px 6px rgba(112, 144, 176, 0.08);
+  --shadow-md: 0px 8px 16px rgba(112, 144, 176, 0.12);
+  --shadow-lg: 14px 17px 40px 4px rgba(112, 144, 176, 0.18);
+  --shadow-xl: 14px 17px 40px 4px rgba(112, 144, 176, 0.25);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-brand: var(--brand-500);
+  --color-brand-light: var(--brand-50);
+  --color-navy: var(--navy-700);
+  --color-navy-dark: var(--navy-900);
+  --font-sans: var(--font-dm-sans), var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+  --radius-card: 20px;
+  --radius-button: 12px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b1437;
+    --foreground: #ffffff;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Horizon UI Card Styles */
+.card-horizon {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+
+.card-horizon-dark {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-900) 100%);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Premium Metric Card */
+.metric-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Brand Gradient Button */
+.btn-brand {
+  background: linear-gradient(135deg, var(--brand-400) 0%, var(--brand-600) 100%);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(67, 24, 255, 0.35);
+}
+
+.btn-brand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(67, 24, 255, 0.45);
+}
+
+/* Status Badges */
+.badge-success {
+  background: rgba(1, 181, 116, 0.1);
+  color: var(--success);
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge-warning {
+  background: rgba(255, 181, 71, 0.1);
+  color: var(--warning);
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge-error {
+  background: rgba(227, 26, 26, 0.1);
+  color: var(--error);
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge-brand {
+  background: var(--brand-50);
+  color: var(--brand-600);
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Sidebar Navigation Style */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: var(--gray-500);
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: var(--brand-50);
+  color: var(--brand-500);
+}
+
+.nav-item.active {
+  background: var(--brand-50);
+  color: var(--brand-500);
+  font-weight: 600;
+}
+
+/* Data Table Styles */
+.table-horizon {
+  border-radius: 20px;
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-horizon th {
+  background: var(--gray-50);
+  color: var(--gray-500);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+}
+
+.table-horizon td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--navy-700);
+}
+
+.table-horizon tr:hover td {
+  background: var(--gray-50);
+}
+
+/* Progress Bar Horizon Style */
+.progress-horizon {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+.progress-horizon-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--brand-400), var(--brand-500));
+  transition: width 0.5s ease;
 }
 
 /* Premium Animations */
@@ -32,8 +233,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }
+  0%, 100% { box-shadow: 0 0 20px rgba(67, 24, 255, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(67, 24, 255, 0.5); }
 }
 
 @keyframes slide-up {
@@ -44,6 +245,11 @@ body {
 @keyframes scale-in {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 @keyframes progress-stripe {
@@ -67,6 +273,10 @@ body {
 
 .animate-scale-in {
   animation: scale-in 0.2s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 /* Premium Progress Bar */
@@ -109,4 +319,75 @@ body {
 /* Smooth transitions for all interactive elements */
 button, a, .card {
   transition: all 0.2s ease;
+}
+
+/* Score Circle */
+.score-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.score-excellent {
+  background: linear-gradient(135deg, #01B574 0%, #00A86B 100%);
+  color: white;
+}
+
+.score-good {
+  background: linear-gradient(135deg, var(--brand-400) 0%, var(--brand-600) 100%);
+  color: white;
+}
+
+.score-average {
+  background: linear-gradient(135deg, #FFB547 0%, #FF9F1C 100%);
+  color: white;
+}
+
+.score-poor {
+  background: linear-gradient(135deg, #E31A1A 0%, #C41E3A 100%);
+  color: white;
+}
+
+/* Stat Card Mini */
+.stat-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--gray-50);
+  border-radius: 12px;
+}
+
+.stat-mini-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
