@@ -397,7 +397,7 @@ export async function extractBatch(
   onProgress?: (processed: number, total: number, call: SilverCall) => void
 ): Promise<SilverCall[]> {
   const results: SilverCall[] = [];
-  const BATCH_SIZE = 5; // Process 5 calls at a time
+  const BATCH_SIZE = 10; // Process 10 calls at a time
 
   for (let i = 0; i < calls.length; i += BATCH_SIZE) {
     const batch = calls.slice(i, i + BATCH_SIZE);

@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         });
         send({ type: 'start', totalCalls: validSalesCalls.length });
 
-        const BATCH_SIZE = 5;
+        const BATCH_SIZE = 10;
         const analyzedCalls: AnalyzedCall[] = [];
         let processedCount = 0;
 
