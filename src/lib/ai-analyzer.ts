@@ -146,7 +146,7 @@ async function analyzeWithClaudeKey(call: CallRecord, apiKey: string): Promise<C
   const prompt = ANALYSIS_PROMPT.replace('{CALL_DATA}', callDataString);
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5-20251101',
+    model: 'claude-sonnet-4-5-20250929',
     max_tokens: 2000,
     messages: [
       { role: 'user', content: prompt },
@@ -355,7 +355,7 @@ async function analyzeWithClaudeSilver(silver: SilverCall, apiKey: string): Prom
   const prompt = buildGoldPrompt(silver);
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5-20251101',
+    model: 'claude-sonnet-4-5-20250929',
     max_tokens: 2000,
     messages: [
       { role: 'user', content: prompt },
