@@ -45,7 +45,9 @@ INSTRUCTIONS:
 1. REP NAME: Look for patterns like "Nationwide, [name]", "This is [name] with Nationwide", "My name is [name]"
    - The company is "Nationwide Haul" or "Nationwide Hall" (speech-to-text variations)
    - Extract ONLY the first name of the sales rep
-   - Common reps: Brian, Vanessa, Jake, Matt, Mark, Paul, Michelle
+   - NH Sales reps: Jake, Matt, Vanessa, Brian, Pablo
+   - Service & Repair reps: Dustin, Rocco, Sean, Erika, Katrina
+   - Road Ready Insurance reps: Nikita, Sladana, Jennine, Adam, Rossy, Herb, Luis
 
 2. CALLER INFO: Extract if mentioned during the call
    - Name: Full name if given
@@ -94,9 +96,15 @@ const INVALID_REP_NAMES = new Set([
 ]);
 
 const KNOWN_REPS = new Set([
-  'brian', 'vanessa', 'jake', 'matt', 'mark', 'paul', 'michelle', 'audrey',
-  'jessica', 'tyler', 'george', 'dustin', 'joshua', 'victor', 'justin',
-  'james', 'larry', 'jose', 'hans', 'cruz', 'carolina', 'sean',
+  // NH Sales
+  'jake', 'matt', 'vanessa', 'brian', 'pablo',
+  // Service & Repair
+  'dustin', 'rocco', 'sean', 'erika', 'katrina',
+  // Road Ready Insurance
+  'nikita', 'sladana', 'jennine', 'adam', 'rossy', 'herb', 'luis',
+  // Legacy/Other (keep for backward compatibility)
+  'mark', 'paul', 'michelle', 'audrey', 'jessica', 'tyler', 'george',
+  'joshua', 'victor', 'justin', 'james', 'larry', 'jose', 'hans', 'cruz', 'carolina',
 ]);
 
 function validateExtraction(
