@@ -1152,7 +1152,7 @@ function SettingsView({
               value={anthropicKey}
               onChange={(e) => setAnthropicKey(e.target.value)}
               placeholder="sk-ant-..."
-              className="w-full h-12 px-4 pr-12 border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB]"
+              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB] placeholder:text-[#a0aec0]"
             />
             <button
               onClick={() => setShowAnthropicKey(!showAnthropicKey)}
@@ -1179,7 +1179,7 @@ function SettingsView({
               value={openaiKey}
               onChange={(e) => setOpenaiKey(e.target.value)}
               placeholder="sk-..."
-              className="w-full h-12 px-4 pr-12 border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB]"
+              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB] placeholder:text-[#a0aec0]"
             />
             <button
               onClick={() => setShowOpenaiKey(!showOpenaiKey)}

@@ -68,12 +68,13 @@
   --radius-button: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Disabled dark mode - using light theme only */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0b1437;
     --foreground: #ffffff;
   }
-}
+} */
 
 body {
   background: var(--background);
@@ -370,6 +371,22 @@ button, a, .card {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Form Inputs */
+input, textarea, select {
+  background-color: #ffffff !important;
+  color: #1B254B !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #a0aec0 !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #422AFB !important;
+  box-shadow: 0 0 0 3px rgba(66, 42, 251, 0.1) !important;
 }
 
 /* Custom Scrollbar */
