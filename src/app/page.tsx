@@ -518,7 +518,7 @@ export default function Home() {
                       <p className="font-medium">💡 Quick Start Tips:</p>
                       <ul className="space-y-0.5 text-amber-600">
                         <li>• Add <span className="font-semibold">$5-10</span> credits to your account to get started</li>
-                        <li>• Analyzing 50 calls typically costs <span className="font-semibold">~$1-2</span></li>
+                        <li>• Analyzing 50 calls typically costs <span className="font-semibold">~$0.50-1</span></li>
                         <li>• API keys won&apos;t work without credits added to billing</li>
                       </ul>
                     </div>
@@ -565,7 +565,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {result && (
                 <span className="text-sm px-4 py-2 bg-white/10 rounded-full text-slate-300 backdrop-blur">
-                  {result.calls[0]?.aiModel === "claude" ? "Claude Opus 4.5" : "GPT-4.1"}
+                  {result.calls[0]?.aiModel === "claude" ? "Claude Sonnet 4.5" : "GPT-4.1"}
                 </span>
               )}
               <Button
@@ -679,9 +679,9 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
                   <span className="text-slate-600">~$0.001/call extraction</span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-slate-600">~$0.02/call analysis</span>
+                  <span className="text-slate-600">~$0.01/call analysis</span>
                   <span className="text-slate-300">•</span>
-                  <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-semibold">~$1-2 for 50 calls</span>
+                  <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-semibold">~$1 for 50 calls</span>
                 </div>
                 <div className="text-xs text-blue-700 bg-blue-100/50 rounded-lg p-2.5">
                   <p className="font-medium mb-1">💡 Getting Started:</p>
@@ -1000,9 +1000,9 @@ export default function Home() {
                             </div>
                             <div>
                               <p className={`font-semibold ${aiModel === "claude" ? "text-purple-700" : "text-slate-700"}`}>
-                                Claude Opus 4.5
+                                Claude Sonnet 4.5
                               </p>
-                              <p className="text-xs text-slate-500">Best quality • Recommended</p>
+                              <p className="text-xs text-slate-500">Fast & accurate • Recommended</p>
                             </div>
                           </div>
                           {aiModel === "claude" && (
