@@ -36,6 +36,12 @@ import {
   Award,
   Flame,
   Bot,
+  Brain,
+  ArrowUpRight,
+  X,
+  Shield,
+  HelpCircle,
+  ExternalLink,
 } from "lucide-react";
 
 // Helper function to build result from collected calls
@@ -115,12 +121,30 @@ export default function Home() {
   const [processedCalls, setProcessedCalls] = useState(0);
   const [totalCalls, setTotalCalls] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<'bronze' | 'silver' | 'gold' | null>(null);
+  const [showWelcome, setShowWelcome] = useState(false);
 
-  // Load saved keys
+  // Load saved keys and check for first visit
   useEffect(() => {
-    setAnthropicKey(localStorage.getItem("anthropic_api_key") || "");
-    setOpenaiKey(localStorage.getItem("openai_api_key") || "");
+    const savedAnthropicKey = localStorage.getItem("anthropic_api_key") || "";
+    const savedOpenaiKey = localStorage.getItem("openai_api_key") || "";
+    const hasSeenWelcome = localStorage.getItem("nwh_seen_welcome");
+
+    setAnthropicKey(savedAnthropicKey);
+    setOpenaiKey(savedOpenaiKey);
+
+    // Show welcome modal on first visit or if no API keys
+    if (!hasSeenWelcome || (!savedAnthropicKey && !savedOpenaiKey)) {
+      setShowWelcome(true);
+    }
   }, []);
+
+  const dismissWelcome = () => {
+    localStorage.setItem("nwh_seen_welcome", "true");
+    setShowWelcome(false);
+    if (!anthropicKey && !openaiKey) {
+      setActiveTab("settings");
+    }
+  };
 
   const saveApiKeys = () => {
     localStorage.setItem("anthropic_api_key", anthropicKey);
@@ -306,6 +330,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
+      {/* Welcome Modal */}
+      {showWelcome && (
+        <WelcomeModal
+          anthropicKey={anthropicKey}
+          openaiKey={openaiKey}
+          onDismiss={dismissWelcome}
+        />
+      )}
+
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} hasResults={!!result} />
       <main className="ml-[280px] min-h-screen transition-all duration-300">
         <DashboardHeader
@@ -317,6 +350,126 @@ export default function Home() {
           {renderContent()}
         </div>
       </main>
+    </div>
+  );
+}
+
+// ============================================================================
+// WELCOME MODAL
+// ============================================================================
+
+function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
+  anthropicKey: string;
+  openaiKey: string;
+  onDismiss: () => void;
+}) {
+  const hasKey = !!(anthropicKey || openaiKey);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1B254B]/80 backdrop-blur-sm">
+      <div className="bg-white rounded-[20px] shadow-2xl max-w-2xl w-full overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#7551FF] to-[#422AFB] p-8 text-white">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="p-3 bg-white/20 rounded-xl backdrop-blur">
+              <BarChart3 className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">NWH Call Analytics</h1>
+              <p className="text-white/80 text-sm">AI-Powered Sales Intelligence</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* How it works */}
+          <div>
+            <h2 className="text-sm font-semibold text-[#718096] uppercase tracking-wide mb-3">
+              How It Works
+            </h2>
+            <div className="grid grid-cols-4 gap-3">
+              {[
+                { icon: Key, label: "1. Add API Key", color: "bg-[#E9E3FF] text-[#422AFB]" },
+                { icon: Upload, label: "2. Upload File", color: "bg-[#E9E3FF] text-[#422AFB]" },
+                { icon: Brain, label: "3. AI Analyzes", color: "bg-[#E9E3FF] text-[#422AFB]" },
+                { icon: Download, label: "4. Export Report", color: "bg-[#E9E3FF] text-[#422AFB]" },
+              ].map((step, i) => (
+                <div key={i} className="text-center p-4 bg-[#F4F7FE] rounded-xl">
+                  <div className={`w-10 h-10 ${step.color} rounded-xl flex items-center justify-center mx-auto mb-2`}>
+                    <step.icon className="w-5 h-5" />
+                  </div>
+                  <p className="text-xs font-medium text-[#1B254B]">{step.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* API Key info */}
+          <div className="bg-[#FFF6E5] border border-[#FFB547]/30 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <Key className="w-5 h-5 text-[#FFB547] mt-0.5" />
+              <div className="flex-1">
+                <p className="font-semibold text-[#1B254B] mb-1">API Key Required</p>
+                <p className="text-sm text-[#718096] mb-3">
+                  You&apos;ll need an Anthropic or OpenAI API key to analyze calls.
+                  {hasKey && <span className="text-[#01B574] font-medium ml-1">&#x2713; Key saved</span>}
+                </p>
+
+                {/* API Console Links */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <a
+                    href="https://console.anthropic.com/settings/keys"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-[#e2e8f0] text-[#1B254B] rounded-lg hover:bg-[#F4F7FE] transition-colors font-medium"
+                  >
+                    <Zap className="w-3 h-3 text-[#422AFB]" />
+                    Anthropic Console
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="https://platform.openai.com/api-keys"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-[#e2e8f0] text-[#1B254B] rounded-lg hover:bg-[#F4F7FE] transition-colors font-medium"
+                  >
+                    <Bot className="w-3 h-3 text-[#10a37f]" />
+                    OpenAI Platform
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </div>
+
+                {/* Quick tips */}
+                <div className="text-xs text-[#996B00] bg-[#FFB547]/10 rounded-lg p-3 space-y-1">
+                  <p className="font-medium flex items-center gap-1"><HelpCircle className="w-3 h-3" /> Quick Start Tips:</p>
+                  <ul className="space-y-0.5 text-[#996B00]/80">
+                    <li>&#x2022; Add <span className="font-semibold">$5-10</span> credits to your account to get started</li>
+                    <li>&#x2022; Analyzing 50 calls typically costs <span className="font-semibold">~$0.50-1</span></li>
+                    <li>&#x2022; API keys won&apos;t work without credits added to billing</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Privacy note */}
+          <div className="flex items-start gap-3 p-4 bg-[#F4F7FE] rounded-xl">
+            <Shield className="w-4 h-4 text-[#422AFB] mt-0.5" />
+            <p className="text-sm text-[#718096]">
+              <span className="font-medium text-[#1B254B]">Your data stays secure.</span> API keys are stored locally in your browser and sent directly to AI providers. We never store or access your data.
+            </p>
+          </div>
+
+          {/* CTA Button */}
+          <Button
+            onClick={onDismiss}
+            className="w-full h-12 font-semibold bg-gradient-to-r from-[#7551FF] to-[#422AFB] hover:from-[#422AFB] hover:to-[#3311DB] rounded-xl text-base shadow-lg shadow-[#422AFB]/25"
+          >
+            {hasKey ? "Continue to Dashboard" : "Get Started"}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -429,7 +582,7 @@ function UploadView({
           <div className="mt-4 p-4 bg-[#FFF6E5] rounded-xl flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-[#FFB547]" />
             <div className="flex-1">
-              <p className="text-sm text-[#1B254B]">API key required</p>
+              <p className="text-sm font-medium text-[#1B254B]">API key required</p>
               <p className="text-xs text-[#718096]">Add your {aiModel === "claude" ? "Anthropic" : "OpenAI"} key in settings</p>
             </div>
             <Button variant="outline" size="sm" onClick={onOpenSettings}>
@@ -456,7 +609,7 @@ function UploadView({
                   currentPhase === 'silver' ? 'bg-slate-400' : 'bg-[#422AFB]'
                 }`} />
                 <span className="text-sm font-medium text-[#1B254B]">
-                  {currentPhase === 'bronze' ? 'Parsing' : currentPhase === 'silver' ? 'Extracting' : 'Analyzing'}
+                  {currentPhase === 'bronze' ? 'Parsing File' : currentPhase === 'silver' ? 'Extracting Data' : 'AI Analysis'}
                 </span>
               </div>
               <span className="text-sm text-[#718096]">{progress}%</span>
@@ -621,6 +774,39 @@ function DashboardView({ result }: { result: AnalysisResult }) {
         </div>
       </div>
 
+      {/* Team Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-[20px] p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <CheckCircle className="w-5 h-5 text-[#01B574]" />
+            <h3 className="font-bold text-[#1B254B]">Team Strengths</h3>
+          </div>
+          <ul className="space-y-2">
+            {[...new Set(result.repSummaries.flatMap(r => r.strengths))].slice(0, 5).map((s, i) => (
+              <li key={i} className="flex items-start gap-2 text-[#718096]">
+                <span className="mt-0.5 w-5 h-5 bg-[#E6FAF5] text-[#01B574] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
+                <span className="text-sm">{s}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="bg-white rounded-[20px] p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertCircle className="w-5 h-5 text-[#FFB547]" />
+            <h3 className="font-bold text-[#1B254B]">Areas to Improve</h3>
+          </div>
+          <ul className="space-y-2">
+            {[...new Set(result.repSummaries.flatMap(r => r.weaknesses))].slice(0, 5).map((w, i) => (
+              <li key={i} className="flex items-start gap-2 text-[#718096]">
+                <span className="mt-0.5 w-5 h-5 bg-[#FFF6E5] text-[#FFB547] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
+                <span className="text-sm">{w}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       {/* Export Buttons */}
       <div className="flex gap-4">
         <Button
@@ -663,7 +849,7 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                   {call.score.repInfo?.name || call.record.repName}
                 </p>
                 <p className="text-sm text-[#718096] truncate">
-                  {call.score.callerInfo?.name || "Unknown caller"} • {call.score.callerInfo?.company || "No company"}
+                  {call.score.callerInfo?.name || "Unknown caller"} &#x2022; {call.score.callerInfo?.company || "No company"}
                 </p>
               </div>
               <div className="text-right">
@@ -682,43 +868,109 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                 <ChevronDown className="w-5 h-5 text-[#718096]" />
               )}
             </div>
+
+            {/* Expanded Details */}
             {expandedCall === call.record.id && (
-              <div className="mt-4 pt-4 border-t border-[#edf2f7] grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-[#718096]">Lead Score</p>
-                  <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.score || 0}/10</p>
+              <div className="mt-4 pt-4 border-t border-[#edf2f7]">
+                {/* Score Breakdown Grid */}
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-[#718096] mb-3">Performance Breakdown</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { label: "Info Gathering", score: call.score.informationGathering?.score },
+                      { label: "Tone", score: call.score.toneProfessionalism?.score },
+                      { label: "Listening", score: call.score.listeningRatio?.score },
+                      { label: "Objections", score: call.score.objectionHandling?.score },
+                      { label: "Guidance", score: call.score.conversationGuidance?.score },
+                      { label: "Next Steps", score: call.score.nextSteps?.score },
+                      { label: "Closing", score: call.score.callClosing?.score },
+                      { label: "Clarity", score: call.score.objectiveClarity?.score },
+                    ].map((item) => (
+                      <div key={item.label} className="bg-[#F4F7FE] p-3 rounded-xl text-center">
+                        <p className={`text-xl font-bold ${
+                          (item.score || 0) >= 8 ? "text-[#01B574]" :
+                          (item.score || 0) >= 6 ? "text-[#422AFB]" :
+                          (item.score || 0) >= 4 ? "text-[#FFB547]" : "text-[#E31A1A]"
+                        }`}>{item.score || "-"}</p>
+                        <p className="text-xs text-[#718096]">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-[#718096]">Timeline</p>
-                  <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.timeline || "Unknown"}</p>
+
+                {/* Basic Info Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div>
+                    <p className="text-sm text-[#718096]">Lead Score</p>
+                    <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.score || 0}/10</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#718096]">Timeline</p>
+                    <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.timeline || "Unknown"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#718096]">Location</p>
+                    <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.location || "Unknown"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#718096]">Phone</p>
+                    <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.phone || "N/A"}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-[#718096]">Need</p>
-                  <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.needSummary || "Not identified"}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-[#718096]">Location</p>
-                  <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.location || "Unknown"}</p>
-                </div>
-                {call.score.strengths && call.score.strengths.length > 0 && (
-                  <div className="col-span-2">
-                    <p className="text-sm text-[#718096] mb-2">Strengths</p>
-                    <div className="flex flex-wrap gap-2">
-                      {call.score.strengths.map((s, i) => (
-                        <span key={i} className="px-2 py-1 bg-[#E6FAF5] text-[#01B574] text-xs rounded-lg">{s}</span>
-                      ))}
-                    </div>
+
+                {/* Need Summary */}
+                {call.score.callerInfo?.needSummary && (
+                  <div className="mb-4 p-3 bg-[#F4F7FE] rounded-xl">
+                    <p className="text-sm text-[#718096]">Need</p>
+                    <p className="font-medium text-[#1B254B]">{call.score.callerInfo.needSummary}</p>
                   </div>
                 )}
-                {call.score.coachingInsights && call.score.coachingInsights.length > 0 && (
-                  <div className="col-span-2">
-                    <p className="text-sm text-[#718096] mb-2">Coaching</p>
-                    <ul className="text-sm text-[#1B254B] space-y-1">
-                      {call.score.coachingInsights.map((c, i) => (
-                        <li key={i}>• {c}</li>
-                      ))}
-                    </ul>
-                  </div>
+
+                {/* Insights Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  {call.score.strengths && call.score.strengths.length > 0 && (
+                    <div className="p-4 bg-[#E6FAF5] rounded-xl border border-[#01B574]/20">
+                      <p className="text-sm font-medium text-[#01B574] mb-2 flex items-center gap-1">
+                        <CheckCircle className="w-4 h-4" /> Strengths
+                      </p>
+                      <ul className="text-sm text-[#1B254B] space-y-1">
+                        {call.score.strengths.map((s, i) => <li key={i}>&#x2022; {s}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {call.score.weaknesses && call.score.weaknesses.length > 0 && (
+                    <div className="p-4 bg-[#FFE5E5] rounded-xl border border-[#E31A1A]/20">
+                      <p className="text-sm font-medium text-[#E31A1A] mb-2 flex items-center gap-1">
+                        <AlertCircle className="w-4 h-4" /> Improve
+                      </p>
+                      <ul className="text-sm text-[#1B254B] space-y-1">
+                        {call.score.weaknesses.map((w, i) => <li key={i}>&#x2022; {w}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {call.score.coachingInsights && call.score.coachingInsights.length > 0 && (
+                    <div className="p-4 bg-[#E9E3FF] rounded-xl border border-[#422AFB]/20">
+                      <p className="text-sm font-medium text-[#422AFB] mb-2 flex items-center gap-1">
+                        <Brain className="w-4 h-4" /> Coaching
+                      </p>
+                      <ul className="text-sm text-[#1B254B] space-y-1">
+                        {call.score.coachingInsights.map((c, i) => <li key={i}>&#x2022; {c}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Transcript */}
+                {call.record.transcript && (
+                  <details className="group">
+                    <summary className="cursor-pointer text-sm font-medium text-[#718096] hover:text-[#422AFB] flex items-center gap-2 p-3 bg-[#F4F7FE] rounded-xl">
+                      <FileText className="w-4 h-4" />
+                      View Transcript
+                    </summary>
+                    <div className="mt-3 p-4 bg-white rounded-xl border border-[#edf2f7] text-sm text-[#718096] max-h-64 overflow-y-auto font-mono text-xs whitespace-pre-wrap">
+                      {call.record.transcript}
+                    </div>
+                  </details>
                 )}
               </div>
             )}
@@ -858,8 +1110,36 @@ function SettingsView({
 }) {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      {/* API Keys Card */}
       <div className="bg-white rounded-[20px] p-6 shadow-sm">
-        <h3 className="font-bold text-[#1B254B] mb-6">API Keys</h3>
+        <h3 className="font-bold text-[#1B254B] mb-2">API Configuration</h3>
+        <p className="text-sm text-[#718096] mb-4">
+          Keys are stored locally in your browser and sent directly to AI providers.
+        </p>
+
+        {/* Quick Links */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          <a
+            href="https://console.anthropic.com/settings/keys"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-[#E9E3FF] text-[#422AFB] rounded-lg hover:bg-[#422AFB] hover:text-white transition-colors font-medium"
+          >
+            <Zap className="w-3 h-3" />
+            Anthropic Console
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://platform.openai.com/api-keys"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-[#E6FAF5] text-[#10a37f] rounded-lg hover:bg-[#10a37f] hover:text-white transition-colors font-medium"
+          >
+            <Bot className="w-3 h-3" />
+            OpenAI Platform
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
 
         {/* Anthropic Key */}
         <div className="mb-6">
@@ -881,9 +1161,11 @@ function SettingsView({
               {showAnthropicKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-          <p className="text-xs text-[#718096] mt-2">
-            Get your key at <a href="https://console.anthropic.com" target="_blank" className="text-[#422AFB] hover:underline">console.anthropic.com</a>
-          </p>
+          {anthropicKey && (
+            <p className="text-xs text-[#01B574] flex items-center gap-1 mt-1">
+              <CheckCircle className="w-3 h-3" /> Saved locally
+            </p>
+          )}
         </div>
 
         {/* OpenAI Key */}
@@ -906,9 +1188,11 @@ function SettingsView({
               {showOpenaiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-          <p className="text-xs text-[#718096] mt-2">
-            Get your key at <a href="https://platform.openai.com" target="_blank" className="text-[#422AFB] hover:underline">platform.openai.com</a>
-          </p>
+          {openaiKey && (
+            <p className="text-xs text-[#01B574] flex items-center gap-1 mt-1">
+              <CheckCircle className="w-3 h-3" /> Saved locally
+            </p>
+          )}
         </div>
 
         <Button onClick={onSave} className="w-full h-12 bg-gradient-to-r from-[#7551FF] to-[#422AFB] hover:from-[#422AFB] hover:to-[#3311DB]">
@@ -916,21 +1200,49 @@ function SettingsView({
         </Button>
       </div>
 
-      {/* Cost Info */}
+      {/* Cost & Tips Card */}
       <div className="bg-white rounded-[20px] p-6 shadow-sm">
-        <h3 className="font-bold text-[#1B254B] mb-4">Pricing</h3>
-        <div className="space-y-3">
-          <div className="flex justify-between">
+        <h3 className="font-bold text-[#1B254B] mb-4">Pricing & Tips</h3>
+
+        {/* Pricing table */}
+        <div className="space-y-3 mb-6">
+          <div className="flex justify-between py-2">
             <span className="text-[#718096]">Extraction (per call)</span>
             <span className="font-medium text-[#1B254B]">~$0.001</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between py-2">
             <span className="text-[#718096]">Analysis (per call)</span>
             <span className="font-medium text-[#1B254B]">~$0.01</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-[#edf2f7]">
             <span className="font-medium text-[#1B254B]">50 calls total</span>
             <span className="font-bold text-[#01B574]">~$0.50-1</span>
+          </div>
+        </div>
+
+        {/* Tips */}
+        <div className="bg-[#FFF6E5] rounded-xl p-4">
+          <p className="text-sm font-medium text-[#996B00] mb-2 flex items-center gap-1">
+            <HelpCircle className="w-4 h-4" /> Quick Tips
+          </p>
+          <ul className="text-sm text-[#996B00]/80 space-y-1">
+            <li>&#x2022; Add <span className="font-semibold">$5-10</span> credits to get started</li>
+            <li>&#x2022; API keys don&apos;t work without billing credits</li>
+            <li>&#x2022; Claude Sonnet 4.5 is recommended (faster, cheaper)</li>
+            <li>&#x2022; Keep uploads under 100 calls to avoid timeouts</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Privacy Card */}
+      <div className="bg-white rounded-[20px] p-6 shadow-sm">
+        <div className="flex items-start gap-3">
+          <Shield className="w-5 h-5 text-[#422AFB] mt-0.5" />
+          <div>
+            <h3 className="font-bold text-[#1B254B] mb-1">Privacy & Security</h3>
+            <p className="text-sm text-[#718096]">
+              Your data stays secure. API keys are stored locally in your browser and sent directly to AI providers. We never store, log, or access your call data or API keys on any server.
+            </p>
           </div>
         </div>
       </div>
