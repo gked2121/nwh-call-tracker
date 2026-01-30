@@ -389,7 +389,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
         <div className="p-6 space-y-6">
           {/* How it works */}
           <div>
-            <h2 className="text-sm font-semibold text-[#718096] uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-semibold text-[#475569] uppercase tracking-wide mb-3">
               How It Works
             </h2>
             <div className="grid grid-cols-4 gap-3">
@@ -415,7 +415,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
               <Key className="w-5 h-5 text-[#FFB547] mt-0.5" />
               <div className="flex-1">
                 <p className="font-semibold text-[#1B254B] mb-1">API Key Required</p>
-                <p className="text-sm text-[#718096] mb-3">
+                <p className="text-sm text-[#334155] mb-3">
                   You&apos;ll need an Anthropic or OpenAI API key to analyze calls.
                   {hasKey && <span className="text-[#01B574] font-medium ml-1">&#x2713; Key saved</span>}
                 </p>
@@ -445,11 +445,11 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
                 </div>
 
                 {/* Quick tips */}
-                <div className="text-xs text-[#996B00] bg-[#FFB547]/10 rounded-lg p-3 space-y-1">
-                  <p className="font-medium flex items-center gap-1"><HelpCircle className="w-3 h-3" /> Quick Start Tips:</p>
-                  <ul className="space-y-0.5 text-[#996B00]/80">
-                    <li>&#x2022; Add <span className="font-semibold">$5-10</span> credits to your account to get started</li>
-                    <li>&#x2022; Analyzing 50 calls typically costs <span className="font-semibold">~$0.50-1</span></li>
+                <div className="text-xs text-[#92400e] bg-[#FFB547]/10 rounded-lg p-3 space-y-1">
+                  <p className="font-semibold flex items-center gap-1"><HelpCircle className="w-3 h-3" /> Quick Start Tips:</p>
+                  <ul className="space-y-0.5 text-[#78350f]">
+                    <li>&#x2022; Add <span className="font-bold">$5-10</span> credits to your account to get started</li>
+                    <li>&#x2022; Analyzing 50 calls typically costs <span className="font-bold">~$0.50-1</span></li>
                     <li>&#x2022; API keys won&apos;t work without credits added to billing</li>
                   </ul>
                 </div>
@@ -460,8 +460,8 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
           {/* Privacy note */}
           <div className="flex items-start gap-3 p-4 bg-[#F4F7FE] rounded-xl">
             <Shield className="w-4 h-4 text-[#0f172a] mt-0.5" />
-            <p className="text-sm text-[#718096]">
-              <span className="font-medium text-[#1B254B]">Your data stays secure.</span> API keys are stored locally in your browser and sent directly to AI providers. We never store or access your data.
+            <p className="text-sm text-[#475569]">
+              <span className="font-semibold text-[#1B254B]">Your data stays secure.</span> API keys are stored locally in your browser and sent directly to AI providers. We never store or access your data.
             </p>
           </div>
 
