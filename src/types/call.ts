@@ -210,7 +210,6 @@ export interface RepSummary {
   callScores: number[];
   leadScores: number[];
   trend: 'improving' | 'declining' | 'stable';
-  hotLeads: number;
   qualifiedLeads: number;
 }
 
@@ -223,7 +222,6 @@ export interface AnalysisResult {
     averageLeadScore: number;
     topPerformer: string;
     needsImprovement: string;
-    hotLeads: number;
     qualifiedLeads: number;
     redFlagCalls: number;
   };

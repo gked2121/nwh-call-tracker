@@ -25,7 +25,7 @@ const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, requiresResults: true },
   { id: "calls", label: "Call Details", icon: Phone, requiresResults: true },
   { id: "reps", label: "Rep Performance", icon: Users, requiresResults: true },
-  { id: "leads", label: "Lead Scores", icon: Target, requiresResults: true },
+  { id: "leads", label: "Lead Source Scores", icon: Target, requiresResults: true },
   { id: "sources", label: "Lead Sources", icon: Megaphone, requiresResults: true },
 ];
 

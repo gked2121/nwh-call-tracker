@@ -94,7 +94,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
   const cards = [
     { label: 'Total Calls', value: result.overallStats.totalCalls.toString(), color: COLORS.primary },
     { label: 'Avg Rep Score', value: `${result.overallStats.averageScore}/10`, color: COLORS.success },
-    { label: 'Avg Lead Score', value: `${result.overallStats.averageLeadScore || 0}/10`, color: COLORS.secondary },
+    { label: 'Avg Lead Source Score', value: `${result.overallStats.averageLeadScore || 0}/10`, color: COLORS.secondary },
     { label: 'Qualified (7+)', value: (result.overallStats.qualifiedLeads || 0).toString(), color: COLORS.warning },
   ];
 
@@ -144,7 +144,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
 
   autoTable(doc, {
     startY: yPos,
-    head: [['#', 'Rep Name', 'Calls', 'Rep Score', 'Lead Score', 'Qualified (7+)', 'Trend']],
+    head: [['#', 'Rep Name', 'Calls', 'Rep Score', 'Lead Source Score', 'Qualified (7+)', 'Trend']],
     body: result.repSummaries.map((rep, i) => [
       (i + 1).toString(),
       rep.repName,
@@ -418,7 +418,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
 
   autoTable(doc, {
     startY: yPos,
-    head: [['Source', 'Calls', 'Avg Lead Score', 'Qualified (7+)', 'Qualified %', 'Avg Duration']],
+    head: [['Source', 'Calls', 'Avg Lead Source Score', 'Qualified (7+)', 'Qualified %', 'Avg Duration']],
     body: sourceTableData.map(s => [
       s.source,
       s.count.toString(),
@@ -471,7 +471,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
 
   autoTable(doc, {
     startY: yPos,
-    head: [['Rep', 'Caller', 'Date', 'Duration', 'Rep Score', 'Lead Score', 'Action', 'Type']],
+    head: [['Rep', 'Caller', 'Date', 'Duration', 'Rep Score', 'Lead Source Score', 'Action', 'Type']],
     body: result.calls.map(call => [
       call.score.repInfo?.name || call.record.repName,
       call.score.callerInfo?.name || 'Unknown',
@@ -571,7 +571,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Rep Name',
     'Total Calls',
     'Rep Score',
-    'Lead Score',
+    'Lead Source Score',
     'Qualified (7+)',
     'Trend',
     'Top Strengths',
@@ -599,7 +599,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 15 },  // Name
     { wch: 10 },  // Calls
     { wch: 10 },  // Rep Score
-    { wch: 10 },  // Lead Score
+    { wch: 10 },  // Lead Source Score
     { wch: 12 },  // Qualified
     { wch: 12 },  // Trend
     { wch: 40 },  // Strengths
@@ -614,7 +614,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
   // ============================================
   const qualifiedLeadHeaders = [
     'Priority',
-    'Lead Score',
+    'Lead Source Score',
     'Caller Name',
     'Company',
     'Location',
@@ -676,7 +676,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Source',
     'Call Type',
     'Rep Score',
-    'Lead Score',
+    'Lead Source Score',
     'Recommended Action',
     'Timeline',
     'Has Authority',
@@ -728,7 +728,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 18 },  // Source
     { wch: 10 },  // Type
     { wch: 10 },  // Rep Score
-    { wch: 10 },  // Lead Score
+    { wch: 10 },  // Lead Source Score
     { wch: 18 },  // Action
     { wch: 15 },  // Timeline
     { wch: 12 },  // Authority
@@ -817,7 +817,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
   const sourceHeaders = [
     'Source',
     'Total Calls',
-    'Avg Lead Score',
+    'Avg Lead Source Score',
     'Avg Rep Score',
     'Qualified (7+)',
     'Qualified %',
@@ -865,7 +865,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
   const redFlagCalls = result.calls.filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0);
 
   if (redFlagCalls.length > 0) {
-    const redFlagHeaders = ['Rep', 'Caller', 'Date', 'Lead Score', 'Red Flags', 'Notes'];
+    const redFlagHeaders = ['Rep', 'Caller', 'Date', 'Lead Source Score', 'Red Flags', 'Notes'];
     const redFlagData = redFlagCalls.map(call => [
       call.score.repInfo?.name || call.record.repName,
       call.score.callerInfo?.name || 'Unknown',

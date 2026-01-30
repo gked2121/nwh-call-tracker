@@ -1,6 +1,6 @@
 // Division configuration for NWH Call Tracker
 
-export type Division = 'all' | 'nh-sales' | 'service-repair' | 'road-ready';
+export type Division = 'all' | 'nh-sales' | 'nh-service' | 'rr-sales' | 'rr-service';
 
 export interface DivisionInfo {
   id: Division;
@@ -20,22 +20,29 @@ export const DIVISIONS: Record<Division, DivisionInfo> = {
   },
   'nh-sales': {
     id: 'nh-sales',
-    name: 'Nationwide Haul (Sales)',
+    name: 'Nationwide Haul - Sales',
     shortName: 'NH Sales',
     color: 'text-[#0f172a]',
     bgColor: 'bg-[#f1f5f9]',
   },
-  'service-repair': {
-    id: 'service-repair',
-    name: 'Service & Repair',
-    shortName: 'Service',
+  'nh-service': {
+    id: 'nh-service',
+    name: 'Nationwide Haul - Service & Repair',
+    shortName: 'NH Service',
+    color: 'text-[#0284c7]',
+    bgColor: 'bg-[#e0f2fe]',
+  },
+  'rr-sales': {
+    id: 'rr-sales',
+    name: 'Road Ready Insurance - Sales',
+    shortName: 'RR Sales',
     color: 'text-[#01B574]',
     bgColor: 'bg-[#E6FAF5]',
   },
-  'road-ready': {
-    id: 'road-ready',
-    name: 'Road Ready Insurance',
-    shortName: 'Road Ready',
+  'rr-service': {
+    id: 'rr-service',
+    name: 'Road Ready Insurance - Service',
+    shortName: 'RR Service',
     color: 'text-[#FFB547]',
     bgColor: 'bg-[#FFF6E5]',
   },
@@ -43,28 +50,27 @@ export const DIVISIONS: Record<Division, DivisionInfo> = {
 
 // Map rep names (lowercase) to their division
 const REP_DIVISION_MAP: Record<string, Division> = {
-  // NH Sales
-  'jake': 'nh-sales',
+  // Nationwide Haul - Sales
   'matt': 'nh-sales',
-  'vanessa': 'nh-sales',
   'brian': 'nh-sales',
-  'pablo': 'nh-sales',
+  'vanessa': 'nh-sales',
+  'jake': 'nh-sales',
 
-  // Service & Repair
-  'dustin': 'service-repair',
-  'rocco': 'service-repair',
-  'sean': 'service-repair',
-  'erika': 'service-repair',
-  'katrina': 'service-repair',
+  // Nationwide Haul - Service & Repair
+  'dustin': 'nh-service',
+  'rocco': 'nh-service',
 
-  // Road Ready Insurance
-  'nikita': 'road-ready',
-  'sladana': 'road-ready',
-  'jennine': 'road-ready',
-  'adam': 'road-ready',
-  'rossy': 'road-ready',
-  'herb': 'road-ready',
-  'luis': 'road-ready',
+  // Road Ready Insurance - Sales
+  'sean': 'rr-sales',
+  'herb': 'rr-sales',
+  'adam': 'rr-sales',
+  'katrina': 'rr-sales',
+  'sladana': 'rr-sales',
+
+  // Road Ready Insurance - Service
+  'nikita': 'rr-service',
+  'luis': 'rr-service',
+  'rossy': 'rr-service',
 };
 
 /**

@@ -241,8 +241,7 @@ function generateRepSummaries(calls: AnalyzedCall[]): RepSummary[] {
     const averageScore = scores.reduce((a, b) => a + b, 0) / scores.length;
     const averageLeadScore = leadScores.reduce((a, b) => a + b, 0) / leadScores.length;
 
-    const hotLeads = leadScores.filter(s => s >= 9).length;
-    const qualifiedLeads = leadScores.filter(s => s >= 7 && s < 9).length;
+    const qualifiedLeads = leadScores.filter(s => s >= 7).length;
 
     const strengthCounts = new Map<string, number>();
     const weaknessCounts = new Map<string, number>();
@@ -295,7 +294,6 @@ function generateRepSummaries(calls: AnalyzedCall[]): RepSummary[] {
       callScores: scores,
       leadScores: leadScores,
       trend,
-      hotLeads,
       qualifiedLeads,
     });
   }
@@ -313,7 +311,6 @@ function calculateOverallStats(
   averageLeadScore: number;
   topPerformer: string;
   needsImprovement: string;
-  hotLeads: number;
   qualifiedLeads: number;
   redFlagCalls: number;
   // New stats from extraction
@@ -335,8 +332,7 @@ function calculateOverallStats(
   const topPerformer = summaries.length > 0 ? summaries[0].repName : 'N/A';
   const needsImprovement = summaries.length > 0 ? summaries[summaries.length - 1].repName : 'N/A';
 
-  const hotLeads = allLeadScores.filter(s => s >= 9).length;
-  const qualifiedLeads = allLeadScores.filter(s => s >= 7 && s < 9).length;
+  const qualifiedLeads = allLeadScores.filter(s => s >= 7).length;
   const redFlagCalls = calls.filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0).length;
 
   // Extraction stats
@@ -351,7 +347,6 @@ function calculateOverallStats(
     averageLeadScore,
     topPerformer,
     needsImprovement,
-    hotLeads,
     qualifiedLeads,
     redFlagCalls,
     totalInFile: allSilverCalls.length,

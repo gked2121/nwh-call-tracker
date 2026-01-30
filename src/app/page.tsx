@@ -80,8 +80,7 @@ function buildResultFromCalls(calls: AnalyzedCall[]): AnalysisResult {
       callScores: scores,
       leadScores: leadScores,
       trend: 'stable' as const,
-      hotLeads: leadScores.filter(s => s >= 9).length,
-      qualifiedLeads: leadScores.filter(s => s >= 7 && s < 9).length,
+      qualifiedLeads: leadScores.filter(s => s >= 7).length,
     });
   }
   repSummaries.sort((a, b) => b.averageScore - a.averageScore);
@@ -98,8 +97,7 @@ function buildResultFromCalls(calls: AnalyzedCall[]): AnalysisResult {
       averageLeadScore: allLeadScores.length > 0 ? Math.round((allLeadScores.reduce((a, b) => a + b, 0) / allLeadScores.length) * 10) / 10 : 0,
       topPerformer: repSummaries[0]?.repName || 'N/A',
       needsImprovement: repSummaries[repSummaries.length - 1]?.repName || 'N/A',
-      hotLeads: allLeadScores.filter(s => s >= 9).length,
-      qualifiedLeads: allLeadScores.filter(s => s >= 7 && s < 9).length,
+      qualifiedLeads: allLeadScores.filter(s => s >= 7).length,
       redFlagCalls: calls.filter(c => (c.score.leadQuality?.redFlags?.length || 0) > 0).length,
     },
   };
@@ -327,7 +325,7 @@ export default function Home() {
       case "dashboard": return "Dashboard";
       case "calls": return "Call Details";
       case "reps": return "Rep Performance";
-      case "leads": return "Lead Scores";
+      case "leads": return "Lead Source Scores";
       case "sources": return "Lead Sources";
       case "settings": return "Settings";
       default: return "Dashboard";
@@ -729,6 +727,160 @@ function DivisionFilter({
   );
 }
 
+// ============================================================================
+// CALL TYPE FILTER COMPONENT
+// ============================================================================
+
+type CallType = 'all' | 'inbound' | 'outbound' | 'follow-up';
+
+function CallTypeFilter({
+  selectedType,
+  setSelectedType
+}: {
+  selectedType: CallType;
+  setSelectedType: (t: CallType) => void;
+}) {
+  const types: { id: CallType; label: string; color: string; bgColor: string }[] = [
+    { id: 'all', label: 'All Types', color: 'text-[#1B254B]', bgColor: 'bg-[#F4F7FE]' },
+    { id: 'inbound', label: 'Inbound', color: 'text-[#01B574]', bgColor: 'bg-[#E6FAF5]' },
+    { id: 'outbound', label: 'Outbound', color: 'text-[#0284c7]', bgColor: 'bg-[#e0f2fe]' },
+    { id: 'follow-up', label: 'Follow-ups', color: 'text-[#FFB547]', bgColor: 'bg-[#FFF6E5]' },
+  ];
+
+  return (
+    <div className="flex items-center gap-2">
+      {types.map((type) => (
+        <button
+          key={type.id}
+          onClick={() => setSelectedType(type.id)}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            selectedType === type.id
+              ? `${type.bgColor} ${type.color}`
+              : 'text-[#718096] hover:bg-[#F4F7FE]'
+          }`}
+        >
+          {type.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// SCORING CRITERIA EXPLANATION COMPONENT
+// ============================================================================
+
+function ScoringExplanation() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const criteria = [
+    { name: 'Information Gathering', weight: '15%', desc: 'Did rep ask about business type, decision maker, timeline, budget, and load details?' },
+    { name: 'Tone & Professionalism', weight: '10%', desc: 'Professional language, minimal filler words, appropriate pace and energy' },
+    { name: 'Listening Ratio', weight: '10%', desc: 'Balance of talking vs listening - ideal is 30-40% rep talk time' },
+    { name: 'Objection Handling', weight: '15%', desc: 'How well did rep address concerns and hesitations?' },
+    { name: 'Conversation Guidance', weight: '10%', desc: 'Did rep guide the call toward next steps productively?' },
+    { name: 'Next Steps', weight: '15%', desc: 'Were clear next steps established with timeline?' },
+    { name: 'Call Closing', weight: '15%', desc: 'Did call end with appointment, follow-up plan, or clear disposition?' },
+    { name: 'Objective Clarity', weight: '10%', desc: 'Was the call purpose clear and was it achieved?' },
+  ];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#718096] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
+      >
+        <HelpCircle className="w-4 h-4" />
+        <span>Scoring Criteria</span>
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#edf2f7] z-40 overflow-hidden">
+            <div className="p-4 border-b border-[#edf2f7] bg-[#F4F7FE]">
+              <h4 className="font-bold text-[#1B254B]">How Rep Scores Are Calculated</h4>
+              <p className="text-xs text-[#718096] mt-1">Each call is scored 1-10 based on these criteria</p>
+            </div>
+            <div className="max-h-80 overflow-y-auto p-2">
+              {criteria.map((c, i) => (
+                <div key={i} className="p-3 hover:bg-[#F4F7FE] rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-sm text-[#1B254B]">{c.name}</span>
+                    <span className="text-xs text-[#0f172a] font-semibold bg-[#f1f5f9] px-2 py-0.5 rounded">{c.weight}</span>
+                  </div>
+                  <p className="text-xs text-[#718096]">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-3 border-t border-[#edf2f7] bg-[#F4F7FE]">
+              <p className="text-xs text-[#718096]">
+                <strong>Note:</strong> Scores 8+ = Excellent, 6-7 = Good, 4-5 = Needs Work, Below 4 = Requires Coaching
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// LEAD SOURCE SCORE EXPLANATION COMPONENT
+// ============================================================================
+
+function LeadSourceScoreExplanation() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const criteria = [
+    { name: 'Timeline Urgency', weight: '25%', desc: 'Immediate need (10), Near-term/1-3 months (7), Exploring (4), Vague/None (1)' },
+    { name: 'Decision Authority', weight: '20%', desc: 'Is caller the decision maker or can authorize the purchase?' },
+    { name: 'Need Identified', weight: '20%', desc: 'Clear, specific need that matches our services' },
+    { name: 'Service Fit', weight: '20%', desc: 'Perfect fit (10), Good (8), Decent (5), Poor (2), Mismatch (0)' },
+    { name: 'Red Flags', weight: '15%', desc: 'Deductions for spam, wrong number, price shopping only, or no callback info' },
+  ];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#718096] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
+      >
+        <HelpCircle className="w-4 h-4" />
+        <span>Scoring Criteria</span>
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#edf2f7] z-40 overflow-hidden">
+            <div className="p-4 border-b border-[#edf2f7] bg-[#F4F7FE]">
+              <h4 className="font-bold text-[#1B254B]">How Lead Source Scores Are Calculated</h4>
+              <p className="text-xs text-[#718096] mt-1">Each lead is scored 1-10 based on quality indicators</p>
+            </div>
+            <div className="max-h-80 overflow-y-auto p-2">
+              {criteria.map((c, i) => (
+                <div key={i} className="p-3 hover:bg-[#F4F7FE] rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-sm text-[#1B254B]">{c.name}</span>
+                    <span className="text-xs text-[#0f172a] font-semibold bg-[#f1f5f9] px-2 py-0.5 rounded">{c.weight}</span>
+                  </div>
+                  <p className="text-xs text-[#718096]">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-3 border-t border-[#edf2f7] bg-[#F4F7FE]">
+              <p className="text-xs text-[#718096]">
+                <strong>Actions:</strong> 9-10 = Priority (1hr), 7-8 = Follow-up (24hr), 5-6 = Nurture (48-72hr), Below 5 = Email only or No follow-up
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function DashboardView({ result, selectedDivision, setSelectedDivision }: {
   result: AnalysisResult;
   selectedDivision: Division;
@@ -927,20 +1079,68 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
   selectedDivision: Division;
   setSelectedDivision: (d: Division) => void;
 }) {
-  const filteredCalls = result.calls.filter(c =>
-    repMatchesDivision(c.score.repInfo?.name || c.record.repName, selectedDivision)
-  );
+  const [selectedCallType, setSelectedCallType] = useState<CallType>('all');
+
+  const filteredCalls = result.calls.filter(c => {
+    const matchesDivision = repMatchesDivision(c.score.repInfo?.name || c.record.repName, selectedDivision);
+    const callType = c.score.callContext?.type || 'unknown';
+    const matchesType = selectedCallType === 'all' || callType === selectedCallType;
+    return matchesDivision && matchesType;
+  });
+
+  // Count by type for display
+  const typeCounts = {
+    inbound: result.calls.filter(c => c.score.callContext?.type === 'inbound').length,
+    outbound: result.calls.filter(c => c.score.callContext?.type === 'outbound').length,
+    followUp: result.calls.filter(c => c.score.callContext?.type === 'follow-up').length,
+  };
 
   return (
     <div className="space-y-6">
-      {/* Division Filter */}
-      <div className="flex items-center justify-between">
-        <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
-        {selectedDivision !== 'all' && (
+      {/* Filters Row */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
+          <div className="h-6 w-px bg-[#e2e8f0]" />
+          <CallTypeFilter selectedType={selectedCallType} setSelectedType={setSelectedCallType} />
+        </div>
+        <div className="flex items-center gap-4">
+          <ScoringExplanation />
           <p className="text-sm text-[#718096]">
             Showing {filteredCalls.length} of {result.calls.length} calls
           </p>
-        )}
+        </div>
+      </div>
+
+      {/* Call Type Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div className="p-2 bg-[#E6FAF5] rounded-lg">
+            <Phone className="w-5 h-5 text-[#01B574]" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.inbound}</p>
+            <p className="text-sm text-[#718096]">Inbound</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div className="p-2 bg-[#e0f2fe] rounded-lg">
+            <PhoneCall className="w-5 h-5 text-[#0284c7]" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.outbound}</p>
+            <p className="text-sm text-[#718096]">Outbound</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div className="p-2 bg-[#FFF6E5] rounded-lg">
+            <Clock className="w-5 h-5 text-[#FFB547]" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.followUp}</p>
+            <p className="text-sm text-[#718096]">Follow-ups</p>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
@@ -1043,7 +1243,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 {/* Basic Info Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-[#718096]">Lead Score</p>
+                    <p className="text-sm text-[#718096]">Lead Source Score</p>
                     <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.score || 0}/10</p>
                   </div>
                   <div>
@@ -1169,7 +1369,7 @@ function RepsView({ result, selectedDivision, setSelectedDivision }: {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[#F4F7FE] rounded-xl">
-              <p className="text-sm text-[#718096]">Lead Score Avg</p>
+              <p className="text-sm text-[#718096]">Lead Source Score</p>
               <p className="text-2xl font-bold text-[#1B254B]">{rep.averageLeadScore.toFixed(1)}</p>
             </div>
             <div className="p-4 bg-[#f1f5f9] rounded-xl">
@@ -1229,8 +1429,9 @@ function LeadsView({ result, selectedDivision, setSelectedDivision }: {
       </div>
 
       <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-[#edf2f7]">
-          <h3 className="font-bold text-[#1B254B]">Lead Scores (Highest First)</h3>
+        <div className="p-6 border-b border-[#edf2f7] flex items-center justify-between">
+          <h3 className="font-bold text-[#1B254B]">Lead Source Scores (Highest First)</h3>
+          <LeadSourceScoreExplanation />
         </div>
         <div className="divide-y divide-[#edf2f7]">
           {sortedCalls.map((call) => {
