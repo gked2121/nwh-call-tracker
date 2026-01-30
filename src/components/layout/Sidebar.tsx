@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Users,
   Phone,
-  BarChart3,
   Settings,
   Upload,
   ChevronLeft,
   ChevronRight,
   Target,
-  TrendingUp,
+  Megaphone,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -26,7 +26,7 @@ const navItems = [
   { id: "calls", label: "Call Details", icon: Phone, requiresResults: true },
   { id: "reps", label: "Rep Performance", icon: Users, requiresResults: true },
   { id: "leads", label: "Lead Scores", icon: Target, requiresResults: true },
-  { id: "trends", label: "Trends", icon: TrendingUp, requiresResults: true },
+  { id: "sources", label: "Lead Sources", icon: Megaphone, requiresResults: true },
 ];
 
 export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarProps) {
@@ -34,27 +34,33 @@ export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarP
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-white z-30 transition-all duration-300 flex flex-col shadow-xl ${
-        collapsed ? "w-[80px]" : "w-[280px]"
+      className={`fixed left-0 top-0 h-screen bg-white z-30 transition-all duration-300 flex flex-col border-r border-[#e2e8f0] ${
+        collapsed ? "w-[72px]" : "w-[260px]"
       }`}
     >
       {/* Logo */}
-      <div className="h-[80px] flex items-center px-6 border-b border-[#edf2f7]">
+      <div className="h-[72px] flex items-center px-4 border-b border-[#e2e8f0]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7551FF] to-[#422AFB] flex items-center justify-center shadow-lg shadow-[#422AFB]/25">
-            <BarChart3 className="w-5 h-5 text-white" />
+          <div className="relative w-10 h-10 flex-shrink-0 rounded-lg overflow-hidden">
+            <Image
+              src="/logo.webp"
+              alt="Nationwide Haul"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           {!collapsed && (
             <div>
-              <h1 className="font-bold text-[#1B254B] text-lg tracking-tight">NWH</h1>
-              <p className="text-xs text-[#a0aec0]">Call Analytics</p>
+              <h1 className="font-semibold text-[#0f172a] text-base tracking-tight leading-tight">Nationwide Haul</h1>
+              <p className="text-xs text-[#94a3b8]">Call Analytics</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 overflow-y-auto">
         <div className="space-y-1">
           {navItems.map((item) => {
             const isDisabled = item.requiresResults && !hasResults;
@@ -66,15 +72,16 @@ export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarP
                 key={item.id}
                 onClick={() => !isDisabled && onTabChange(item.id)}
                 disabled={isDisabled}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                title={collapsed ? item.label : undefined}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${
                   isActive
-                    ? "bg-gradient-to-r from-[#7551FF] to-[#422AFB] text-white shadow-lg shadow-[#422AFB]/30"
+                    ? "bg-[#0f172a] text-white"
                     : isDisabled
-                    ? "text-[#cbd5e0] cursor-not-allowed"
-                    : "text-[#718096] hover:bg-[#F4F7FE] hover:text-[#422AFB]"
+                    ? "text-[#cbd5e1] cursor-not-allowed"
+                    : "text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a]"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${collapsed ? "mx-auto" : ""}`} />
+                <Icon className={`w-5 h-5 flex-shrink-0 ${collapsed ? "mx-auto" : ""} ${isActive ? "" : "group-hover:scale-105 transition-transform"}`} />
                 {!collapsed && (
                   <span className="font-medium text-sm">{item.label}</span>
                 )}
@@ -85,16 +92,17 @@ export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarP
       </nav>
 
       {/* Settings at bottom */}
-      <div className="px-4 py-4 border-t border-[#edf2f7]">
+      <div className="px-3 py-3 border-t border-[#e2e8f0]">
         <button
           onClick={() => onTabChange("settings")}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          title={collapsed ? "Settings" : undefined}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${
             activeTab === "settings"
-              ? "bg-gradient-to-r from-[#7551FF] to-[#422AFB] text-white shadow-lg shadow-[#422AFB]/30"
-              : "text-[#718096] hover:bg-[#F4F7FE] hover:text-[#422AFB]"
+              ? "bg-[#0f172a] text-white"
+              : "text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a]"
           }`}
         >
-          <Settings className={`w-5 h-5 ${collapsed ? "mx-auto" : ""}`} />
+          <Settings className={`w-5 h-5 flex-shrink-0 ${collapsed ? "mx-auto" : ""} ${activeTab === "settings" ? "" : "group-hover:scale-105 transition-transform"}`} />
           {!collapsed && <span className="font-medium text-sm">Settings</span>}
         </button>
       </div>
@@ -102,12 +110,12 @@ export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarP
       {/* Collapse Toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-[90px] w-6 h-6 bg-white border border-[#e2e8f0] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+        className="absolute -right-3 top-[80px] w-6 h-6 bg-white border border-[#e2e8f0] rounded-full flex items-center justify-center shadow-sm hover:shadow-md hover:border-[#cbd5e1] transition-all"
       >
         {collapsed ? (
-          <ChevronRight className="w-3 h-3 text-[#718096]" />
+          <ChevronRight className="w-3 h-3 text-[#64748b]" />
         ) : (
-          <ChevronLeft className="w-3 h-3 text-[#718096]" />
+          <ChevronLeft className="w-3 h-3 text-[#64748b]" />
         )}
       </button>
     </aside>

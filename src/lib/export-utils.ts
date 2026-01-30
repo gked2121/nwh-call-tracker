@@ -3,14 +3,14 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { AnalysisResult } from '@/types/call';
 
-// Color constants
+// Color constants - Professional slate/blue scheme
 const COLORS = {
-  primary: [59, 130, 246] as [number, number, number],      // Blue
-  secondary: [99, 102, 241] as [number, number, number],    // Indigo
-  success: [16, 185, 129] as [number, number, number],      // Green
-  warning: [245, 158, 11] as [number, number, number],      // Amber
-  danger: [239, 68, 68] as [number, number, number],        // Red
-  dark: [30, 41, 59] as [number, number, number],           // Slate-800
+  primary: [15, 23, 42] as [number, number, number],        // Slate-900
+  secondary: [14, 165, 233] as [number, number, number],    // Sky-500
+  success: [16, 185, 129] as [number, number, number],      // Emerald-500
+  warning: [245, 158, 11] as [number, number, number],      // Amber-500
+  danger: [239, 68, 68] as [number, number, number],        // Red-500
+  dark: [15, 23, 42] as [number, number, number],           // Slate-900
   light: [248, 250, 252] as [number, number, number],       // Slate-50
   muted: [148, 163, 184] as [number, number, number],       // Slate-400
 };
@@ -94,8 +94,8 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
   const cards = [
     { label: 'Total Calls', value: result.overallStats.totalCalls.toString(), color: COLORS.primary },
     { label: 'Avg Rep Score', value: `${result.overallStats.averageScore}/10`, color: COLORS.success },
-    { label: 'Hot Leads', value: (result.overallStats.hotLeads || 0).toString(), color: COLORS.danger },
-    { label: 'Qualified', value: (result.overallStats.qualifiedLeads || 0).toString(), color: COLORS.warning },
+    { label: 'Avg Lead Score', value: `${result.overallStats.averageLeadScore || 0}/10`, color: COLORS.secondary },
+    { label: 'Qualified (7+)', value: (result.overallStats.qualifiedLeads || 0).toString(), color: COLORS.warning },
   ];
 
   cards.forEach((card, i) => {
@@ -144,14 +144,13 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
 
   autoTable(doc, {
     startY: yPos,
-    head: [['#', 'Rep Name', 'Calls', 'Rep Score', 'Lead Score', 'Hot', 'Qualified', 'Trend']],
+    head: [['#', 'Rep Name', 'Calls', 'Rep Score', 'Lead Score', 'Qualified (7+)', 'Trend']],
     body: result.repSummaries.map((rep, i) => [
       (i + 1).toString(),
       rep.repName,
       rep.totalCalls.toString(),
       `${rep.averageScore}/10`,
       `${rep.averageLeadScore || 0}/10`,
-      (rep.hotLeads || 0).toString(),
       (rep.qualifiedLeads || 0).toString(),
       rep.trend.charAt(0).toUpperCase() + rep.trend.slice(1),
     ]),
@@ -173,7 +172,6 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
       4: { halign: 'center' },
       5: { halign: 'center' },
       6: { halign: 'center' },
-      7: { halign: 'center' },
     },
     didParseCell: (data) => {
       // Color code scores
@@ -185,7 +183,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
           else data.cell.styles.textColor = COLORS.danger;
           data.cell.styles.fontStyle = 'bold';
         }
-        if (data.column.index === 7) {
+        if (data.column.index === 6) {
           const trend = data.cell.text[0].toLowerCase();
           if (trend === 'improving') data.cell.styles.textColor = COLORS.success;
           else if (trend === 'declining') data.cell.styles.textColor = COLORS.danger;
@@ -304,31 +302,31 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
   });
 
   // ============================================
-  // HOT LEADS PAGE
+  // QUALIFIED LEADS PAGE
   // ============================================
   doc.addPage();
   yPos = 20;
 
   // Header
-  doc.setFillColor(...COLORS.danger);
+  doc.setFillColor(...COLORS.warning);
   doc.rect(0, 0, pageWidth, 25, 'F');
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(255, 255, 255);
-  doc.text('Hot Leads - Priority Follow-Up', pageWidth / 2, 16, { align: 'center' });
+  doc.text('Qualified Leads - Follow-Up Required', pageWidth / 2, 16, { align: 'center' });
 
   yPos = 35;
   doc.setTextColor(0, 0, 0);
 
-  const hotLeads = result.calls
+  const qualifiedLeads = result.calls
     .filter(c => (c.score.leadQuality?.score || 0) >= 7)
     .sort((a, b) => (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0));
 
-  if (hotLeads.length > 0) {
+  if (qualifiedLeads.length > 0) {
     autoTable(doc, {
       startY: yPos,
       head: [['Score', 'Caller', 'Company/Location', 'Rep', 'Need Summary', 'Action']],
-      body: hotLeads.map(call => [
+      body: qualifiedLeads.map(call => [
         `${call.score.leadQuality?.score || '-'}/10`,
         call.score.callerInfo?.name || 'Unknown',
         call.score.callerInfo?.company || call.score.callerInfo?.location || '-',
@@ -353,7 +351,7 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
         if (data.section === 'body' && data.column.index === 0) {
           const score = parseFloat(data.cell.text[0]);
           if (score >= 9) {
-            data.cell.styles.textColor = COLORS.danger;
+            data.cell.styles.textColor = COLORS.success;
           } else {
             data.cell.styles.textColor = COLORS.warning;
           }
@@ -370,8 +368,94 @@ export function exportToPDF(result: AnalysisResult, filename: string = 'call-ana
   } else {
     doc.setFontSize(12);
     doc.setTextColor(...COLORS.muted);
-    doc.text('No hot leads (score 7+) found in this analysis.', pageWidth / 2, yPos + 20, { align: 'center' });
+    doc.text('No qualified leads (score 7+) found in this analysis.', pageWidth / 2, yPos + 20, { align: 'center' });
   }
+
+  // ============================================
+  // LEAD SOURCES PAGE
+  // ============================================
+  doc.addPage();
+  yPos = 20;
+
+  // Header
+  doc.setFillColor(...COLORS.secondary);
+  doc.rect(0, 0, pageWidth, 25, 'F');
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text('Lead Source Analysis', pageWidth / 2, 16, { align: 'center' });
+
+  yPos = 35;
+  doc.setTextColor(0, 0, 0);
+
+  // Aggregate source data
+  const sourceMap = new Map<string, typeof result.calls>();
+  for (const call of result.calls) {
+    const source = call.record.source || 'Unknown';
+    if (!sourceMap.has(source)) sourceMap.set(source, []);
+    sourceMap.get(source)!.push(call);
+  }
+
+  const sourceTableData = [...sourceMap.entries()]
+    .map(([source, calls]) => {
+      const leadScores = calls.map(c => c.score.leadQuality?.score || 0);
+      const avgLead = leadScores.length > 0 ? leadScores.reduce((a, b) => a + b, 0) / leadScores.length : 0;
+      const qualified = leadScores.filter(s => s >= 7).length;
+      const durations = calls.map(c => c.record.durationSeconds || 0);
+      const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+      const mins = Math.floor(avgDuration / 60);
+      const secs = Math.round(avgDuration % 60);
+      return {
+        source,
+        count: calls.length,
+        avgLead: Math.round(avgLead * 10) / 10,
+        qualified,
+        qualifiedPct: Math.round(qualified / calls.length * 100),
+        avgDuration: `${mins}:${String(secs).padStart(2, '0')}`,
+      };
+    })
+    .sort((a, b) => b.avgLead - a.avgLead);
+
+  autoTable(doc, {
+    startY: yPos,
+    head: [['Source', 'Calls', 'Avg Lead Score', 'Qualified (7+)', 'Qualified %', 'Avg Duration']],
+    body: sourceTableData.map(s => [
+      s.source,
+      s.count.toString(),
+      `${s.avgLead}/10`,
+      s.qualified.toString(),
+      `${s.qualifiedPct}%`,
+      s.avgDuration,
+    ]),
+    styles: {
+      fontSize: 9,
+      cellPadding: 4,
+    },
+    headStyles: {
+      fillColor: COLORS.dark,
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+    },
+    alternateRowStyles: {
+      fillColor: COLORS.light,
+    },
+    columnStyles: {
+      1: { halign: 'center' },
+      2: { halign: 'center' },
+      3: { halign: 'center' },
+      4: { halign: 'center' },
+      5: { halign: 'center' },
+    },
+    didParseCell: (data) => {
+      if (data.section === 'body' && data.column.index === 2) {
+        const score = parseFloat(data.cell.text[0]);
+        if (score >= 8) data.cell.styles.textColor = COLORS.success;
+        else if (score >= 6) data.cell.styles.textColor = COLORS.warning;
+        else data.cell.styles.textColor = COLORS.danger;
+        data.cell.styles.fontStyle = 'bold';
+      }
+    },
+  });
 
   // ============================================
   // ALL CALLS DETAIL
@@ -457,8 +541,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     ['═══════════════════════════════════════'],
     [''],
     ['Category', 'Count', 'Description'],
-    ['Hot Leads (9-10)', result.overallStats.hotLeads || 0, 'Call within 1 hour'],
-    ['Qualified Leads (7-8)', result.overallStats.qualifiedLeads || 0, 'Follow up within 24 hours'],
+    ['Qualified Leads (7+)', result.overallStats.qualifiedLeads || 0, 'Follow up within 24-48 hours'],
     ['Red Flag Calls', result.overallStats.redFlagCalls || 0, 'Requires attention'],
     [''],
     ['═══════════════════════════════════════'],
@@ -489,8 +572,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Total Calls',
     'Rep Score',
     'Lead Score',
-    'Hot Leads',
-    'Qualified Leads',
+    'Qualified (7+)',
     'Trend',
     'Top Strengths',
     'Key Improvements',
@@ -503,7 +585,6 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     rep.totalCalls,
     rep.averageScore,
     rep.averageLeadScore || 0,
-    rep.hotLeads || 0,
     rep.qualifiedLeads || 0,
     rep.trend.charAt(0).toUpperCase() + rep.trend.slice(1),
     rep.strengths.slice(0, 2).join(' | '),
@@ -519,7 +600,6 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 10 },  // Calls
     { wch: 10 },  // Rep Score
     { wch: 10 },  // Lead Score
-    { wch: 10 },  // Hot
     { wch: 12 },  // Qualified
     { wch: 12 },  // Trend
     { wch: 40 },  // Strengths
@@ -530,9 +610,9 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
   XLSX.utils.book_append_sheet(workbook, repSheet, 'Rep Leaderboard');
 
   // ============================================
-  // HOT LEADS SHEET (Priority)
+  // QUALIFIED LEADS SHEET
   // ============================================
-  const hotLeadHeaders = [
+  const qualifiedLeadHeaders = [
     'Priority',
     'Lead Score',
     'Caller Name',
@@ -546,7 +626,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Timeline',
   ];
 
-  const hotLeadData = result.calls
+  const qualifiedLeadData = result.calls
     .filter(c => (c.score.leadQuality?.score || 0) >= 7)
     .sort((a, b) => (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0))
     .map((call, i) => [
@@ -563,9 +643,9 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
       call.score.leadQuality?.timeline || '',
     ]);
 
-  const hotLeadSheet = XLSX.utils.aoa_to_sheet([hotLeadHeaders, ...hotLeadData]);
+  const qualifiedLeadSheet = XLSX.utils.aoa_to_sheet([qualifiedLeadHeaders, ...qualifiedLeadData]);
 
-  hotLeadSheet['!cols'] = [
+  qualifiedLeadSheet['!cols'] = [
     { wch: 8 },   // Priority
     { wch: 10 },  // Score
     { wch: 20 },  // Name
@@ -579,7 +659,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 15 },  // Timeline
   ];
 
-  XLSX.utils.book_append_sheet(workbook, hotLeadSheet, 'Hot Leads');
+  XLSX.utils.book_append_sheet(workbook, qualifiedLeadSheet, 'Qualified Leads');
 
   // ============================================
   // ALL CALLS SHEET
@@ -593,6 +673,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Need Summary',
     'Date',
     'Duration',
+    'Source',
     'Call Type',
     'Rep Score',
     'Lead Score',
@@ -605,6 +686,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     'Weaknesses',
     'Coaching Insights',
     'Red Flags',
+    'Recording URL',
   ];
 
   const callData = result.calls.map(call => [
@@ -616,6 +698,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     call.score.callerInfo?.needSummary || '',
     call.record.callDate,
     call.record.callDuration,
+    call.record.source || '',
     call.score.callContext?.type || '',
     call.score.overallScore,
     call.score.leadQuality?.score || '',
@@ -628,6 +711,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     (call.score.weaknesses || []).join(' | '),
     (call.score.coachingInsights || []).join(' | '),
     (call.score.leadQuality?.redFlags || []).join(' | '),
+    call.record.recordingUrl || '',
   ]);
 
   const callSheet = XLSX.utils.aoa_to_sheet([callHeaders, ...callData]);
@@ -641,6 +725,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 35 },  // Need
     { wch: 18 },  // Date
     { wch: 10 },  // Duration
+    { wch: 18 },  // Source
     { wch: 10 },  // Type
     { wch: 10 },  // Rep Score
     { wch: 10 },  // Lead Score
@@ -653,6 +738,7 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
     { wch: 40 },  // Weaknesses
     { wch: 40 },  // Coaching
     { wch: 30 },  // Red Flags
+    { wch: 50 },  // Recording URL
   ];
 
   // Freeze header row
@@ -717,6 +803,61 @@ export function exportToExcel(result: AnalysisResult, filename: string = 'call-a
   ];
 
   XLSX.utils.book_append_sheet(workbook, scoreSheet, 'Score Breakdown');
+
+  // ============================================
+  // LEAD SOURCES SHEET
+  // ============================================
+  const sourceMap = new Map<string, typeof result.calls>();
+  for (const call of result.calls) {
+    const source = call.record.source || 'Unknown';
+    if (!sourceMap.has(source)) sourceMap.set(source, []);
+    sourceMap.get(source)!.push(call);
+  }
+
+  const sourceHeaders = [
+    'Source',
+    'Total Calls',
+    'Avg Lead Score',
+    'Avg Rep Score',
+    'Qualified (7+)',
+    'Qualified %',
+    'Avg Duration',
+  ];
+
+  const sourceData = [...sourceMap.entries()]
+    .map(([source, calls]) => {
+      const leadScores = calls.map(c => c.score.leadQuality?.score || 0);
+      const repScores = calls.map(c => c.score.overallScore);
+      const avgLead = leadScores.length > 0 ? leadScores.reduce((a, b) => a + b, 0) / leadScores.length : 0;
+      const avgRep = repScores.length > 0 ? repScores.reduce((a, b) => a + b, 0) / repScores.length : 0;
+      const qualified = leadScores.filter(s => s >= 7).length;
+      const durations = calls.map(c => c.record.durationSeconds || 0);
+      const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+      const mins = Math.floor(avgDuration / 60);
+      const secs = Math.round(avgDuration % 60);
+      return [
+        source,
+        calls.length,
+        Math.round(avgLead * 10) / 10,
+        Math.round(avgRep * 10) / 10,
+        qualified,
+        `${Math.round(qualified / calls.length * 100)}%`,
+        `${mins}:${String(secs).padStart(2, '0')}`,
+      ];
+    })
+    .sort((a, b) => (b[2] as number) - (a[2] as number)); // Sort by lead score
+
+  const sourceSheet = XLSX.utils.aoa_to_sheet([sourceHeaders, ...sourceData]);
+  sourceSheet['!cols'] = [
+    { wch: 25 },  // Source
+    { wch: 12 },  // Calls
+    { wch: 14 },  // Avg Lead
+    { wch: 14 },  // Avg Rep
+    { wch: 12 },  // Qualified
+    { wch: 12 },  // %
+    { wch: 12 },  // Duration
+  ];
+  XLSX.utils.book_append_sheet(workbook, sourceSheet, 'Lead Sources');
 
   // ============================================
   // RED FLAGS SHEET (if any)

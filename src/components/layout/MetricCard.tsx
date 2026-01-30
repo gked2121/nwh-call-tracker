@@ -20,7 +20,7 @@ export default function MetricCard({
   subtitle,
   icon: Icon,
   iconBg = "bg-[#F4F7FE]",
-  iconColor = "text-[#422AFB]",
+  iconColor = "text-[#0f172a]",
   trend,
   trendValue,
   onClick,
@@ -28,41 +28,41 @@ export default function MetricCard({
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-[20px] p-6 shadow-sm hover:shadow-md transition-all duration-300 ${
-        onClick ? "cursor-pointer hover:-translate-y-1" : ""
+      className={`bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-300 border border-[#f1f5f9] ${
+        onClick ? "cursor-pointer hover:-translate-y-0.5" : ""
       }`}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-[#a0aec0] mb-1">{title}</p>
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-bold text-[#1B254B]">{value}</h3>
+          <p className="text-sm font-medium text-[#64748b] tracking-wide uppercase mb-2">{title}</p>
+          <div className="flex items-baseline gap-3">
+            <h3 className="text-4xl font-bold text-[#0f172a] tracking-tight">{value}</h3>
             {trend && trendValue && (
               <div
-                className={`flex items-center gap-1 text-sm font-medium ${
+                className={`flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded-full ${
                   trend === "up"
-                    ? "text-[#01B574]"
+                    ? "text-[#059669] bg-[#d1fae5]"
                     : trend === "down"
-                    ? "text-[#E31A1A]"
-                    : "text-[#a0aec0]"
+                    ? "text-[#dc2626] bg-[#fee2e2]"
+                    : "text-[#64748b] bg-[#f1f5f9]"
                 }`}
               >
                 {trend === "up" ? (
-                  <TrendingUp className="w-4 h-4" />
+                  <TrendingUp className="w-3.5 h-3.5" />
                 ) : trend === "down" ? (
-                  <TrendingDown className="w-4 h-4" />
+                  <TrendingDown className="w-3.5 h-3.5" />
                 ) : (
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3.5 h-3.5" />
                 )}
                 <span>{trendValue}</span>
               </div>
             )}
           </div>
           {subtitle && (
-            <p className="text-sm text-[#718096] mt-1">{subtitle}</p>
+            <p className="text-sm text-[#94a3b8] mt-2">{subtitle}</p>
           )}
         </div>
-        <div className={`p-3 rounded-xl ${iconBg}`}>
+        <div className={`p-3.5 rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-105`}>
           <Icon className={`w-6 h-6 ${iconColor}`} />
         </div>
       </div>
@@ -83,20 +83,20 @@ export function MiniMetricCard({
   color?: "brand" | "success" | "warning" | "error";
 }) {
   const colors = {
-    brand: { bg: "bg-[#E9E3FF]", icon: "text-[#422AFB]" },
-    success: { bg: "bg-[#E6FAF5]", icon: "text-[#01B574]" },
-    warning: { bg: "bg-[#FFF6E5]", icon: "text-[#FFB547]" },
-    error: { bg: "bg-[#FFE5E5]", icon: "text-[#E31A1A]" },
+    brand: { bg: "bg-[#f1f5f9]", icon: "text-[#0f172a]" },
+    success: { bg: "bg-[#d1fae5]", icon: "text-[#059669]" },
+    warning: { bg: "bg-[#fef3c7]", icon: "text-[#d97706]" },
+    error: { bg: "bg-[#fee2e2]", icon: "text-[#dc2626]" },
   };
 
   return (
-    <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-sm">
+    <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-[#f1f5f9] hover:shadow-md transition-all duration-200">
       <div className={`p-3 rounded-xl ${colors[color].bg}`}>
         <Icon className={`w-5 h-5 ${colors[color].icon}`} />
       </div>
       <div>
-        <p className="text-sm text-[#a0aec0]">{title}</p>
-        <p className="text-xl font-bold text-[#1B254B]">{value}</p>
+        <p className="text-sm text-[#64748b] font-medium">{title}</p>
+        <p className="text-xl font-bold text-[#0f172a]">{value}</p>
       </div>
     </div>
   );

@@ -6,17 +6,17 @@
   --background: #F4F7FE;
   --foreground: #1B2559;
 
-  /* Brand Colors (Purple-Blue) */
-  --brand-50: #E9E3FF;
-  --brand-100: #C0B8FE;
-  --brand-200: #A195FD;
-  --brand-300: #8171FC;
-  --brand-400: #7551FF;
-  --brand-500: #422AFB;
-  --brand-600: #3311DB;
-  --brand-700: #2111A5;
-  --brand-800: #190793;
-  --brand-900: #11047A;
+  /* Brand Colors (Slate) */
+  --brand-50: #f8fafc;
+  --brand-100: #f1f5f9;
+  --brand-200: #e2e8f0;
+  --brand-300: #cbd5e1;
+  --brand-400: #94a3b8;
+  --brand-500: #64748b;
+  --brand-600: #475569;
+  --brand-700: #334155;
+  --brand-800: #1e293b;
+  --brand-900: #0f172a;
 
   /* Navy (Dark elements) */
   --navy-50: #d0dcfb;
@@ -46,7 +46,7 @@
   --success: #01B574;
   --warning: #FFB547;
   --error: #E31A1A;
-  --info: #4318FF;
+  --info: #0284c7;
 
   /* Shadows */
   --shadow-sm: 0px 4px 6px rgba(112, 144, 176, 0.08);
@@ -121,17 +121,17 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
 
 /* Brand Gradient Button */
 .btn-brand {
-  background: linear-gradient(135deg, var(--brand-400) 0%, var(--brand-600) 100%);
+  background: linear-gradient(135deg, var(--brand-800) 0%, var(--brand-900) 100%);
   color: white;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(67, 24, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
 .btn-brand:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(67, 24, 255, 0.45);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.35);
 }
 
 /* Status Badges */
@@ -183,13 +183,13 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
 }
 
 .nav-item:hover {
-  background: var(--brand-50);
-  color: var(--brand-500);
+  background: var(--brand-100);
+  color: var(--brand-900);
 }
 
 .nav-item.active {
-  background: var(--brand-50);
-  color: var(--brand-500);
+  background: var(--brand-900);
+  color: white;
   font-weight: 600;
 }
 
@@ -232,7 +232,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
 .progress-horizon-bar {
   height: 100%;
   border-radius: 4px;
-  background: linear-gradient(90deg, var(--brand-400), var(--brand-500));
+  background: linear-gradient(90deg, var(--brand-800), var(--brand-900));
   transition: width 0.5s ease;
 }
 
@@ -243,8 +243,8 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(67, 24, 255, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(67, 24, 255, 0.5); }
+  0%, 100% { box-shadow: 0 0 20px rgba(15, 23, 42, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(15, 23, 42, 0.3); }
 }
 
 @keyframes slide-up {
@@ -349,7 +349,7 @@ button, a, .card {
 }
 
 .score-good {
-  background: linear-gradient(135deg, var(--brand-400) 0%, var(--brand-600) 100%);
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
   color: white;
 }
 
@@ -394,8 +394,8 @@ input::placeholder, textarea::placeholder {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #422AFB !important;
-  box-shadow: 0 0 0 3px rgba(66, 42, 251, 0.1) !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1) !important;
 }
 
 /* Custom Scrollbar */

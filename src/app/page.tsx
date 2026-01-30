@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { AnalysisResult, AnalyzedCall, RepSummary } from "@/types/call";
 import { Sidebar, DashboardHeader, MetricCard, DataTable, ScoreBadge, StatusBadge } from "@/components/layout";
 import { exportToPDF, exportToExcel } from "@/lib/export-utils";
+import { Division, DIVISIONS, getRepDivisionInfo, repMatchesDivision, getDivisionOptions } from "@/lib/divisions";
 import {
   Upload,
   FileSpreadsheet,
@@ -42,6 +43,7 @@ import {
   Shield,
   HelpCircle,
   ExternalLink,
+  Filter,
 } from "lucide-react";
 
 // Helper function to build result from collected calls
@@ -122,6 +124,7 @@ export default function Home() {
   const [totalCalls, setTotalCalls] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<'bronze' | 'silver' | 'gold' | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [selectedDivision, setSelectedDivision] = useState<Division>('all');
 
   // Load saved keys and check for first visit
   useEffect(() => {
@@ -277,13 +280,15 @@ export default function Home() {
           onOpenSettings={() => setActiveTab("settings")}
         />;
       case "dashboard":
-        return result ? <DashboardView result={result} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
+        return result ? <DashboardView result={result} selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
       case "calls":
-        return result ? <CallsView result={result} expandedCall={expandedCall} setExpandedCall={setExpandedCall} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
+        return result ? <CallsView result={result} expandedCall={expandedCall} setExpandedCall={setExpandedCall} selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
       case "reps":
-        return result ? <RepsView result={result} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
+        return result ? <RepsView result={result} selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
       case "leads":
-        return result ? <LeadsView result={result} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
+        return result ? <LeadsView result={result} selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
+      case "sources":
+        return result ? <SourcesView result={result} /> : <NoDataView onUpload={() => setActiveTab("upload")} />;
       case "settings":
         return <SettingsView
           aiModel={aiModel}
@@ -323,6 +328,7 @@ export default function Home() {
       case "calls": return "Call Details";
       case "reps": return "Rep Performance";
       case "leads": return "Lead Scores";
+      case "sources": return "Lead Sources";
       case "settings": return "Settings";
       default: return "Dashboard";
     }
@@ -340,7 +346,7 @@ export default function Home() {
       )}
 
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} hasResults={!!result} />
-      <main className="ml-[280px] min-h-screen transition-all duration-300">
+      <main className="ml-[260px] min-h-screen transition-all duration-300">
         <DashboardHeader
           title={getHeaderTitle()}
           subtitle={result ? `${result.overallStats.totalCalls} calls analyzed` : undefined}
@@ -369,7 +375,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1B254B]/80 backdrop-blur-sm">
       <div className="bg-white rounded-[20px] shadow-2xl max-w-2xl w-full overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#7551FF] to-[#422AFB] p-8 text-white">
+        <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] p-8 text-white">
           <div className="flex items-center gap-4 mb-2">
             <div className="p-3 bg-white/20 rounded-xl backdrop-blur">
               <BarChart3 className="w-7 h-7 text-white" />
@@ -390,10 +396,10 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
             </h2>
             <div className="grid grid-cols-4 gap-3">
               {[
-                { icon: Key, label: "1. Add API Key", color: "bg-[#E9E3FF] text-[#422AFB]" },
-                { icon: Upload, label: "2. Upload File", color: "bg-[#E9E3FF] text-[#422AFB]" },
-                { icon: Brain, label: "3. AI Analyzes", color: "bg-[#E9E3FF] text-[#422AFB]" },
-                { icon: Download, label: "4. Export Report", color: "bg-[#E9E3FF] text-[#422AFB]" },
+                { icon: Key, label: "1. Add API Key", color: "bg-[#f1f5f9] text-[#0f172a]" },
+                { icon: Upload, label: "2. Upload File", color: "bg-[#f1f5f9] text-[#0f172a]" },
+                { icon: Brain, label: "3. AI Analyzes", color: "bg-[#f1f5f9] text-[#0f172a]" },
+                { icon: Download, label: "4. Export Report", color: "bg-[#f1f5f9] text-[#0f172a]" },
               ].map((step, i) => (
                 <div key={i} className="text-center p-4 bg-[#F4F7FE] rounded-xl">
                   <div className={`w-10 h-10 ${step.color} rounded-xl flex items-center justify-center mx-auto mb-2`}>
@@ -424,7 +430,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-white border border-[#e2e8f0] text-[#1B254B] rounded-lg hover:bg-[#F4F7FE] transition-colors font-medium"
                   >
-                    <Zap className="w-3 h-3 text-[#422AFB]" />
+                    <Zap className="w-3 h-3 text-[#0f172a]" />
                     Anthropic Console
                     <ArrowUpRight className="w-3 h-3" />
                   </a>
@@ -455,7 +461,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
 
           {/* Privacy note */}
           <div className="flex items-start gap-3 p-4 bg-[#F4F7FE] rounded-xl">
-            <Shield className="w-4 h-4 text-[#422AFB] mt-0.5" />
+            <Shield className="w-4 h-4 text-[#0f172a] mt-0.5" />
             <p className="text-sm text-[#718096]">
               <span className="font-medium text-[#1B254B]">Your data stays secure.</span> API keys are stored locally in your browser and sent directly to AI providers. We never store or access your data.
             </p>
@@ -464,7 +470,7 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
           {/* CTA Button */}
           <Button
             onClick={onDismiss}
-            className="w-full h-12 font-semibold bg-gradient-to-r from-[#7551FF] to-[#422AFB] hover:from-[#422AFB] hover:to-[#3311DB] rounded-xl text-base shadow-lg shadow-[#422AFB]/25"
+            className="w-full h-12 font-semibold bg-gradient-to-r from-[#0f172a] to-[#1e293b] hover:from-[#0f172a] hover:to-[#334155] rounded-xl text-base shadow-lg shadow-[#0f172a]/25"
           >
             {hasKey ? "Continue to Dashboard" : "Get Started"}
           </Button>
@@ -481,12 +487,12 @@ function WelcomeModal({ anthropicKey, openaiKey, onDismiss }: {
 function NoDataView({ onUpload }: { onUpload: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="w-20 h-20 rounded-full bg-[#E9E3FF] flex items-center justify-center mb-6">
-        <FileSpreadsheet className="w-10 h-10 text-[#422AFB]" />
+      <div className="w-20 h-20 rounded-full bg-[#f1f5f9] flex items-center justify-center mb-6">
+        <FileSpreadsheet className="w-10 h-10 text-[#0f172a]" />
       </div>
       <h3 className="text-xl font-semibold text-[#1B254B] mb-2">No Data Yet</h3>
       <p className="text-[#718096] mb-6">Upload and analyze a call log to see results</p>
-      <Button onClick={onUpload} className="bg-[#422AFB] hover:bg-[#3311DB]">
+      <Button onClick={onUpload} className="bg-[#0f172a] hover:bg-[#334155]">
         <Upload className="w-4 h-4 mr-2" /> Upload Calls
       </Button>
     </div>
@@ -518,11 +524,11 @@ function UploadView({
 
         {/* File Input */}
         <label className={`block border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
-          file ? "border-[#422AFB] bg-[#E9E3FF]/30" : "border-[#e2e8f0] hover:border-[#422AFB] hover:bg-[#F4F7FE]"
+          file ? "border-[#0f172a] bg-[#f1f5f9]/30" : "border-[#e2e8f0] hover:border-[#0f172a] hover:bg-[#F4F7FE]"
         }`}>
           <input type="file" accept=".xlsx,.xls,.csv" onChange={onFileChange} className="hidden" disabled={loading} />
-          <div className="w-16 h-16 rounded-2xl bg-[#E9E3FF] flex items-center justify-center mx-auto mb-4">
-            {file ? <CheckCircle className="w-8 h-8 text-[#422AFB]" /> : <Upload className="w-8 h-8 text-[#422AFB]" />}
+          <div className="w-16 h-16 rounded-2xl bg-[#f1f5f9] flex items-center justify-center mx-auto mb-4">
+            {file ? <CheckCircle className="w-8 h-8 text-[#0f172a]" /> : <Upload className="w-8 h-8 text-[#0f172a]" />}
           </div>
           {file ? (
             <>
@@ -543,16 +549,16 @@ function UploadView({
             onClick={() => setAiModel("claude")}
             className={`p-4 rounded-xl border-2 transition-all ${
               aiModel === "claude"
-                ? "border-[#422AFB] bg-[#E9E3FF]"
+                ? "border-[#0f172a] bg-[#f1f5f9]"
                 : "border-[#e2e8f0] hover:border-[#cbd5e0]"
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-[#422AFB]" : "bg-[#F4F7FE]"}`}>
+              <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-[#0f172a]" : "bg-[#F4F7FE]"}`}>
                 <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-white" : "text-[#718096]"}`} />
               </div>
               <div className="text-left">
-                <p className={`font-semibold ${aiModel === "claude" ? "text-[#422AFB]" : "text-[#1B254B]"}`}>Claude Sonnet 4.5</p>
+                <p className={`font-semibold ${aiModel === "claude" ? "text-[#0f172a]" : "text-[#1B254B]"}`}>Claude Sonnet 4.5</p>
                 <p className="text-xs text-[#718096]">Fast & accurate</p>
               </div>
             </div>
@@ -606,7 +612,7 @@ function UploadView({
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full animate-pulse ${
                   currentPhase === 'bronze' ? 'bg-amber-500' :
-                  currentPhase === 'silver' ? 'bg-slate-400' : 'bg-[#422AFB]'
+                  currentPhase === 'silver' ? 'bg-slate-400' : 'bg-[#0f172a]'
                 }`} />
                 <span className="text-sm font-medium text-[#1B254B]">
                   {currentPhase === 'bronze' ? 'Parsing File' : currentPhase === 'silver' ? 'Extracting Data' : 'AI Analysis'}
@@ -623,7 +629,7 @@ function UploadView({
         <Button
           onClick={onAnalyze}
           disabled={!file || loading || !hasApiKey}
-          className="w-full mt-6 h-12 bg-gradient-to-r from-[#7551FF] to-[#422AFB] hover:from-[#422AFB] hover:to-[#3311DB] text-white font-semibold rounded-xl shadow-lg shadow-[#422AFB]/25"
+          className="w-full mt-6 h-12 bg-gradient-to-r from-[#0f172a] to-[#1e293b] hover:from-[#0f172a] hover:to-[#334155] text-white font-semibold rounded-xl shadow-lg shadow-[#0f172a]/25"
         >
           {loading ? (
             <>
@@ -644,7 +650,7 @@ function UploadView({
         <div className="space-y-4">
           {[
             { icon: FileSpreadsheet, color: "bg-amber-100 text-amber-600", label: "Upload CallRail Export", desc: "Excel file with call transcripts" },
-            { icon: Zap, color: "bg-[#E9E3FF] text-[#422AFB]", label: "AI Extraction", desc: "Identify reps, callers, and context" },
+            { icon: Zap, color: "bg-[#f1f5f9] text-[#0f172a]", label: "AI Extraction", desc: "Identify reps, callers, and context" },
             { icon: Target, color: "bg-[#E6FAF5] text-[#01B574]", label: "Score & Analyze", desc: "Lead quality and rep performance" },
           ].map((step, i) => (
             <div key={i} className="flex items-center gap-4">
@@ -663,40 +669,132 @@ function UploadView({
   );
 }
 
-function DashboardView({ result }: { result: AnalysisResult }) {
-  const { overallStats, repSummaries, calls } = result;
-  const hotLeads = calls.filter(c => (c.score.leadQuality?.score || 0) >= 9);
-  const priorityCalls = calls.filter(c => c.score.leadQuality?.recommendedAction === "priority-1hr");
+// ============================================================================
+// DIVISION FILTER COMPONENT
+// ============================================================================
+
+function DivisionFilter({
+  selectedDivision,
+  setSelectedDivision
+}: {
+  selectedDivision: Division;
+  setSelectedDivision: (d: Division) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const currentDivision = DIVISIONS[selectedDivision];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+          selectedDivision === 'all'
+            ? 'border-[#e2e8f0] bg-white hover:bg-[#F4F7FE]'
+            : `border-transparent ${currentDivision.bgColor}`
+        }`}
+      >
+        <Filter className={`w-4 h-4 ${selectedDivision === 'all' ? 'text-[#718096]' : currentDivision.color}`} />
+        <span className={`font-medium ${selectedDivision === 'all' ? 'text-[#1B254B]' : currentDivision.color}`}>
+          {currentDivision.shortName}
+        </span>
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''} ${selectedDivision === 'all' ? 'text-[#718096]' : currentDivision.color}`} />
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-[#edf2f7] z-40 overflow-hidden">
+            {getDivisionOptions().map((div) => (
+              <button
+                key={div.id}
+                onClick={() => {
+                  setSelectedDivision(div.id);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-[#F4F7FE] transition-colors ${
+                  selectedDivision === div.id ? 'bg-[#F4F7FE]' : ''
+                }`}
+              >
+                <div className={`w-3 h-3 rounded-full ${div.bgColor}`} />
+                <span className="flex-1 text-left font-medium text-[#1B254B]">{div.name}</span>
+                {selectedDivision === div.id && (
+                  <CheckCircle className="w-4 h-4 text-[#01B574]" />
+                )}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function DashboardView({ result, selectedDivision, setSelectedDivision }: {
+  result: AnalysisResult;
+  selectedDivision: Division;
+  setSelectedDivision: (d: Division) => void;
+}) {
+  // Filter data by division
+  const filteredCalls = result.calls.filter(c =>
+    repMatchesDivision(c.score.repInfo?.name || c.record.repName, selectedDivision)
+  );
+  const filteredRepSummaries = result.repSummaries.filter(r =>
+    repMatchesDivision(r.repName, selectedDivision)
+  );
+
+  // Recalculate stats for filtered data
+  const filteredStats = {
+    totalCalls: filteredCalls.length,
+    averageScore: filteredCalls.length > 0
+      ? Math.round((filteredCalls.reduce((sum, c) => sum + c.score.overallScore, 0) / filteredCalls.length) * 10) / 10
+      : 0,
+    averageLeadScore: filteredCalls.length > 0
+      ? Math.round((filteredCalls.reduce((sum, c) => sum + (c.score.leadQuality?.score || 0), 0) / filteredCalls.length) * 10) / 10
+      : 0,
+    qualifiedLeads: filteredCalls.filter(c => (c.score.leadQuality?.score || 0) >= 7).length,
+  };
+
+  const priorityCalls = filteredCalls.filter(c => c.score.leadQuality?.recommendedAction === "priority-1hr");
 
   return (
     <div className="space-y-6">
+      {/* Division Filter */}
+      <div className="flex items-center justify-between">
+        <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
+        {selectedDivision !== 'all' && (
+          <p className="text-sm text-[#718096]">
+            Showing {filteredCalls.length} of {result.calls.length} calls
+          </p>
+        )}
+      </div>
+
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           title="Total Calls"
-          value={overallStats.totalCalls}
+          value={filteredStats.totalCalls}
           subtitle="Analyzed"
           icon={Phone}
-          iconBg="bg-[#E9E3FF]"
-          iconColor="text-[#422AFB]"
+          iconBg="bg-[#f1f5f9]"
+          iconColor="text-[#0f172a]"
         />
         <MetricCard
           title="Avg Score"
-          value={overallStats.averageScore.toFixed(1)}
+          value={filteredStats.averageScore.toFixed(1)}
           subtitle="Rep performance"
           icon={Star}
           iconBg="bg-[#FFF6E5]"
           iconColor="text-[#FFB547]"
-          trend={overallStats.averageScore >= 7 ? "up" : overallStats.averageScore >= 5 ? "neutral" : "down"}
-          trendValue={overallStats.averageScore >= 7 ? "Good" : overallStats.averageScore >= 5 ? "Fair" : "Needs work"}
+          trend={filteredStats.averageScore >= 7 ? "up" : filteredStats.averageScore >= 5 ? "neutral" : "down"}
+          trendValue={filteredStats.averageScore >= 7 ? "Good" : filteredStats.averageScore >= 5 ? "Fair" : "Needs work"}
         />
         <MetricCard
-          title="Hot Leads"
-          value={overallStats.hotLeads}
-          subtitle="Score 9+"
-          icon={Flame}
-          iconBg="bg-[#FFE5E5]"
-          iconColor="text-[#E31A1A]"
+          title="Qualified Leads"
+          value={filteredStats.qualifiedLeads}
+          subtitle="Score 7+"
+          icon={Target}
+          iconBg="bg-[#E6FAF5]"
+          iconColor="text-[#01B574]"
         />
         <MetricCard
           title="Priority Actions"
@@ -714,10 +812,10 @@ function DashboardView({ result }: { result: AnalysisResult }) {
         <div className="bg-white rounded-[20px] p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-bold text-[#1B254B]">Top Performers</h3>
-            <Award className="w-5 h-5 text-[#422AFB]" />
+            <Award className="w-5 h-5 text-[#0f172a]" />
           </div>
           <div className="space-y-4">
-            {repSummaries.slice(0, 5).map((rep, i) => (
+            {filteredRepSummaries.slice(0, 5).map((rep, i) => (
               <div key={rep.repName} className="flex items-center gap-4">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
                   i === 0 ? "bg-[#FFF6E5] text-[#FFB547]" : "bg-[#F4F7FE] text-[#718096]"
@@ -730,7 +828,7 @@ function DashboardView({ result }: { result: AnalysisResult }) {
                 </div>
                 <div className={`px-3 py-1 rounded-lg font-semibold text-sm ${
                   rep.averageScore >= 8 ? "bg-[#E6FAF5] text-[#01B574]" :
-                  rep.averageScore >= 6 ? "bg-[#E9E3FF] text-[#422AFB]" :
+                  rep.averageScore >= 6 ? "bg-[#f1f5f9] text-[#0f172a]" :
                   "bg-[#FFF6E5] text-[#FFB547]"
                 }`}>
                   {rep.averageScore.toFixed(1)}
@@ -740,37 +838,33 @@ function DashboardView({ result }: { result: AnalysisResult }) {
           </div>
         </div>
 
-        {/* Hot Leads */}
+        {/* Needs Coaching */}
         <div className="bg-white rounded-[20px] p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-[#1B254B]">Hot Leads</h3>
-            <Flame className="w-5 h-5 text-[#E31A1A]" />
+            <h3 className="font-bold text-[#1B254B]">Needs Coaching</h3>
+            <Brain className="w-5 h-5 text-[#FFB547]" />
           </div>
-          {hotLeads.length > 0 ? (
-            <div className="space-y-4">
-              {hotLeads.slice(0, 5).map((call) => (
-                <div key={call.record.id} className="flex items-center gap-4 p-3 bg-[#F4F7FE] rounded-xl">
-                  <div className="w-10 h-10 rounded-xl bg-[#FFE5E5] flex items-center justify-center">
-                    <Flame className="w-5 h-5 text-[#E31A1A]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-[#1B254B] truncate">
-                      {call.score.callerInfo?.name || call.score.callerInfo?.company || "Unknown"}
-                    </p>
-                    <p className="text-sm text-[#718096] truncate">
-                      {call.score.callerInfo?.needSummary || "No details"}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-[#E31A1A]">{call.score.leadQuality?.score || 0}</p>
-                    <p className="text-xs text-[#718096]">Lead Score</p>
-                  </div>
+          <div className="space-y-4">
+            {filteredRepSummaries.slice(-5).reverse().filter(rep => rep.averageScore < 7).map((rep, i) => (
+              <div key={rep.repName} className="flex items-center gap-4">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm bg-[#FFF6E5] text-[#FFB547]">
+                  {rep.repName.charAt(0)}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-[#718096]">No hot leads found</div>
-          )}
+                <div className="flex-1">
+                  <p className="font-medium text-[#1B254B]">{rep.repName}</p>
+                  <p className="text-sm text-[#718096]">{rep.weaknesses[0] || "Review calls"}</p>
+                </div>
+                <div className={`px-3 py-1 rounded-lg font-semibold text-sm ${
+                  rep.averageScore >= 5 ? "bg-[#FFF6E5] text-[#FFB547]" : "bg-[#FFE5E5] text-[#E31A1A]"
+                }`}>
+                  {rep.averageScore.toFixed(1)}
+                </div>
+              </div>
+            ))}
+            {filteredRepSummaries.filter(rep => rep.averageScore < 7).length === 0 && (
+              <div className="text-center py-8 text-[#718096]">All reps performing well!</div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -782,7 +876,7 @@ function DashboardView({ result }: { result: AnalysisResult }) {
             <h3 className="font-bold text-[#1B254B]">Team Strengths</h3>
           </div>
           <ul className="space-y-2">
-            {[...new Set(result.repSummaries.flatMap(r => r.strengths))].slice(0, 5).map((s, i) => (
+            {[...new Set(filteredRepSummaries.flatMap(r => r.strengths))].slice(0, 5).map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-[#718096]">
                 <span className="mt-0.5 w-5 h-5 bg-[#E6FAF5] text-[#01B574] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
                 <span className="text-sm">{s}</span>
@@ -797,7 +891,7 @@ function DashboardView({ result }: { result: AnalysisResult }) {
             <h3 className="font-bold text-[#1B254B]">Areas to Improve</h3>
           </div>
           <ul className="space-y-2">
-            {[...new Set(result.repSummaries.flatMap(r => r.weaknesses))].slice(0, 5).map((w, i) => (
+            {[...new Set(filteredRepSummaries.flatMap(r => r.weaknesses))].slice(0, 5).map((w, i) => (
               <li key={i} className="flex items-start gap-2 text-[#718096]">
                 <span className="mt-0.5 w-5 h-5 bg-[#FFF6E5] text-[#FFB547] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
                 <span className="text-sm">{w}</span>
@@ -826,18 +920,35 @@ function DashboardView({ result }: { result: AnalysisResult }) {
   );
 }
 
-function CallsView({ result, expandedCall, setExpandedCall }: {
+function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, setSelectedDivision }: {
   result: AnalysisResult;
   expandedCall: string | null;
   setExpandedCall: (id: string | null) => void;
+  selectedDivision: Division;
+  setSelectedDivision: (d: Division) => void;
 }) {
+  const filteredCalls = result.calls.filter(c =>
+    repMatchesDivision(c.score.repInfo?.name || c.record.repName, selectedDivision)
+  );
+
   return (
-    <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-[#edf2f7]">
-        <h3 className="font-bold text-[#1B254B]">All Calls ({result.calls.length})</h3>
+    <div className="space-y-6">
+      {/* Division Filter */}
+      <div className="flex items-center justify-between">
+        <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
+        {selectedDivision !== 'all' && (
+          <p className="text-sm text-[#718096]">
+            Showing {filteredCalls.length} of {result.calls.length} calls
+          </p>
+        )}
       </div>
-      <div className="divide-y divide-[#edf2f7]">
-        {result.calls.map((call) => (
+
+      <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-[#edf2f7]">
+          <h3 className="font-bold text-[#1B254B]">All Calls ({filteredCalls.length})</h3>
+        </div>
+        <div className="divide-y divide-[#edf2f7]">
+          {filteredCalls.map((call) => (
           <div key={call.record.id} className="p-6">
             <div
               className="flex items-center gap-4 cursor-pointer"
@@ -845,9 +956,14 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
             >
               <ScoreBadge score={call.score.overallScore} />
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-[#1B254B]">
-                  {call.score.repInfo?.name || call.record.repName}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-[#1B254B]">
+                    {call.score.repInfo?.name || call.record.repName}
+                  </p>
+                  <span className="text-xs text-[#a0aec0]">
+                    {call.record.callDate ? new Date(call.record.callDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''}
+                  </span>
+                </div>
                 <p className="text-sm text-[#718096] truncate">
                   {call.score.callerInfo?.name || "Unknown caller"} &#x2022; {call.score.callerInfo?.company || "No company"}
                 </p>
@@ -861,6 +977,7 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                     "info"
                   }
                 />
+                <p className="text-xs text-[#a0aec0] mt-1">{call.record.callDuration}</p>
               </div>
               {expandedCall === call.record.id ? (
                 <ChevronUp className="w-5 h-5 text-[#718096]" />
@@ -872,6 +989,31 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
             {/* Expanded Details */}
             {expandedCall === call.record.id && (
               <div className="mt-4 pt-4 border-t border-[#edf2f7]">
+                {/* Call Info Bar */}
+                <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-[#F4F7FE] rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[#718096]" />
+                    <span className="text-sm text-[#1B254B]">{call.record.callDate || "No date"}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-[#718096]" />
+                    <span className="text-sm text-[#1B254B]">{call.record.source || "Unknown source"}</span>
+                  </div>
+                  {call.record.recordingUrl && (
+                    <a
+                      href={call.record.recordingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-[#0f172a] hover:underline ml-auto"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <PhoneCall className="w-4 h-4" />
+                      Listen to Recording
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+
                 {/* Score Breakdown Grid */}
                 <div className="mb-4">
                   <p className="text-sm font-medium text-[#718096] mb-3">Performance Breakdown</p>
@@ -889,7 +1031,7 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                       <div key={item.label} className="bg-[#F4F7FE] p-3 rounded-xl text-center">
                         <p className={`text-xl font-bold ${
                           (item.score || 0) >= 8 ? "text-[#01B574]" :
-                          (item.score || 0) >= 6 ? "text-[#422AFB]" :
+                          (item.score || 0) >= 6 ? "text-[#0f172a]" :
                           (item.score || 0) >= 4 ? "text-[#FFB547]" : "text-[#E31A1A]"
                         }`}>{item.score || "-"}</p>
                         <p className="text-xs text-[#718096]">{item.label}</p>
@@ -949,8 +1091,8 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                     </div>
                   )}
                   {call.score.coachingInsights && call.score.coachingInsights.length > 0 && (
-                    <div className="p-4 bg-[#E9E3FF] rounded-xl border border-[#422AFB]/20">
-                      <p className="text-sm font-medium text-[#422AFB] mb-2 flex items-center gap-1">
+                    <div className="p-4 bg-[#f1f5f9] rounded-xl border border-[#0f172a]/20">
+                      <p className="text-sm font-medium text-[#0f172a] mb-2 flex items-center gap-1">
                         <Brain className="w-4 h-4" /> Coaching
                       </p>
                       <ul className="text-sm text-[#1B254B] space-y-1">
@@ -963,7 +1105,7 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
                 {/* Transcript */}
                 {call.record.transcript && (
                   <details className="group">
-                    <summary className="cursor-pointer text-sm font-medium text-[#718096] hover:text-[#422AFB] flex items-center gap-2 p-3 bg-[#F4F7FE] rounded-xl">
+                    <summary className="cursor-pointer text-sm font-medium text-[#718096] hover:text-[#0f172a] flex items-center gap-2 p-3 bg-[#F4F7FE] rounded-xl">
                       <FileText className="w-4 h-4" />
                       View Transcript
                     </summary>
@@ -976,22 +1118,48 @@ function CallsView({ result, expandedCall, setExpandedCall }: {
             )}
           </div>
         ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function RepsView({ result }: { result: AnalysisResult }) {
+function RepsView({ result, selectedDivision, setSelectedDivision }: {
+  result: AnalysisResult;
+  selectedDivision: Division;
+  setSelectedDivision: (d: Division) => void;
+}) {
+  const filteredRepSummaries = result.repSummaries.filter(r =>
+    repMatchesDivision(r.repName, selectedDivision)
+  );
+
   return (
     <div className="space-y-6">
-      {result.repSummaries.map((rep) => (
+      {/* Division Filter */}
+      <div className="flex items-center justify-between">
+        <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
+        {selectedDivision !== 'all' && (
+          <p className="text-sm text-[#718096]">
+            Showing {filteredRepSummaries.length} of {result.repSummaries.length} reps
+          </p>
+        )}
+      </div>
+
+      {filteredRepSummaries.map((rep) => {
+        const divisionInfo = getRepDivisionInfo(rep.repName);
+        return (
         <div key={rep.repName} className="bg-white rounded-[20px] p-6 shadow-sm">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7551FF] to-[#422AFB] flex items-center justify-center">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex items-center justify-center">
               <span className="text-white font-bold text-xl">{rep.repName.charAt(0)}</span>
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-[#1B254B]">{rep.repName}</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-xl font-bold text-[#1B254B]">{rep.repName}</h3>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${divisionInfo.bgColor} ${divisionInfo.color}`}>
+                  {divisionInfo.shortName}
+                </span>
+              </div>
               <p className="text-[#718096]">{rep.totalCalls} calls analyzed</p>
             </div>
             <div className="text-right">
@@ -999,18 +1167,14 @@ function RepsView({ result }: { result: AnalysisResult }) {
               <p className="text-sm text-[#718096]">Avg Score</p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[#F4F7FE] rounded-xl">
               <p className="text-sm text-[#718096]">Lead Score Avg</p>
               <p className="text-2xl font-bold text-[#1B254B]">{rep.averageLeadScore.toFixed(1)}</p>
             </div>
-            <div className="p-4 bg-[#E6FAF5] rounded-xl">
-              <p className="text-sm text-[#718096]">Hot Leads</p>
-              <p className="text-2xl font-bold text-[#01B574]">{rep.hotLeads}</p>
-            </div>
-            <div className="p-4 bg-[#E9E3FF] rounded-xl">
-              <p className="text-sm text-[#718096]">Qualified</p>
-              <p className="text-2xl font-bold text-[#422AFB]">{rep.qualifiedLeads}</p>
+            <div className="p-4 bg-[#f1f5f9] rounded-xl">
+              <p className="text-sm text-[#718096]">Qualified Leads</p>
+              <p className="text-2xl font-bold text-[#0f172a]">{rep.qualifiedLeads}</p>
             </div>
           </div>
           {rep.strengths.length > 0 && (
@@ -1034,29 +1198,48 @@ function RepsView({ result }: { result: AnalysisResult }) {
             </div>
           )}
         </div>
-      ))}
+      );
+      })}
     </div>
   );
 }
 
-function LeadsView({ result }: { result: AnalysisResult }) {
-  const sortedCalls = [...result.calls].sort((a, b) =>
+function LeadsView({ result, selectedDivision, setSelectedDivision }: {
+  result: AnalysisResult;
+  selectedDivision: Division;
+  setSelectedDivision: (d: Division) => void;
+}) {
+  const filteredCalls = result.calls.filter(c =>
+    repMatchesDivision(c.score.repInfo?.name || c.record.repName, selectedDivision)
+  );
+  const sortedCalls = [...filteredCalls].sort((a, b) =>
     (b.score.leadQuality?.score || 0) - (a.score.leadQuality?.score || 0)
   );
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-[#edf2f7]">
-        <h3 className="font-bold text-[#1B254B]">Lead Scores (Highest First)</h3>
+    <div className="space-y-6">
+      {/* Division Filter */}
+      <div className="flex items-center justify-between">
+        <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
+        {selectedDivision !== 'all' && (
+          <p className="text-sm text-[#718096]">
+            Showing {filteredCalls.length} of {result.calls.length} leads
+          </p>
+        )}
       </div>
-      <div className="divide-y divide-[#edf2f7]">
-        {sortedCalls.map((call) => {
+
+      <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-[#edf2f7]">
+          <h3 className="font-bold text-[#1B254B]">Lead Scores (Highest First)</h3>
+        </div>
+        <div className="divide-y divide-[#edf2f7]">
+          {sortedCalls.map((call) => {
           const score = call.score.leadQuality?.score || 0;
           return (
             <div key={call.record.id} className="p-6 flex items-center gap-4">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl ${
                 score >= 9 ? "bg-gradient-to-br from-[#E31A1A] to-[#FF6B6B] text-white" :
-                score >= 7 ? "bg-gradient-to-br from-[#7551FF] to-[#422AFB] text-white" :
+                score >= 7 ? "bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white" :
                 score >= 5 ? "bg-[#FFF6E5] text-[#FFB547]" :
                 "bg-[#F4F7FE] text-[#718096]"
               }`}>
@@ -1087,6 +1270,194 @@ function LeadsView({ result }: { result: AnalysisResult }) {
             </div>
           );
         })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// SOURCES VIEW - Lead Source Quality Scoring
+// ============================================================================
+
+interface SourceStats {
+  source: string;
+  totalCalls: number;
+  avgLeadScore: number;
+  avgRepScore: number;
+  qualifiedLeads: number;
+  spamCalls: number;
+  avgDuration: number;
+  topReps: string[];
+}
+
+function SourcesView({ result }: { result: AnalysisResult }) {
+  // Aggregate calls by source
+  const sourceMap = new Map<string, AnalyzedCall[]>();
+  for (const call of result.calls) {
+    const source = call.record.source || "Unknown";
+    if (!sourceMap.has(source)) sourceMap.set(source, []);
+    sourceMap.get(source)!.push(call);
+  }
+
+  // Calculate stats for each source
+  const sourceStats: SourceStats[] = [];
+  for (const [source, calls] of sourceMap.entries()) {
+    const leadScores = calls.map(c => c.score.leadQuality?.score || 0);
+    const repScores = calls.map(c => c.score.overallScore);
+    const avgLeadScore = leadScores.length > 0 ? leadScores.reduce((a, b) => a + b, 0) / leadScores.length : 0;
+    const avgRepScore = repScores.length > 0 ? repScores.reduce((a, b) => a + b, 0) / repScores.length : 0;
+    const qualifiedLeads = leadScores.filter(s => s >= 7).length;
+    const spamCalls = calls.filter(c =>
+      c.score.leadQuality?.redFlags?.some(f => f.toLowerCase().includes('spam')) ||
+      c.score.leadQuality?.serviceFit === 'mismatch'
+    ).length;
+
+    // Get avg duration from record
+    const durations = calls.map(c => {
+      const parts = (c.record.callDuration || "0:00").split(":");
+      return parseInt(parts[0]) * 60 + parseInt(parts[1] || "0");
+    });
+    const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+
+    // Top reps for this source
+    const repCounts = new Map<string, number>();
+    for (const call of calls) {
+      const rep = call.score.repInfo?.name || call.record.repName;
+      repCounts.set(rep, (repCounts.get(rep) || 0) + 1);
+    }
+    const topReps = [...repCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name]) => name);
+
+    sourceStats.push({
+      source,
+      totalCalls: calls.length,
+      avgLeadScore: Math.round(avgLeadScore * 10) / 10,
+      avgRepScore: Math.round(avgRepScore * 10) / 10,
+      qualifiedLeads,
+      spamCalls,
+      avgDuration: Math.round(avgDuration),
+      topReps,
+    });
+  }
+
+  // Sort by avg lead score descending
+  sourceStats.sort((a, b) => b.avgLeadScore - a.avgLeadScore);
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-[20px] p-6 shadow-sm">
+          <p className="text-sm text-[#718096]">Total Sources</p>
+          <p className="text-3xl font-bold text-[#1B254B]">{sourceStats.length}</p>
+        </div>
+        <div className="bg-white rounded-[20px] p-6 shadow-sm">
+          <p className="text-sm text-[#718096]">Best Source</p>
+          <p className="text-xl font-bold text-[#01B574]">{sourceStats[0]?.source || "N/A"}</p>
+          <p className="text-sm text-[#718096]">Avg Lead Score: {sourceStats[0]?.avgLeadScore || 0}</p>
+        </div>
+        <div className="bg-white rounded-[20px] p-6 shadow-sm">
+          <p className="text-sm text-[#718096]">Needs Review</p>
+          <p className="text-xl font-bold text-[#FFB547]">{sourceStats[sourceStats.length - 1]?.source || "N/A"}</p>
+          <p className="text-sm text-[#718096]">Avg Lead Score: {sourceStats[sourceStats.length - 1]?.avgLeadScore || 0}</p>
+        </div>
+      </div>
+
+      {/* Source Table */}
+      <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-[#edf2f7]">
+          <h3 className="font-bold text-[#1B254B]">Lead Source Performance</h3>
+          <p className="text-sm text-[#718096]">Quality metrics by marketing channel</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-[#F4F7FE]">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-[#718096] uppercase">Source</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Calls</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Lead Score</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Qualified</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Spam/Bad</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Avg Duration</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-[#718096] uppercase">Top Reps</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#edf2f7]">
+              {sourceStats.map((stat) => (
+                <tr key={stat.source} className="hover:bg-[#F4F7FE]/50">
+                  <td className="px-6 py-4">
+                    <p className="font-medium text-[#1B254B]">{stat.source}</p>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="font-semibold text-[#1B254B]">{stat.totalCalls}</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className={`inline-flex px-3 py-1 rounded-lg font-bold text-sm ${
+                      stat.avgLeadScore >= 7 ? "bg-[#E6FAF5] text-[#01B574]" :
+                      stat.avgLeadScore >= 5 ? "bg-[#f1f5f9] text-[#0f172a]" :
+                      stat.avgLeadScore >= 3 ? "bg-[#FFF6E5] text-[#FFB547]" :
+                      "bg-[#FFE5E5] text-[#E31A1A]"
+                    }`}>
+                      {stat.avgLeadScore}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-[#01B574] font-semibold">{stat.qualifiedLeads}</span>
+                    <span className="text-[#a0aec0] text-sm ml-1">({Math.round(stat.qualifiedLeads / stat.totalCalls * 100)}%)</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-[#E31A1A] font-semibold">{stat.spamCalls}</span>
+                    <span className="text-[#a0aec0] text-sm ml-1">({Math.round(stat.spamCalls / stat.totalCalls * 100)}%)</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-[#718096]">{formatDuration(stat.avgDuration)}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1">
+                      {stat.topReps.map((rep, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-[#F4F7FE] text-[#718096] rounded">
+                          {rep}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Source Quality Guide */}
+      <div className="bg-white rounded-[20px] p-6 shadow-sm">
+        <h3 className="font-bold text-[#1B254B] mb-4">Understanding Source Quality</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-[#E6FAF5] rounded-xl">
+            <p className="font-semibold text-[#01B574] mb-2">Good Sources (7+ Lead Score)</p>
+            <ul className="text-sm text-[#718096] space-y-1">
+              <li>&#x2022; High percentage of qualified leads</li>
+              <li>&#x2022; Low spam/wrong service calls</li>
+              <li>&#x2022; Longer average call duration</li>
+            </ul>
+          </div>
+          <div className="p-4 bg-[#FFE5E5] rounded-xl">
+            <p className="font-semibold text-[#E31A1A] mb-2">Poor Sources (Below 4 Lead Score)</p>
+            <ul className="text-sm text-[#718096] space-y-1">
+              <li>&#x2022; High spam or wrong number rate</li>
+              <li>&#x2022; Short call durations (hangups)</li>
+              <li>&#x2022; Callers looking for other services</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1108,6 +1479,14 @@ function SettingsView({
   setShowOpenaiKey: (s: boolean) => void;
   onSave: () => void;
 }) {
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = () => {
+    onSave();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* API Keys Card */}
@@ -1123,7 +1502,7 @@ function SettingsView({
             href="https://console.anthropic.com/settings/keys"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-[#E9E3FF] text-[#422AFB] rounded-lg hover:bg-[#422AFB] hover:text-white transition-colors font-medium"
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 bg-[#f1f5f9] text-[#0f172a] rounded-lg hover:bg-[#0f172a] hover:text-white transition-colors font-medium"
           >
             <Zap className="w-3 h-3" />
             Anthropic Console
@@ -1152,7 +1531,7 @@ function SettingsView({
               value={anthropicKey}
               onChange={(e) => setAnthropicKey(e.target.value)}
               placeholder="sk-ant-..."
-              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB] placeholder:text-[#a0aec0]"
+              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f172a]/20 focus:border-[#0f172a] placeholder:text-[#a0aec0]"
             />
             <button
               onClick={() => setShowAnthropicKey(!showAnthropicKey)}
@@ -1179,7 +1558,7 @@ function SettingsView({
               value={openaiKey}
               onChange={(e) => setOpenaiKey(e.target.value)}
               placeholder="sk-..."
-              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#422AFB]/20 focus:border-[#422AFB] placeholder:text-[#a0aec0]"
+              className="w-full h-12 px-4 pr-12 bg-white text-[#1B254B] border border-[#e2e8f0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f172a]/20 focus:border-[#0f172a] placeholder:text-[#a0aec0]"
             />
             <button
               onClick={() => setShowOpenaiKey(!showOpenaiKey)}
@@ -1195,9 +1574,17 @@ function SettingsView({
           )}
         </div>
 
-        <Button onClick={onSave} className="w-full h-12 bg-gradient-to-r from-[#7551FF] to-[#422AFB] hover:from-[#422AFB] hover:to-[#3311DB]">
+        <Button onClick={handleSave} className="w-full h-12 bg-gradient-to-r from-[#0f172a] to-[#1e293b] hover:from-[#0f172a] hover:to-[#334155]">
           <CheckCircle className="w-5 h-5 mr-2" /> Save Settings
         </Button>
+
+        {/* Success Message */}
+        {saved && (
+          <div className="mt-4 p-4 bg-[#E6FAF5] border border-[#01B574]/30 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+            <CheckCircle className="w-5 h-5 text-[#01B574]" />
+            <p className="text-sm font-medium text-[#01B574]">Settings saved successfully!</p>
+          </div>
+        )}
       </div>
 
       {/* Cost & Tips Card */}
@@ -1237,7 +1624,7 @@ function SettingsView({
       {/* Privacy Card */}
       <div className="bg-white rounded-[20px] p-6 shadow-sm">
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-[#422AFB] mt-0.5" />
+          <Shield className="w-5 h-5 text-[#0f172a] mt-0.5" />
           <div>
             <h3 className="font-bold text-[#1B254B] mb-1">Privacy & Security</h3>
             <p className="text-sm text-[#718096]">

@@ -88,13 +88,21 @@ export interface CallRecord {
   repName: string;
   callDate: string;
   callDuration: string;
+  durationSeconds?: number;
   customerName?: string;
   phoneNumber?: string;
   transcript?: string;
   notes?: string;
   outcome?: string;
   direction?: string;
-  [key: string]: string | undefined;
+  source?: string;
+  recordingUrl?: string;
+  // Additional extracted data for display
+  callerCompany?: string;
+  callerLocation?: string;
+  callerPhone?: string;
+  needSummary?: string;
+  [key: string]: string | number | undefined;
 }
 
 export interface RepInfo {

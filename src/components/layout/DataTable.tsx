@@ -58,24 +58,24 @@ export default function DataTable<T extends { id?: string | number }>({
 
   if (data.length === 0) {
     return (
-      <div className="bg-white rounded-[20px] p-12 text-center shadow-sm">
-        <p className="text-[#a0aec0]">{emptyMessage}</p>
+      <div className="bg-white rounded-2xl p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-[#f1f5f9]">
+        <p className="text-[#94a3b8]">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-[#f1f5f9] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#edf2f7]">
+            <tr className="bg-[#f8fafc] border-b border-[#e2e8f0]">
               {columns.map((column) => (
                 <th
                   key={column.key as string}
                   onClick={() => handleSort(column)}
-                  className={`px-6 py-4 text-left text-xs font-semibold text-[#a0aec0] uppercase tracking-wider ${
-                    column.sortable ? "cursor-pointer hover:text-[#422AFB]" : ""
+                  className={`px-6 py-4 text-left text-xs font-semibold text-[#64748b] uppercase tracking-wider ${
+                    column.sortable ? "cursor-pointer hover:text-[#0f172a] transition-colors" : ""
                   }`}
                   style={{ width: column.width }}
                 >
@@ -93,21 +93,21 @@ export default function DataTable<T extends { id?: string | number }>({
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[#f1f5f9]">
             {sortedData.map((item, index) => (
               <tr
                 key={item.id || index}
                 onClick={() => onRowClick?.(item)}
-                className={`border-b border-[#edf2f7] last:border-0 transition-colors ${
+                className={`transition-colors ${
                   onRowClick
-                    ? "cursor-pointer hover:bg-[#F4F7FE]"
+                    ? "cursor-pointer hover:bg-[#f8fafc]"
                     : ""
                 }`}
               >
                 {columns.map((column) => (
                   <td
                     key={column.key as string}
-                    className="px-6 py-4 text-sm text-[#1B254B]"
+                    className="px-6 py-4 text-sm text-[#1e293b]"
                   >
                     {column.render
                       ? column.render(item)
@@ -126,14 +126,14 @@ export default function DataTable<T extends { id?: string | number }>({
 // Score badge component
 export function ScoreBadge({ score }: { score: number }) {
   const getScoreStyle = (score: number) => {
-    if (score >= 8) return "bg-[#E6FAF5] text-[#01B574]";
-    if (score >= 6) return "bg-[#E9E3FF] text-[#422AFB]";
-    if (score >= 4) return "bg-[#FFF6E5] text-[#FFB547]";
-    return "bg-[#FFE5E5] text-[#E31A1A]";
+    if (score >= 8) return "bg-gradient-to-br from-[#10b981] to-[#059669] text-white shadow-[0_2px_8px_rgba(16,185,129,0.3)]";
+    if (score >= 6) return "bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] text-white shadow-[0_2px_8px_rgba(14,165,233,0.3)]";
+    if (score >= 4) return "bg-gradient-to-br from-[#f59e0b] to-[#d97706] text-white shadow-[0_2px_8px_rgba(245,158,11,0.3)]";
+    return "bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white shadow-[0_2px_8px_rgba(239,68,68,0.3)]";
   };
 
   return (
-    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl font-bold text-sm ${getScoreStyle(score)}`}>
+    <span className={`inline-flex items-center justify-center w-11 h-11 rounded-xl font-bold text-sm ${getScoreStyle(score)}`}>
       {score.toFixed(1)}
     </span>
   );
@@ -142,14 +142,14 @@ export function ScoreBadge({ score }: { score: number }) {
 // Status badge component
 export function StatusBadge({ status, variant }: { status: string; variant: "success" | "warning" | "error" | "info" }) {
   const variants = {
-    success: "bg-[#E6FAF5] text-[#01B574]",
-    warning: "bg-[#FFF6E5] text-[#FFB547]",
-    error: "bg-[#FFE5E5] text-[#E31A1A]",
-    info: "bg-[#E9E3FF] text-[#422AFB]",
+    success: "bg-[#ecfdf5] text-[#059669] border border-[#a7f3d0]",
+    warning: "bg-[#fffbeb] text-[#d97706] border border-[#fde68a]",
+    error: "bg-[#fef2f2] text-[#dc2626] border border-[#fecaca]",
+    info: "bg-[#f0f9ff] text-[#0284c7] border border-[#bae6fd]",
   };
 
   return (
-    <span className={`inline-flex px-3 py-1 rounded-lg text-xs font-semibold ${variants[variant]}`}>
+    <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${variants[variant]}`}>
       {status}
     </span>
   );

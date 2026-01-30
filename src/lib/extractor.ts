@@ -102,9 +102,6 @@ const KNOWN_REPS = new Set([
   'dustin', 'rocco', 'sean', 'erika', 'katrina',
   // Road Ready Insurance
   'nikita', 'sladana', 'jennine', 'adam', 'rossy', 'herb', 'luis',
-  // Legacy/Other (keep for backward compatibility)
-  'mark', 'paul', 'michelle', 'audrey', 'jessica', 'tyler', 'george',
-  'joshua', 'victor', 'justin', 'james', 'larry', 'jose', 'hans', 'cruz', 'carolina',
 ]);
 
 function validateExtraction(
@@ -114,7 +111,7 @@ function validateExtraction(
   const issues: string[] = [];
   let confidence = 1.0;
 
-  // Validate rep name
+  // Validate rep name - ONLY allow known staff names
   if (!extracted.rep.name) {
     issues.push('NO_REP_NAME');
     confidence -= 0.2;
@@ -125,9 +122,10 @@ function validateExtraction(
       extracted.rep.name = null;
       confidence -= 0.3;
     } else if (!KNOWN_REPS.has(repNameLower)) {
-      // Unknown but possibly valid - flag for review
+      // Unknown name - reject and set to Unknown
       issues.push('UNKNOWN_REP_NAME');
-      confidence -= 0.1;
+      extracted.rep.name = 'Unknown';
+      confidence -= 0.2;
     }
   }
 

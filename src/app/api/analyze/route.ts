@@ -38,10 +38,15 @@ export async function POST(request: NextRequest) {
         // =================================================================
         send({ type: 'status', phase: 'bronze', message: 'Parsing Excel file...' });
         const buffer = await file.arrayBuffer();
-        const bronzeCalls = parseExcelToBronze(buffer);
+        const allBronzeCalls = parseExcelToBronze(buffer);
+
+        // Filter out very short calls (hangups, <5 seconds)
+        const MIN_CALL_DURATION = 5;
+        const bronzeCalls = allBronzeCalls.filter(call => call.durationSeconds >= MIN_CALL_DURATION);
+        const skippedShortCalls = allBronzeCalls.length - bronzeCalls.length;
 
         if (bronzeCalls.length === 0) {
-          send({ type: 'error', message: 'No calls found in file' });
+          send({ type: 'error', message: 'No calls found in file (or all calls were under 5 seconds)' });
           controller.close();
           return;
         }
@@ -49,6 +54,7 @@ export async function POST(request: NextRequest) {
         send({
           type: 'bronze_complete',
           count: bronzeCalls.length,
+          skippedShortCalls,
         });
 
         // =================================================================
@@ -198,6 +204,7 @@ function silverToCallRecord(silver: SilverCall): CallRecord {
     repName: silver.rep.name || bronze.rawAgentName || 'Unknown',
     callDate: bronze.startTime,
     callDuration: `${durationMinutes}:${String(durationSecs).padStart(2, '0')}`,
+    durationSeconds: bronze.durationSeconds,
     customerName: silver.caller.name || undefined,
     phoneNumber: bronze.trackingNumber,
     transcript: bronze.transcript,
@@ -205,6 +212,7 @@ function silverToCallRecord(silver: SilverCall): CallRecord {
     outcome: bronze.callStatus,
     direction: silver.callContext.type,
     source: bronze.source,
+    recordingUrl: bronze.recordingUrl || undefined,
     // Additional extracted data for display
     callerCompany: silver.caller.company || undefined,
     callerLocation: silver.caller.location || undefined,
