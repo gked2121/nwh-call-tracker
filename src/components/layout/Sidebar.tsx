@@ -53,7 +53,7 @@ export default function Sidebar({ activeTab, onTabChange, hasResults }: SidebarP
           {!collapsed && (
             <div>
               <h1 className="font-semibold text-[#0f172a] text-base tracking-tight leading-tight">Nationwide Haul</h1>
-              <p className="text-xs text-[#94a3b8]">Call Analytics</p>
+              <p className="text-xs text-[#64748b]">Call Analytics</p>
             </div>
           )}
         </div>

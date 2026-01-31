@@ -489,7 +489,7 @@ function NoDataView({ onUpload }: { onUpload: () => void }) {
         <FileSpreadsheet className="w-10 h-10 text-[#0f172a]" />
       </div>
       <h3 className="text-xl font-semibold text-[#1B254B] mb-2">No Data Yet</h3>
-      <p className="text-[#718096] mb-6">Upload and analyze a call log to see results</p>
+      <p className="text-[#475569] mb-6">Upload and analyze a call log to see results</p>
       <Button onClick={onUpload} className="bg-[#0f172a] hover:bg-[#334155]">
         <Upload className="w-4 h-4 mr-2" /> Upload Calls
       </Button>
@@ -531,12 +531,12 @@ function UploadView({
           {file ? (
             <>
               <p className="font-semibold text-[#1B254B]">{file.name}</p>
-              <p className="text-sm text-[#718096] mt-1">{(file.size / 1024).toFixed(1)} KB</p>
+              <p className="text-sm text-[#475569] mt-1">{(file.size / 1024).toFixed(1)} KB</p>
             </>
           ) : (
             <>
               <p className="font-semibold text-[#1B254B]">Drop your CallRail export here</p>
-              <p className="text-sm text-[#718096] mt-1">or click to browse (.xlsx, .xls, .csv)</p>
+              <p className="text-sm text-[#475569] mt-1">or click to browse (.xlsx, .xls, .csv)</p>
             </>
           )}
         </label>
@@ -553,11 +553,11 @@ function UploadView({
           >
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${aiModel === "claude" ? "bg-[#0f172a]" : "bg-[#F4F7FE]"}`}>
-                <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-white" : "text-[#718096]"}`} />
+                <Zap className={`w-5 h-5 ${aiModel === "claude" ? "text-white" : "text-[#475569]"}`} />
               </div>
               <div className="text-left">
                 <p className={`font-semibold ${aiModel === "claude" ? "text-[#0f172a]" : "text-[#1B254B]"}`}>Claude Sonnet 4.5</p>
-                <p className="text-xs text-[#718096]">Fast & accurate</p>
+                <p className="text-xs text-[#475569]">Fast & accurate</p>
               </div>
             </div>
           </button>
@@ -571,11 +571,11 @@ function UploadView({
           >
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${aiModel === "openai" ? "bg-[#10a37f]" : "bg-[#F4F7FE]"}`}>
-                <Bot className={`w-5 h-5 ${aiModel === "openai" ? "text-white" : "text-[#718096]"}`} />
+                <Bot className={`w-5 h-5 ${aiModel === "openai" ? "text-white" : "text-[#475569]"}`} />
               </div>
               <div className="text-left">
                 <p className={`font-semibold ${aiModel === "openai" ? "text-[#10a37f]" : "text-[#1B254B]"}`}>GPT-4.1</p>
-                <p className="text-xs text-[#718096]">Alternative model</p>
+                <p className="text-xs text-[#475569]">Alternative model</p>
               </div>
             </div>
           </button>
@@ -587,7 +587,7 @@ function UploadView({
             <AlertCircle className="w-5 h-5 text-[#FFB547]" />
             <div className="flex-1">
               <p className="text-sm font-medium text-[#1B254B]">API key required</p>
-              <p className="text-xs text-[#718096]">Add your {aiModel === "claude" ? "Anthropic" : "OpenAI"} key in settings</p>
+              <p className="text-xs text-[#475569]">Add your {aiModel === "claude" ? "Anthropic" : "OpenAI"} key in settings</p>
             </div>
             <Button variant="outline" size="sm" onClick={onOpenSettings}>
               <Key className="w-4 h-4 mr-1" /> Add Key
@@ -616,10 +616,10 @@ function UploadView({
                   {currentPhase === 'bronze' ? 'Parsing File' : currentPhase === 'silver' ? 'Extracting Data' : 'AI Analysis'}
                 </span>
               </div>
-              <span className="text-sm text-[#718096]">{progress}%</span>
+              <span className="text-sm text-[#475569]">{progress}%</span>
             </div>
             <Progress value={progress} className="h-2 mb-2" />
-            <p className="text-sm text-[#718096]">{progressMessage}</p>
+            <p className="text-sm text-[#475569]">{progressMessage}</p>
           </div>
         )}
 
@@ -657,7 +657,7 @@ function UploadView({
               </div>
               <div>
                 <p className="font-medium text-[#1B254B]">{step.label}</p>
-                <p className="text-sm text-[#718096]">{step.desc}</p>
+                <p className="text-sm text-[#475569]">{step.desc}</p>
               </div>
             </div>
           ))}
@@ -691,11 +691,11 @@ function DivisionFilter({
             : `border-transparent ${currentDivision.bgColor}`
         }`}
       >
-        <Filter className={`w-4 h-4 ${selectedDivision === 'all' ? 'text-[#718096]' : currentDivision.color}`} />
+        <Filter className={`w-4 h-4 ${selectedDivision === 'all' ? 'text-[#475569]' : currentDivision.color}`} />
         <span className={`font-medium ${selectedDivision === 'all' ? 'text-[#1B254B]' : currentDivision.color}`}>
           {currentDivision.shortName}
         </span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''} ${selectedDivision === 'all' ? 'text-[#718096]' : currentDivision.color}`} />
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''} ${selectedDivision === 'all' ? 'text-[#475569]' : currentDivision.color}`} />
       </button>
 
       {isOpen && (
@@ -756,7 +756,7 @@ function CallTypeFilter({
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
             selectedType === type.id
               ? `${type.bgColor} ${type.color}`
-              : 'text-[#718096] hover:bg-[#F4F7FE]'
+              : 'text-[#475569] hover:bg-[#F4F7FE]'
           }`}
         >
           {type.label}
@@ -788,7 +788,7 @@ function ScoringExplanation() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#718096] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#475569] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
       >
         <HelpCircle className="w-4 h-4" />
         <span>Scoring Criteria</span>
@@ -800,7 +800,7 @@ function ScoringExplanation() {
           <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#edf2f7] z-40 overflow-hidden">
             <div className="p-4 border-b border-[#edf2f7] bg-[#F4F7FE]">
               <h4 className="font-bold text-[#1B254B]">How Rep Scores Are Calculated</h4>
-              <p className="text-xs text-[#718096] mt-1">Each call is scored 1-10 based on these criteria</p>
+              <p className="text-xs text-[#475569] mt-1">Each call is scored 1-10 based on these criteria</p>
             </div>
             <div className="max-h-80 overflow-y-auto p-2">
               {criteria.map((c, i) => (
@@ -809,12 +809,12 @@ function ScoringExplanation() {
                     <span className="font-medium text-sm text-[#1B254B]">{c.name}</span>
                     <span className="text-xs text-[#0f172a] font-semibold bg-[#f1f5f9] px-2 py-0.5 rounded">{c.weight}</span>
                   </div>
-                  <p className="text-xs text-[#718096]">{c.desc}</p>
+                  <p className="text-xs text-[#475569]">{c.desc}</p>
                 </div>
               ))}
             </div>
             <div className="p-3 border-t border-[#edf2f7] bg-[#F4F7FE]">
-              <p className="text-xs text-[#718096]">
+              <p className="text-xs text-[#475569]">
                 <strong>Note:</strong> Scores 8+ = Excellent, 6-7 = Good, 4-5 = Needs Work, Below 4 = Requires Coaching
               </p>
             </div>
@@ -844,7 +844,7 @@ function LeadSourceScoreExplanation() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#718096] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#475569] hover:text-[#1B254B] hover:bg-[#F4F7FE] rounded-lg transition-colors"
       >
         <HelpCircle className="w-4 h-4" />
         <span>Scoring Criteria</span>
@@ -856,7 +856,7 @@ function LeadSourceScoreExplanation() {
           <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#edf2f7] z-40 overflow-hidden">
             <div className="p-4 border-b border-[#edf2f7] bg-[#F4F7FE]">
               <h4 className="font-bold text-[#1B254B]">How Lead Source Scores Are Calculated</h4>
-              <p className="text-xs text-[#718096] mt-1">Each lead is scored 1-10 based on quality indicators</p>
+              <p className="text-xs text-[#475569] mt-1">Each lead is scored 1-10 based on quality indicators</p>
             </div>
             <div className="max-h-80 overflow-y-auto p-2">
               {criteria.map((c, i) => (
@@ -865,12 +865,12 @@ function LeadSourceScoreExplanation() {
                     <span className="font-medium text-sm text-[#1B254B]">{c.name}</span>
                     <span className="text-xs text-[#0f172a] font-semibold bg-[#f1f5f9] px-2 py-0.5 rounded">{c.weight}</span>
                   </div>
-                  <p className="text-xs text-[#718096]">{c.desc}</p>
+                  <p className="text-xs text-[#475569]">{c.desc}</p>
                 </div>
               ))}
             </div>
             <div className="p-3 border-t border-[#edf2f7] bg-[#F4F7FE]">
-              <p className="text-xs text-[#718096]">
+              <p className="text-xs text-[#475569]">
                 <strong>Actions:</strong> 9-10 = Priority (1hr), 7-8 = Follow-up (24hr), 5-6 = Nurture (48-72hr), Below 5 = Email only or No follow-up
               </p>
             </div>
@@ -914,7 +914,7 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
       <div className="flex items-center justify-between">
         <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
         {selectedDivision !== 'all' && (
-          <p className="text-sm text-[#718096]">
+          <p className="text-sm text-[#475569]">
             Showing {filteredCalls.length} of {result.calls.length} calls
           </p>
         )}
@@ -970,13 +970,13 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
             {filteredRepSummaries.slice(0, 5).map((rep, i) => (
               <div key={rep.repName} className="flex items-center gap-4">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
-                  i === 0 ? "bg-[#FFF6E5] text-[#FFB547]" : "bg-[#F4F7FE] text-[#718096]"
+                  i === 0 ? "bg-[#FFF6E5] text-[#FFB547]" : "bg-[#F4F7FE] text-[#475569]"
                 }`}>
                   {i + 1}
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-[#1B254B]">{rep.repName}</p>
-                  <p className="text-sm text-[#718096]">{rep.totalCalls} calls</p>
+                  <p className="text-sm text-[#475569]">{rep.totalCalls} calls</p>
                 </div>
                 <div className={`px-3 py-1 rounded-lg font-semibold text-sm ${
                   rep.averageScore >= 8 ? "bg-[#E6FAF5] text-[#01B574]" :
@@ -1004,7 +1004,7 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-[#1B254B]">{rep.repName}</p>
-                  <p className="text-sm text-[#718096]">{rep.weaknesses[0] || "Review calls"}</p>
+                  <p className="text-sm text-[#475569]">{rep.weaknesses[0] || "Review calls"}</p>
                 </div>
                 <div className={`px-3 py-1 rounded-lg font-semibold text-sm ${
                   rep.averageScore >= 5 ? "bg-[#FFF6E5] text-[#FFB547]" : "bg-[#FFE5E5] text-[#E31A1A]"
@@ -1014,7 +1014,7 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
               </div>
             ))}
             {filteredRepSummaries.filter(rep => rep.averageScore < 7).length === 0 && (
-              <div className="text-center py-8 text-[#718096]">All reps performing well!</div>
+              <div className="text-center py-8 text-[#475569]">All reps performing well!</div>
             )}
           </div>
         </div>
@@ -1029,7 +1029,7 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
           </div>
           <ul className="space-y-2">
             {[...new Set(filteredRepSummaries.flatMap(r => r.strengths))].slice(0, 5).map((s, i) => (
-              <li key={i} className="flex items-start gap-2 text-[#718096]">
+              <li key={i} className="flex items-start gap-2 text-[#475569]">
                 <span className="mt-0.5 w-5 h-5 bg-[#E6FAF5] text-[#01B574] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
                 <span className="text-sm">{s}</span>
               </li>
@@ -1044,7 +1044,7 @@ function DashboardView({ result, selectedDivision, setSelectedDivision }: {
           </div>
           <ul className="space-y-2">
             {[...new Set(filteredRepSummaries.flatMap(r => r.weaknesses))].slice(0, 5).map((w, i) => (
-              <li key={i} className="flex items-start gap-2 text-[#718096]">
+              <li key={i} className="flex items-start gap-2 text-[#475569]">
                 <span className="mt-0.5 w-5 h-5 bg-[#FFF6E5] text-[#FFB547] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
                 <span className="text-sm">{w}</span>
               </li>
@@ -1106,7 +1106,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
         </div>
         <div className="flex items-center gap-4">
           <ScoringExplanation />
-          <p className="text-sm text-[#718096]">
+          <p className="text-sm text-[#475569]">
             Showing {filteredCalls.length} of {result.calls.length} calls
           </p>
         </div>
@@ -1120,7 +1120,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
           </div>
           <div>
             <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.inbound}</p>
-            <p className="text-sm text-[#718096]">Inbound</p>
+            <p className="text-sm text-[#475569]">Inbound</p>
           </div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
@@ -1129,7 +1129,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
           </div>
           <div>
             <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.outbound}</p>
-            <p className="text-sm text-[#718096]">Outbound</p>
+            <p className="text-sm text-[#475569]">Outbound</p>
           </div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
@@ -1138,7 +1138,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
           </div>
           <div>
             <p className="text-2xl font-bold text-[#1B254B]">{typeCounts.followUp}</p>
-            <p className="text-sm text-[#718096]">Follow-ups</p>
+            <p className="text-sm text-[#475569]">Follow-ups</p>
           </div>
         </div>
       </div>
@@ -1164,7 +1164,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                     {call.record.callDate ? new Date(call.record.callDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''}
                   </span>
                 </div>
-                <p className="text-sm text-[#718096] truncate">
+                <p className="text-sm text-[#475569] truncate">
                   {call.score.callerInfo?.name || "Unknown caller"} &#x2022; {call.score.callerInfo?.company || "No company"}
                 </p>
               </div>
@@ -1180,9 +1180,9 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 <p className="text-xs text-[#a0aec0] mt-1">{call.record.callDuration}</p>
               </div>
               {expandedCall === call.record.id ? (
-                <ChevronUp className="w-5 h-5 text-[#718096]" />
+                <ChevronUp className="w-5 h-5 text-[#475569]" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-[#718096]" />
+                <ChevronDown className="w-5 h-5 text-[#475569]" />
               )}
             </div>
 
@@ -1192,11 +1192,11 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 {/* Call Info Bar */}
                 <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-[#F4F7FE] rounded-xl">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#718096]" />
+                    <Clock className="w-4 h-4 text-[#475569]" />
                     <span className="text-sm text-[#1B254B]">{call.record.callDate || "No date"}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-[#718096]" />
+                    <MapPin className="w-4 h-4 text-[#475569]" />
                     <span className="text-sm text-[#1B254B]">{call.record.source || "Unknown source"}</span>
                   </div>
                   {call.record.recordingUrl && (
@@ -1216,7 +1216,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
 
                 {/* Score Breakdown Grid */}
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-[#718096] mb-3">Performance Breakdown</p>
+                  <p className="text-sm font-medium text-[#475569] mb-3">Performance Breakdown</p>
                   <div className="grid grid-cols-4 gap-2">
                     {[
                       { label: "Info Gathering", score: call.score.informationGathering?.score },
@@ -1234,7 +1234,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                           (item.score || 0) >= 6 ? "text-[#0f172a]" :
                           (item.score || 0) >= 4 ? "text-[#FFB547]" : "text-[#E31A1A]"
                         }`}>{item.score || "-"}</p>
-                        <p className="text-xs text-[#718096]">{item.label}</p>
+                        <p className="text-xs text-[#475569]">{item.label}</p>
                       </div>
                     ))}
                   </div>
@@ -1243,19 +1243,19 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 {/* Basic Info Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-[#718096]">Lead Source Score</p>
+                    <p className="text-sm text-[#475569]">Lead Source Score</p>
                     <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.score || 0}/10</p>
                   </div>
                   <div>
-                    <p className="text-sm text-[#718096]">Timeline</p>
+                    <p className="text-sm text-[#475569]">Timeline</p>
                     <p className="font-semibold text-[#1B254B]">{call.score.leadQuality?.timeline || "Unknown"}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-[#718096]">Location</p>
+                    <p className="text-sm text-[#475569]">Location</p>
                     <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.location || "Unknown"}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-[#718096]">Phone</p>
+                    <p className="text-sm text-[#475569]">Phone</p>
                     <p className="font-semibold text-[#1B254B]">{call.score.callerInfo?.phone || "N/A"}</p>
                   </div>
                 </div>
@@ -1263,7 +1263,7 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 {/* Need Summary */}
                 {call.score.callerInfo?.needSummary && (
                   <div className="mb-4 p-3 bg-[#F4F7FE] rounded-xl">
-                    <p className="text-sm text-[#718096]">Need</p>
+                    <p className="text-sm text-[#475569]">Need</p>
                     <p className="font-medium text-[#1B254B]">{call.score.callerInfo.needSummary}</p>
                   </div>
                 )}
@@ -1305,11 +1305,11 @@ function CallsView({ result, expandedCall, setExpandedCall, selectedDivision, se
                 {/* Transcript */}
                 {call.record.transcript && (
                   <details className="group">
-                    <summary className="cursor-pointer text-sm font-medium text-[#718096] hover:text-[#0f172a] flex items-center gap-2 p-3 bg-[#F4F7FE] rounded-xl">
+                    <summary className="cursor-pointer text-sm font-medium text-[#475569] hover:text-[#0f172a] flex items-center gap-2 p-3 bg-[#F4F7FE] rounded-xl">
                       <FileText className="w-4 h-4" />
                       View Transcript
                     </summary>
-                    <div className="mt-3 p-4 bg-white rounded-xl border border-[#edf2f7] text-sm text-[#718096] max-h-64 overflow-y-auto font-mono text-xs whitespace-pre-wrap">
+                    <div className="mt-3 p-4 bg-white rounded-xl border border-[#edf2f7] text-sm text-[#475569] max-h-64 overflow-y-auto font-mono text-xs whitespace-pre-wrap">
                       {call.record.transcript}
                     </div>
                   </details>
@@ -1339,7 +1339,7 @@ function RepsView({ result, selectedDivision, setSelectedDivision }: {
       <div className="flex items-center justify-between">
         <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
         {selectedDivision !== 'all' && (
-          <p className="text-sm text-[#718096]">
+          <p className="text-sm text-[#475569]">
             Showing {filteredRepSummaries.length} of {result.repSummaries.length} reps
           </p>
         )}
@@ -1360,26 +1360,26 @@ function RepsView({ result, selectedDivision, setSelectedDivision }: {
                   {divisionInfo.shortName}
                 </span>
               </div>
-              <p className="text-[#718096]">{rep.totalCalls} calls analyzed</p>
+              <p className="text-[#475569]">{rep.totalCalls} calls analyzed</p>
             </div>
             <div className="text-right">
               <p className="text-3xl font-bold text-[#1B254B]">{rep.averageScore.toFixed(1)}</p>
-              <p className="text-sm text-[#718096]">Avg Score</p>
+              <p className="text-sm text-[#475569]">Avg Score</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[#F4F7FE] rounded-xl">
-              <p className="text-sm text-[#718096]">Lead Source Score</p>
+              <p className="text-sm text-[#475569]">Lead Source Score</p>
               <p className="text-2xl font-bold text-[#1B254B]">{rep.averageLeadScore.toFixed(1)}</p>
             </div>
             <div className="p-4 bg-[#f1f5f9] rounded-xl">
-              <p className="text-sm text-[#718096]">Qualified Leads</p>
+              <p className="text-sm text-[#475569]">Qualified Leads</p>
               <p className="text-2xl font-bold text-[#0f172a]">{rep.qualifiedLeads}</p>
             </div>
           </div>
           {rep.strengths.length > 0 && (
             <div className="mt-4">
-              <p className="text-sm text-[#718096] mb-2">Key Strengths</p>
+              <p className="text-sm text-[#475569] mb-2">Key Strengths</p>
               <div className="flex flex-wrap gap-2">
                 {rep.strengths.map((s, i) => (
                   <span key={i} className="px-3 py-1 bg-[#E6FAF5] text-[#01B574] text-sm rounded-lg">{s}</span>
@@ -1389,7 +1389,7 @@ function RepsView({ result, selectedDivision, setSelectedDivision }: {
           )}
           {rep.weaknesses.length > 0 && (
             <div className="mt-4">
-              <p className="text-sm text-[#718096] mb-2">Areas to Improve</p>
+              <p className="text-sm text-[#475569] mb-2">Areas to Improve</p>
               <div className="flex flex-wrap gap-2">
                 {rep.weaknesses.map((w, i) => (
                   <span key={i} className="px-3 py-1 bg-[#FFF6E5] text-[#FFB547] text-sm rounded-lg">{w}</span>
@@ -1422,7 +1422,7 @@ function LeadsView({ result, selectedDivision, setSelectedDivision }: {
       <div className="flex items-center justify-between">
         <DivisionFilter selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} />
         {selectedDivision !== 'all' && (
-          <p className="text-sm text-[#718096]">
+          <p className="text-sm text-[#475569]">
             Showing {filteredCalls.length} of {result.calls.length} leads
           </p>
         )}
@@ -1442,7 +1442,7 @@ function LeadsView({ result, selectedDivision, setSelectedDivision }: {
                 score >= 9 ? "bg-gradient-to-br from-[#E31A1A] to-[#FF6B6B] text-white" :
                 score >= 7 ? "bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white" :
                 score >= 5 ? "bg-[#FFF6E5] text-[#FFB547]" :
-                "bg-[#F4F7FE] text-[#718096]"
+                "bg-[#F4F7FE] text-[#475569]"
               }`}>
                 {score}
               </div>
@@ -1450,7 +1450,7 @@ function LeadsView({ result, selectedDivision, setSelectedDivision }: {
                 <p className="font-medium text-[#1B254B]">
                   {call.score.callerInfo?.name || call.score.callerInfo?.company || "Unknown"}
                 </p>
-                <p className="text-sm text-[#718096] truncate">
+                <p className="text-sm text-[#475569] truncate">
                   {call.score.callerInfo?.needSummary || "No details"}
                 </p>
                 <p className="text-xs text-[#a0aec0]">
@@ -1458,7 +1458,7 @@ function LeadsView({ result, selectedDivision, setSelectedDivision }: {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-[#718096]">{call.score.leadQuality?.timeline || "Unknown"}</p>
+                <p className="text-sm text-[#475569]">{call.score.leadQuality?.timeline || "Unknown"}</p>
                 <StatusBadge
                   status={call.score.leadQuality?.serviceFit || "Unknown"}
                   variant={
@@ -1558,18 +1558,18 @@ function SourcesView({ result }: { result: AnalysisResult }) {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-[20px] p-6 shadow-sm">
-          <p className="text-sm text-[#718096]">Total Sources</p>
+          <p className="text-sm text-[#475569]">Total Sources</p>
           <p className="text-3xl font-bold text-[#1B254B]">{sourceStats.length}</p>
         </div>
         <div className="bg-white rounded-[20px] p-6 shadow-sm">
-          <p className="text-sm text-[#718096]">Best Source</p>
+          <p className="text-sm text-[#475569]">Best Source</p>
           <p className="text-xl font-bold text-[#01B574]">{sourceStats[0]?.source || "N/A"}</p>
-          <p className="text-sm text-[#718096]">Avg Lead Score: {sourceStats[0]?.avgLeadScore || 0}</p>
+          <p className="text-sm text-[#475569]">Avg Lead Score: {sourceStats[0]?.avgLeadScore || 0}</p>
         </div>
         <div className="bg-white rounded-[20px] p-6 shadow-sm">
-          <p className="text-sm text-[#718096]">Needs Review</p>
+          <p className="text-sm text-[#475569]">Needs Review</p>
           <p className="text-xl font-bold text-[#FFB547]">{sourceStats[sourceStats.length - 1]?.source || "N/A"}</p>
-          <p className="text-sm text-[#718096]">Avg Lead Score: {sourceStats[sourceStats.length - 1]?.avgLeadScore || 0}</p>
+          <p className="text-sm text-[#475569]">Avg Lead Score: {sourceStats[sourceStats.length - 1]?.avgLeadScore || 0}</p>
         </div>
       </div>
 
@@ -1577,19 +1577,19 @@ function SourcesView({ result }: { result: AnalysisResult }) {
       <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
         <div className="p-6 border-b border-[#edf2f7]">
           <h3 className="font-bold text-[#1B254B]">Lead Source Performance</h3>
-          <p className="text-sm text-[#718096]">Quality metrics by marketing channel</p>
+          <p className="text-sm text-[#475569]">Quality metrics by marketing channel</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#F4F7FE]">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#718096] uppercase">Source</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Calls</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Lead Score</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Qualified</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Spam/Bad</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#718096] uppercase">Avg Duration</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#718096] uppercase">Top Reps</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-[#475569] uppercase">Source</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#475569] uppercase">Calls</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#475569] uppercase">Lead Score</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#475569] uppercase">Qualified</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#475569] uppercase">Spam/Bad</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-[#475569] uppercase">Avg Duration</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-[#475569] uppercase">Top Reps</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#edf2f7]">
@@ -1620,12 +1620,12 @@ function SourcesView({ result }: { result: AnalysisResult }) {
                     <span className="text-[#a0aec0] text-sm ml-1">({Math.round(stat.spamCalls / stat.totalCalls * 100)}%)</span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-[#718096]">{formatDuration(stat.avgDuration)}</span>
+                    <span className="text-[#475569]">{formatDuration(stat.avgDuration)}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
                       {stat.topReps.map((rep, i) => (
-                        <span key={i} className="text-xs px-2 py-1 bg-[#F4F7FE] text-[#718096] rounded">
+                        <span key={i} className="text-xs px-2 py-1 bg-[#F4F7FE] text-[#475569] rounded">
                           {rep}
                         </span>
                       ))}
@@ -1644,7 +1644,7 @@ function SourcesView({ result }: { result: AnalysisResult }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 bg-[#E6FAF5] rounded-xl">
             <p className="font-semibold text-[#01B574] mb-2">Good Sources (7+ Lead Score)</p>
-            <ul className="text-sm text-[#718096] space-y-1">
+            <ul className="text-sm text-[#475569] space-y-1">
               <li>&#x2022; High percentage of qualified leads</li>
               <li>&#x2022; Low spam/wrong service calls</li>
               <li>&#x2022; Longer average call duration</li>
@@ -1652,7 +1652,7 @@ function SourcesView({ result }: { result: AnalysisResult }) {
           </div>
           <div className="p-4 bg-[#FFE5E5] rounded-xl">
             <p className="font-semibold text-[#E31A1A] mb-2">Poor Sources (Below 4 Lead Score)</p>
-            <ul className="text-sm text-[#718096] space-y-1">
+            <ul className="text-sm text-[#475569] space-y-1">
               <li>&#x2022; High spam or wrong number rate</li>
               <li>&#x2022; Short call durations (hangups)</li>
               <li>&#x2022; Callers looking for other services</li>
@@ -1693,7 +1693,7 @@ function SettingsView({
       {/* API Keys Card */}
       <div className="bg-white rounded-[20px] p-6 shadow-sm">
         <h3 className="font-bold text-[#1B254B] mb-2">API Configuration</h3>
-        <p className="text-sm text-[#718096] mb-4">
+        <p className="text-sm text-[#475569] mb-4">
           Keys are stored locally in your browser and sent directly to AI providers.
         </p>
 
@@ -1736,7 +1736,7 @@ function SettingsView({
             />
             <button
               onClick={() => setShowAnthropicKey(!showAnthropicKey)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#718096] hover:text-[#1B254B]"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#1B254B]"
             >
               {showAnthropicKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -1763,7 +1763,7 @@ function SettingsView({
             />
             <button
               onClick={() => setShowOpenaiKey(!showOpenaiKey)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#718096] hover:text-[#1B254B]"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#1B254B]"
             >
               {showOpenaiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -1795,11 +1795,11 @@ function SettingsView({
         {/* Pricing table */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-between py-2">
-            <span className="text-[#718096]">Extraction (per call)</span>
+            <span className="text-[#475569]">Extraction (per call)</span>
             <span className="font-medium text-[#1B254B]">~$0.001</span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-[#718096]">Analysis (per call)</span>
+            <span className="text-[#475569]">Analysis (per call)</span>
             <span className="font-medium text-[#1B254B]">~$0.01</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-[#edf2f7]">
@@ -1828,7 +1828,7 @@ function SettingsView({
           <Shield className="w-5 h-5 text-[#0f172a] mt-0.5" />
           <div>
             <h3 className="font-bold text-[#1B254B] mb-1">Privacy & Security</h3>
-            <p className="text-sm text-[#718096]">
+            <p className="text-sm text-[#475569]">
               Your data stays secure. API keys are stored locally in your browser and sent directly to AI providers. We never store, log, or access your call data or API keys on any server.
             </p>
           </div>

@@ -59,7 +59,7 @@ export default function DataTable<T extends { id?: string | number }>({
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-2xl p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-[#f1f5f9]">
-        <p className="text-[#94a3b8]">{emptyMessage}</p>
+        <p className="text-[#64748b]">{emptyMessage}</p>
       </div>
     );
   }

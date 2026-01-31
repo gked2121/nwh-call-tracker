@@ -59,7 +59,7 @@ export default function MetricCard({
             )}
           </div>
           {subtitle && (
-            <p className="text-sm text-[#94a3b8] mt-2">{subtitle}</p>
+            <p className="text-sm text-[#64748b] mt-2">{subtitle}</p>
           )}
         </div>
         <div className={`p-3.5 rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-105`}>
